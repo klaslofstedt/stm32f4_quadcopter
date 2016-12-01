@@ -1,0 +1,1492 @@
+###############################################################################
+#
+# IAR ELF Linker V7.50.2.10312/W32 for ARM                01/Dec/2016  00:46:59
+# Copyright 2007-2015 IAR Systems AB.
+#
+#    Output file  =  
+#        C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Exe\RTOSDemo.out
+#    Map file     =  
+#        C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\List\RTOSDemo.map
+#    Command line =  
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\application_hooks.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\data_builder.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\eMPL_outputs.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\esc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\event_groups.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\freertos_time.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\gpio.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\hal_outputs.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\heap_2.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\i2c.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\imu.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\inv_mpu.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\inv_mpu_dmp_motion_driver.o"
+#        C:\Users\klasl\Desktop\freertos_dmp2\invensense_dmp\mpl\libmpllib.a
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\list.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\main.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\message_layer.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\misc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\ml_math_func.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\mlmath.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\motors.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\mpl.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\pid.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\port.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\portasm.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\printf2.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\pwm.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\queue.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\reg_test.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\RegTest.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\results_holder.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\start_manager.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\startup_stm32f4xx.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_adc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_can.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_crc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_cryp.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_cryp_aes.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_cryp_des.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_cryp_tdes.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_dac.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_dbgmcu.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_dcmi.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_dma.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_exti.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_flash.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_fsmc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_gpio.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_hash.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_hash_md5.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_hash_sha1.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_i2c.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_it.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_iwdg.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_pwr.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_rcc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_rng.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_rtc.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_sdio.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_spi.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_syscfg.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\stm32f4xx_tim.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_usart.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\stm32f4xx_wwdg.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\storage_manager.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\Obj\system_stm32f4xx.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\tasks.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\timers.o"
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj\uart.o"
+#        --redirect _Printf=_PrintfLarge --redirect _Scanf=_ScanfSmall -o
+#        "C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Exe\RTOSDemo.out"
+#        --map "C:\Users\klasl\Desktop\freertos_dmp2\Flash
+#        Debug\List\RTOSDemo.map" --config "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 7.3_2\arm\config\linker\ST\stm32f407xG.icf"
+#        --semihosting --entry __iar_program_start --redirect
+#        __iar_sh_stdout=__iar_sh_stdout_swo --vfe
+#
+###############################################################################
+
+*******************************************************************************
+*** MESSAGES
+***
+
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: fusion_9axis.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\ml_math_func.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: fusion_9axis.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\results_holder.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: fast_no_motion.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\ml_math_func.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: fast_no_motion.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\results_holder.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: gyro_tc.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\results_holder.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: accel_auto_cal.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\ml_math_func.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: accel_auto_cal.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\results_holder.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: quaternion_supervisor.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\ml_math_func.o
+Warning[Lt049]: Potential floating point parameter passing conflict. The first
+          module below references the second and they have been built with
+          different settings.
+          AAPCS, base variant: quaternion_supervisor.o(libmpllib.a)
+          AAPCS, VFP variant: C:\Users\klasl\Desktop\freertos_dmp2\Flash
+                    Debug\Obj\results_holder.o
+
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor                     = *
+__Heap_Handler                = DLMalloc
+__SystemLibrary               = DLib
+__dlib_dynamic_initialization = normal
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A1":  place at 0x08000000 { ro section .intvec };
+"P1":  place in [from 0x08000000 to 0x080fffff] { ro };
+"P2":  place in [from 0x20000000 to 0x2001ffff] { rw, block CSTACK, block HEAP };
+
+  Section             Kind        Address     Size  Object
+  -------             ----        -------     ----  ------
+"A1":                                        0x188
+  .intvec             ro code  0x08000000    0x188  startup_stm32f4xx.o [1]
+                             - 0x08000188    0x188
+
+"P1":                                      0x1110f
+  .text               ro code  0x08000188   0x197c  inv_mpu.o [1]
+  .text               ro code  0x08001b04    0x744  i2c.o [1]
+  .text               ro code  0x08002248     0x22  freertos_time.o [1]
+  .text               ro code  0x0800226a     0x1a  xsnprout.o [3]
+  .text               ro code  0x08002284     0x66  ABImemset.o [6]
+  .text               ro code  0x080022ea      0x8  labs.o [3]
+  .text               ro code  0x080022f2      0xa  xsprout.o [3]
+  .text               ro code  0x080022fc     0x4e  FltToDbl.o [5]
+  .rodata             const    0x0800234a      0x2  heap_2.o [1]
+  .text               ro code  0x0800234c     0x2e  DblCmpLe.o [5]
+  .rodata             const    0x0800237a      0x2  inv_mpu_dmp_motion_driver.o [1]
+  .text               ro code  0x0800237c    0x132  I64DivMod.o [6]
+  .text               ro code  0x080024b0     0x62  memcmp_unaligned.o [6]
+  .text               ro code  0x08002514    0x188  stm32f4xx_rcc.o [1]
+  .text               ro code  0x0800269c     0xf4  stm32f4xx_gpio.o [1]
+  .text               ro code  0x08002790    0x242  stm32f4xx_i2c.o [1]
+  .text               ro code  0x080029d4    0xae4  tasks.o [1]
+  .text               ro code  0x080034b8      0x2  I64DivZer.o [6]
+  .text               ro code  0x080034bc    0x134  heap_2.o [1]
+  .text               ro code  0x080035f0     0x98  list.o [1]
+  .text               ro code  0x08003688    0x214  port.o [1]
+  .text               ro code  0x0800389c    0x3f0  timers.o [1]
+  .text               ro code  0x08003c8c     0x24  application_hooks.o [1]
+  CODE                ro code  0x08003cb0     0xa8  portasm.o [1]
+  .text               ro code  0x08003d58    0x6f6  queue.o [1]
+  .text               ro code  0x08004450     0x76  ABImemcpy_unaligned.o [6]
+  .text               ro code  0x080044c8   0x14f0  dlmalloc.o [3]
+  .text               ro code  0x080059b8      0x6  abort.o [3]
+  .text               ro code  0x080059c0     0x2c  xgetmemchunk.o [3]
+  .text               ro code  0x080059ec     0x14  exit.o [7]
+  .text               ro code  0x08005a00    0xf9a  xprintflarge.o [3]
+  .text               ro code  0x0800699a     0x20  xmbtowc.o [3]
+  .text               ro code  0x080069bc     0x16  strchr.o [6]
+  .text               ro code  0x080069d4     0x36  strlen.o [6]
+  .text               ro code  0x08006a0c     0x58  memchr.o [6]
+  .text               ro code  0x08006a64      0xa  xmbcurmax.o [3]
+  .text               ro code  0x08006a6e     0x1a  xwctomb.o [3]
+  .text               ro code  0x08006a88    0x1a2  DblMul.o [5]
+  .text               ro code  0x08006c2a     0x42  xdnorm.o [5]
+  .text               ro code  0x08006c6c    0x256  DblDiv.o [5]
+  .text               ro code  0x08006ec4     0x58  DblToI32.o [5]
+  .text               ro code  0x08006f1c     0x30  I32ToDbl.o [5]
+  .text               ro code  0x08006f4c    0x180  DblSub.o [5]
+  .text               ro code  0x080070cc     0x6c  localeconv.o [3]
+  .text               ro code  0x08007138      0xe  div.o [3]
+  .text               ro code  0x08007148     0x14  setlocale.o [3]
+  .text               ro code  0x0800715c     0x60  xencoding_sb.o [3]
+  .text               ro code  0x080071bc     0xe8  DblAdd.o [5]
+  .text               ro code  0x080072a4      0x2  xtls.o [3]
+  .rodata             const    0x080072a8    0xbf8  inv_mpu_dmp_motion_driver.o [1]
+  .text               ro code  0x08007ea0    0xbc8  accel_auto_cal.o [4]
+  .text               ro code  0x08008a68     0x24  FltCmpLe.o [5]
+  .text               ro code  0x08008a8c    0x6d2  ml_math_func.o [1]
+  .text               ro code  0x08009160    0x2dc  results_holder.o [1]
+  .text               ro code  0x0800943c      0xc  memmove.o [6]
+  .text               ro code  0x08009448      0xc  memcpy.o [3]
+  .text               ro code  0x08009454    0x888  data_builder.o [1]
+  .text               ro code  0x08009cdc     0x24  FltCmpGe.o [5]
+  .text               ro code  0x08009d00    0xb24  compass_vec_cal.o [4]
+  .text               ro code  0x0800a824      0xe  S32ToFlt.o [5]
+  .text               ro code  0x0800a832     0x12  FltMul.o [5]
+  .text               ro code  0x0800a844     0x2e  DblCmpGe.o [5]
+  .text               ro code  0x0800a874     0xf0  sqrt.o [5]
+  .text               ro code  0x0800a964     0x90  DblToFlt.o [5]
+  .text               ro code  0x0800a9f4     0x12  FltAdd.o [5]
+  .text               ro code  0x0800aa06     0x12  FltDiv.o [5]
+  .text               ro code  0x0800aa18     0x12  FltSub.o [5]
+  .text               ro code  0x0800aa2a      0x6  cos.o [5]
+  .text               ro code  0x0800aa30     0x2c  sqrtf.o [5]
+  .text               ro code  0x0800aa5c      0xe  FltToS32.o [5]
+  .text               ro code  0x0800aa6c    0xb34  fast_no_motion.o [4]
+  .text               ro code  0x0800b5a0     0x1c  FltCmpEq.o [5]
+  .text               ro code  0x0800b5bc     0x62  I64ToFlt.o [5]
+  .text               ro code  0x0800b61e     0x14  memset.o [3]
+  .text               ro code  0x0800b634     0x68  start_manager.o [1]
+  .text               ro code  0x0800b69c     0x6a  atan2f.o [5]
+  .text               ro code  0x0800b708     0x20  message_layer.o [1]
+  .text               ro code  0x0800b728     0x78  ABImemmove_unaligned.o [6]
+  .text               ro code  0x0800b7a0     0xa4  storage_manager.o [1]
+  .text               ro code  0x0800b844     0x20  DblCmpEq.o [5]
+  .text               ro code  0x0800b864      0xc  iarEdom.o [6]
+  .text               ro code  0x0800b870    0x450  xsin.o [5]
+  .text               ro code  0x0800bcc0     0x76  FltToS64.o [5]
+  .text               ro code  0x0800bd38     0x22  S64Shr.o [6]
+  .text               ro code  0x0800bd5c     0x22  I64Shl.o [6]
+  .text               ro code  0x0800bd7e      0x8  abs.o [3]
+  .text               ro code  0x0800bd88     0xa4  xatanf.o [5]
+  .text               ro code  0x0800be2c      0xc  errno.o [3]
+  .text               ro code  0x0800be38    0x168  xquad.o [5]
+  .text               ro code  0x0800bfa0     0x7a  xdint.o [5]
+  .text               ro code  0x0800c01c    0x1a8  fmod.o [5]
+  .text               ro code  0x0800c1c4    0xa48  inv_mpu_dmp_motion_driver.o [1]
+  .text               ro code  0x0800cc0c    0xa48  quaternion_supervisor.o [4]
+  .text               ro code  0x0800d654     0x12  cosf.o [5]
+  .text               ro code  0x0800d666     0x12  sinf.o [5]
+  .text               ro code  0x0800d678    0x16c  xfsin.o [5]
+  .text               ro code  0x0800d7e4     0xec  xfquad.o [5]
+  .text               ro code  0x0800d8d0     0x4e  xfdint.o [5]
+  .text               ro code  0x0800d920     0xe6  fmodf.o [5]
+  .text               ro code  0x0800da08    0x8c0  pow.o [5]
+  .text               ro code  0x0800e2c8     0xb0  xlog.o [5]
+  .text               ro code  0x0800e378    0x2c6  xexp.o [5]
+  .text               ro code  0x0800e63e     0x40  xdtest.o [5]
+  .text               ro code  0x0800e680    0x114  xdscale.o [5]
+  .text               ro code  0x0800e794    0x69c  fusion_9axis.o [4]
+  .text               ro code  0x0800ee30      0xc  mag_disturb.o [4]
+  .text               ro code  0x0800ee3c    0x4b4  imu.o [1]
+  .text               ro code  0x0800f2f0    0x384  eMPL_outputs.o [1]
+  .text               ro code  0x0800f674    0x104  printf2.o [1]
+  .text               ro code  0x0800f778     0x90  mpl.o [1]
+  .text               ro code  0x0800f808    0x474  gyro_tc.o [4]
+  .text               ro code  0x0800fc7c    0x13a  stm32f4xx_usart.o [1]
+  .text               ro code  0x0800fdb8     0x3c  vsnprint.o [3]
+  .text               ro code  0x0800fdf4     0x2c  vsprintf.o [3]
+  .text               ro code  0x0800fe20      0x6  ABImemclr4.o [6]
+  .text               ro code  0x0800fe28     0x32  ABImemset48.o [6]
+  CODE                ro code  0x0800fe5c    0x3d4  RegTest.o [1]
+  .text               ro code  0x08010230    0x2f8  stm32f4xx_tim.o [1]
+  .text               ro code  0x08010528    0x1fc  system_stm32f4xx.o [1]
+  .text               ro code  0x08010724    0x180  pwm.o [1]
+  .text               ro code  0x080108a4     0xa0  stm32f4xx_exti.o [1]
+  .text               ro code  0x08010944     0x9c  uart.o [1]
+  .text               ro code  0x080109e0     0x98  main.o [1]
+  .text               ro code  0x08010a78      0xc  stm32f4xx_pwr.o [1]
+  .text               ro code  0x08010a84     0x80  gpio.o [1]
+  .text               ro code  0x08010b04     0x80  misc.o [1]
+  .text               ro code  0x08010b84     0x54  stm32f4xx_syscfg.o [1]
+  .text               ro code  0x08010bd8     0x90  motors.o [1]
+  .text               ro code  0x08010c68     0x8a  stm32f4xx_it.o [1]
+  .rodata             const    0x08010cf4     0x44  mpl.o [1]
+  .text               ro code  0x08010d38     0x40  zero_init3.o [6]
+  .text               ro code  0x08010d78     0x38  packbits_init_single.o [6]
+  .rodata             const    0x08010db0     0x28  inv_mpu.o [1]
+  .text               ro code  0x08010dd8     0x28  data_init.o [6]
+  .text               ro code  0x08010e00     0x22  fpinit_M.o [5]
+  .iar.init_table     const    0x08010e24     0x20  - Linker created -
+  .rodata             const    0x08010e44     0x20  imu.o [1]
+  .rodata             const    0x08010e64     0x20  inv_mpu.o [1]
+  .rodata             const    0x08010e84     0x1c  imu.o [1]
+  .rodata             const    0x08010ea0     0x1c  imu.o [1]
+  .rodata             const    0x08010ebc     0x1c  imu.o [1]
+  .rodata             const    0x08010ed8     0x1c  imu.o [1]
+  .text               ro code  0x08010ef4     0x1a  cmain.o [6]
+  .text               ro code  0x08010f0e      0x4  low_level_init.o [3]
+  .text               ro code  0x08010f12      0x4  exit.o [3]
+  .text               ro code  0x08010f18      0xa  cexit.o [6]
+  .rodata             const    0x08010f24     0x18  motors.o [1]
+  .rodata             const    0x08010f3c     0x14  imu.o [1]
+  .rodata             const    0x08010f50     0x14  imu.o [1]
+  .rodata             const    0x08010f64     0x14  imu.o [1]
+  .rodata             const    0x08010f78     0x14  imu.o [1]
+  .rodata             const    0x08010f8c     0x14  imu.o [1]
+  .rodata             const    0x08010fa0     0x10  imu.o [1]
+  .rodata             const    0x08010fb0     0x10  imu.o [1]
+  .rodata             const    0x08010fc0     0x10  motors.o [1]
+  .rodata             const    0x08010fd0     0x10  motors.o [1]
+  .rodata             const    0x08010fe0     0x10  motors.o [1]
+  .rodata             const    0x08010ff0     0x10  mpl.o [1]
+  .rodata             const    0x08011000     0x10  mpl.o [1]
+  .text               ro code  0x08011010     0x10  startup_stm32f4xx.o [1]
+  .rodata             const    0x08011020      0xc  imu.o [1]
+  .rodata             const    0x0801102c      0xc  imu.o [1]
+  .rodata             const    0x08011038      0xc  inv_mpu.o [1]
+  .rodata             const    0x08011044      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x08011050      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x0801105c      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x08011068      0xc  main.o [1]
+  .rodata             const    0x08011074      0xc  main.o [1]
+  .rodata             const    0x08011080      0xc  motors.o [1]
+  .rodata             const    0x0801108c      0xc  motors.o [1]
+  .text               ro code  0x08011098      0xc  cstartup_M.o [6]
+  .rodata             const    0x080110a4      0x8  main.o [1]
+  .rodata             const    0x080110ac      0x8  tasks.o [1]
+  .rodata             const    0x080110b4      0x8  timers.o [1]
+  .rodata             const    0x080110bc      0x8  timers.o [1]
+  .rodata             const    0x080110c4      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080110c8      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080110cc      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080110d0      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080110d4      0x4  port.o [1]
+  .text               ro code  0x080110d8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110dc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110e0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110e4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110e8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110ec      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110f0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110f4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110f8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080110fc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011100      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011104      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011108      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801110c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011110      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011114      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011118      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801111c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011120      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011124      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011128      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801112c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011130      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011134      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011138      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801113c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011140      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011144      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011148      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801114c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011150      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011154      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011158      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801115c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011160      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011164      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011168      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801116c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011170      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011174      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011178      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801117c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011180      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011184      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011188      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801118c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011190      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011194      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011198      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801119c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111a0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111a4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111a8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111ac      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111b0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111b4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111b8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111bc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111c0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111c4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111c8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111cc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111d0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111d4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111d8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111dc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111e0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111e4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111e8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111ec      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111f0      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111f4      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111f8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x080111fc      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011200      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011204      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011208      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801120c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011210      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011214      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011218      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801121c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011220      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011224      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011228      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801122c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011230      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011234      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011238      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801123c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08011240      0x4  startup_stm32f4xx.o [1]
+  .rodata             const    0x08011244      0x0  zero_init3.o [6]
+  .rodata             const    0x08011244      0x0  packbits_init_single.o [6]
+  Initializer bytes   const    0x08011244     0x53  <for P2-1>
+                             - 0x08011297  0x1110f
+
+"P2", part 1 of 3:                           0x16a
+  P2-1                         0x20000000    0x16a  <Init block>
+    .data             inited   0x20000000      0x4  heap_2.o [1]
+    .data             inited   0x20000004      0x4  imu.o [1]
+    .data             inited   0x20000008      0xc  imu.o [1]
+    .data             inited   0x20000014     0x2c  inv_mpu.o [1]
+    .data             inited   0x20000040      0x4  port.o [1]
+    .data             inited   0x20000044     0x10  stm32f4xx_rcc.o [1]
+    .data             inited   0x20000054      0x4  system_stm32f4xx.o [1]
+    .data             inited   0x20000058     0x10  system_stm32f4xx.o [1]
+    __DLIB_PERTHREAD  inited   0x20000068      0x4  errno.o [3]
+    __DLIB_PERTHREAD  inited   0x2000006c     0x88  localeconv.o [3]
+    __DLIB_PERTHREAD  inited   0x200000f4     0x74  setlocale.o [3]
+    .data             inited   0x20000168      0x2  i2c.o [1]
+                             - 0x2000016a    0x16a
+
+"P2", part 2 of 3:                          0x4000
+  CSTACK                       0x20000170   0x2000  <Block>
+    CSTACK            uninit   0x20000170   0x2000  <Block tail>
+  HEAP                         0x20002170   0x2000  <Block>
+    HEAP              uninit   0x20002170   0x2000  <Block tail>
+                             - 0x20004170   0x4000
+
+"P2", part 3 of 3:                         0x140e4
+  .bss                zero     0x20004170  0x12c00  heap_2.o [1]
+  .bss                zero     0x20016d70    0x4b8  accel_auto_cal.o [4]
+  .bss                zero     0x20017228    0x260  fast_no_motion.o [4]
+  .bss                zero     0x20017488    0x1d8  dlmalloc.o [3]
+  .bss                zero     0x20017660    0x1c4  gyro_tc.o [4]
+  .bss                zero     0x20017824    0x198  data_builder.o [1]
+  .bss                zero     0x200179bc    0x198  storage_manager.o [1]
+  .bss                zero     0x20017b54    0x140  data_builder.o [1]
+  .bss                zero     0x20017c94    0x138  fusion_9axis.o [4]
+  .bss                zero     0x20017dcc     0xb8  mag_disturb.o [4]
+  .bss                zero     0x20017e84     0x88  results_holder.o [1]
+  .bss                zero     0x20017f0c     0x6c  quaternion_supervisor.o [4]
+  .bss                zero     0x20017f78     0x64  tasks.o [1]
+  .bss                zero     0x20017fdc     0x54  start_manager.o [1]
+  .bss                zero     0x20018030     0x40  queue.o [1]
+  .bss                zero     0x20018070     0x40  fast_no_motion.o [4]
+  .bss                zero     0x200180b0     0x28  eMPL_outputs.o [1]
+  .bss                zero     0x200180d8     0x24  imu.o [1]
+  .bss                zero     0x200180fc     0x18  dlmalloc.o [3]
+  .bss                zero     0x20018114     0x14  tasks.o [1]
+  .bss                zero     0x20018128     0x14  tasks.o [1]
+  .bss                zero     0x2001813c     0x14  tasks.o [1]
+  .bss                zero     0x20018150     0x14  tasks.o [1]
+  .bss                zero     0x20018164     0x14  tasks.o [1]
+  .bss                zero     0x20018178     0x14  timers.o [1]
+  .bss                zero     0x2001818c     0x14  timers.o [1]
+  .bss                zero     0x200181a0     0x10  imu.o [1]
+  .bss                zero     0x200181b0     0x10  inv_mpu_dmp_motion_driver.o [1]
+  .bss                zero     0x200181c0      0x8  heap_2.o [1]
+  .bss                zero     0x200181c8      0x8  heap_2.o [1]
+  .bss                zero     0x200181d0      0x4  heap_2.o [1]
+  .bss                zero     0x200181d4      0x4  imu.o [1]
+  .bss                zero     0x200181d8      0x4  imu.o [1]
+  .bss                zero     0x200181dc      0x4  imu.o [1]
+  .bss                zero     0x200181e0      0x4  imu.o [1]
+  .bss                zero     0x200181e4      0x4  message_layer.o [1]
+  .bss                zero     0x200181e8      0x4  port.o [1]
+  .bss                zero     0x200181ec      0x4  reg_test.o [1]
+  .bss                zero     0x200181f0      0x4  reg_test.o [1]
+  .bss                zero     0x200181f4      0x4  stm32f4xx_it.o [1]
+  .bss                zero     0x200181f8      0x4  tasks.o [1]
+  .bss                zero     0x200181fc      0x4  tasks.o [1]
+  .bss                zero     0x20018200      0x4  tasks.o [1]
+  .bss                zero     0x20018204      0x4  tasks.o [1]
+  .bss                zero     0x20018208      0x4  tasks.o [1]
+  .bss                zero     0x2001820c      0x4  tasks.o [1]
+  .bss                zero     0x20018210      0x4  tasks.o [1]
+  .bss                zero     0x20018214      0x4  tasks.o [1]
+  .bss                zero     0x20018218      0x4  tasks.o [1]
+  .bss                zero     0x2001821c      0x4  tasks.o [1]
+  .bss                zero     0x20018220      0x4  tasks.o [1]
+  .bss                zero     0x20018224      0x4  tasks.o [1]
+  .bss                zero     0x20018228      0x4  tasks.o [1]
+  .bss                zero     0x2001822c      0x4  tasks.o [1]
+  .bss                zero     0x20018230      0x4  tasks.o [1]
+  .bss                zero     0x20018234      0x4  timers.o [1]
+  .bss                zero     0x20018238      0x4  timers.o [1]
+  .bss                zero     0x2001823c      0x4  timers.o [1]
+  .bss                zero     0x20018240      0x4  timers.o [1]
+  .bss                zero     0x20018244      0x4  timers.o [1]
+  .bss                zero     0x20018248      0x4  xgetmemchunk.o [3]
+  .bss                zero     0x2001824c      0x2  stm32f4xx_it.o [1]
+  .bss                zero     0x2001824e      0x2  stm32f4xx_it.o [1]
+  .bss                zero     0x20018250      0x1  port.o [1]
+                             - 0x20018251  0x140e1
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address     Size
+          -------     ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x140e1:
+          0x20004170  0x140e1
+
+Copy/packbits (__iar_packbits_init_single3)
+    1 source range, total size 0x53 (22% of destination):
+          0x08011244     0x53
+    1 destination range, total size 0x16a:
+          0x20000000    0x16a
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module                       ro code  ro data  rw data
+    ------                       -------  -------  -------
+C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj: [1]
+    RegTest.o                        980
+    application_hooks.o               36
+    data_builder.o                 2 184               728
+    eMPL_outputs.o                   900                40
+    freertos_time.o                   34
+    gpio.o                           128
+    heap_2.o                         308        2   76 824
+    i2c.o                          1 860        1        2
+    imu.o                          1 204      304       84
+    inv_mpu.o                      6 524       94       44
+    inv_mpu_dmp_motion_driver.o    2 632    3 118       16
+    list.o                           152
+    main.o                           152       32
+    message_layer.o                   32                 4
+    misc.o                           128
+    ml_math_func.o                 1 746
+    motors.o                         144       96
+    mpl.o                            144      100
+    port.o                           532        5        9
+    portasm.o                        168
+    printf2.o                        260
+    pwm.o                            384
+    queue.o                        1 782                64
+    reg_test.o                                           8
+    results_holder.o                 732               136
+    start_manager.o                  104                84
+    startup_stm32f4xx.o              772
+    stm32f4xx_exti.o                 160
+    stm32f4xx_gpio.o                 244
+    stm32f4xx_i2c.o                  578
+    stm32f4xx_it.o                   138                 8
+    stm32f4xx_pwr.o                   12
+    stm32f4xx_rcc.o                  392        4       16
+    stm32f4xx_syscfg.o                84
+    stm32f4xx_tim.o                  760
+    stm32f4xx_usart.o                314
+    storage_manager.o                164               408
+    system_stm32f4xx.o               508        4       20
+    tasks.o                        2 788        8      260
+    timers.o                       1 008       16       60
+    uart.o                           156
+    ------------------------------------------------------
+    Total:                        31 328    3 784   78 815
+
+command line: [2]
+    ------------------------------------------------------
+    Total:
+
+dl7M_tlf.a: [3]
+    abort.o                            6
+    abs.o                              8
+    div.o                             14
+    dlmalloc.o                     5 360               496
+    errno.o                           12        1        4
+    exit.o                             4
+    labs.o                             8
+    localeconv.o                     108       31      136
+    low_level_init.o                   4
+    memcpy.o                          12
+    memset.o                          20
+    setlocale.o                       20       27      116
+    vsnprint.o                        60
+    vsprintf.o                        44
+    xencoding_sb.o                    96
+    xgetmemchunk.o                    44                 4
+    xmbcurmax.o                       10
+    xmbtowc.o                         32
+    xprintflarge.o                 3 994
+    xsnprout.o                        26
+    xsprout.o                         10
+    xtls.o                             2
+    xwctomb.o                         26
+    ------------------------------------------------------
+    Total:                         9 920       59      756
+
+libmpllib.a: [4]
+    accel_auto_cal.o               3 016             1 208
+    compass_vec_cal.o              2 852
+    fast_no_motion.o               2 868               672
+    fusion_9axis.o                 1 692               312
+    gyro_tc.o                      1 140               452
+    mag_disturb.o                     12               184
+    quaternion_supervisor.o        2 632               108
+    ------------------------------------------------------
+    Total:                        14 212             2 936
+
+m7M_tls.a: [5]
+    DblAdd.o                         232
+    DblCmpEq.o                        32
+    DblCmpGe.o                        46
+    DblCmpLe.o                        46
+    DblDiv.o                         598
+    DblMul.o                         418
+    DblSub.o                         384
+    DblToFlt.o                       144
+    DblToI32.o                        88
+    FltAdd.o                          18
+    FltCmpEq.o                        28
+    FltCmpGe.o                        36
+    FltCmpLe.o                        36
+    FltDiv.o                          18
+    FltMul.o                          18
+    FltSub.o                          18
+    FltToDbl.o                        78
+    FltToS32.o                        14
+    FltToS64.o                       118
+    I32ToDbl.o                        48
+    I64ToFlt.o                        98
+    S32ToFlt.o                        14
+    atan2f.o                         106
+    cos.o                              6
+    cosf.o                            18
+    fmod.o                           424
+    fmodf.o                          230
+    fpinit_M.o                        34
+    pow.o                          2 240
+    sinf.o                            18
+    sqrt.o                           240
+    sqrtf.o                           44
+    xatanf.o                         164
+    xdint.o                          122
+    xdnorm.o                          66
+    xdscale.o                        276
+    xdtest.o                          64
+    xexp.o                           710
+    xfdint.o                          78
+    xfquad.o                         236
+    xfsin.o                          364
+    xlog.o                           176
+    xquad.o                          360
+    xsin.o                         1 104
+    ------------------------------------------------------
+    Total:                         9 610
+
+rt7M_tl.a: [6]
+    ABImemclr4.o                       6
+    ABImemcpy_unaligned.o            118
+    ABImemmove_unaligned.o           120
+    ABImemset.o                      102
+    ABImemset48.o                     50
+    I64DivMod.o                      306
+    I64DivZer.o                        2
+    I64Shl.o                          34
+    S64Shr.o                          34
+    cexit.o                           10
+    cmain.o                           26
+    cstartup_M.o                      12
+    data_init.o                       40
+    iarEdom.o                         12
+    memchr.o                          88
+    memcmp_unaligned.o                98
+    memmove.o                         12
+    packbits_init_single.o            56
+    strchr.o                          22
+    strlen.o                          54
+    zero_init3.o                      64
+    ------------------------------------------------------
+    Total:                         1 266
+
+shb_l.a: [7]
+    exit.o                            20
+    ------------------------------------------------------
+    Total:                            20
+
+    Gaps                              56        8
+    Linker created                             32   16 384
+----------------------------------------------------------
+    Grand Total:                  66 412    3 883   98 891
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address     Size  Type      Object
+-----                      -------     ----  ----      ------
+.iar.init_table$$Base   0x08010e24            --   Gb  - Linker created -
+.iar.init_table$$Limit  0x08010e44            --   Gb  - Linker created -
+?main                   0x08010ef5           Code  Gb  cmain.o [6]
+AHBPrescTable           0x20000058     0x10  Data  Gb  system_stm32f4xx.o [1]
+APBAHBPrescTable        0x20000044     0x10  Data  Lc  stm32f4xx_rcc.o [1]
+BusFault_Handler        0x08010c6f      0x2  Code  Gb  stm32f4xx_it.o [1]
+CSTACK$$Base            0x20000170            --   Gb  - Linker created -
+CSTACK$$Limit           0x20002170            --   Gb  - Linker created -
+DebugMon_Handler        0x08010c73      0x2  Code  Gb  stm32f4xx_it.o [1]
+DutyCycle               0x2001824e      0x2  Data  Gb  stm32f4xx_it.o [1]
+EXTI1_IRQHandler        0x08010ce5      0xe  Code  Gb  stm32f4xx_it.o [1]
+EXTI_ClearITPendingBit  0x0801092b      0x6  Code  Gb  stm32f4xx_exti.o [1]
+EXTI_Init               0x080108a5     0x86  Code  Gb  stm32f4xx_exti.o [1]
+Frequency               0x200181f4      0x4  Data  Gb  stm32f4xx_it.o [1]
+GPIO_Init               0x0800269d     0xa4  Code  Gb  stm32f4xx_gpio.o [1]
+GPIO_PinAFConfig        0x08002741     0x50  Code  Gb  stm32f4xx_gpio.o [1]
+Get_I2C_Retry           0x08002217      0x6  Code  Gb  i2c.o [1]
+HEAP$$Base              0x20002170            --   Gb  - Linker created -
+HEAP$$Limit             0x20004170            --   Gb  - Linker created -
+HardFault_Handler       0x08010c6b      0x2  Code  Gb  stm32f4xx_it.o [1]
+I2C_AcknowledgeConfig   0x0800292b     0x1c  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_ClearFlag           0x080029c7      0xc  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_Cmd                 0x080028c1     0x1c  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_DeInit              0x08002791     0x56  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_GenerateSTART       0x080028dd     0x1c  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_GenerateSTOP        0x080028f9     0x1c  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_GetFlagStatus       0x08002985     0x42  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_Init                0x080027e7     0xc0  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_ReadRegister        0x0800296d     0x18  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_ReceiveData         0x08002967      0x6  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_Send7bitAddress     0x08002915     0x16  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_SendData            0x08002961      0x6  Code  Gb  stm32f4xx_i2c.o [1]
+I2C_SoftwareResetCmd    0x08002947     0x1a  Code  Gb  stm32f4xx_i2c.o [1]
+I2Cx_TIMEOUT_UserCallback
+                        0x08001bb5     0x6e  Code  Lc  i2c.o [1]
+IC2Value                0x2001824c      0x2  Data  Gb  stm32f4xx_it.o [1]
+LoadInt                 0x08006043     0x6e  Code  Lc  xprintflarge.o [3]
+MemManage_Handler       0x08010c6d      0x2  Code  Gb  stm32f4xx_it.o [1]
+NMI_Handler             0x08010c69      0x2  Code  Gb  stm32f4xx_it.o [1]
+NVIC_Init               0x08010b0f     0x60  Code  Gb  misc.o [1]
+NVIC_PriorityGroupConfig
+                        0x08010b05      0xa  Code  Gb  misc.o [1]
+PWR_BackupAccessCmd     0x08010a79      0x8  Code  Gb  stm32f4xx_pwr.o [1]
+PendSV_Handler          0x08003cb1           Code  Gb  portasm.o [1]
+RCC_AHB1PeriphClockCmd  0x080025f5     0x20  Code  Gb  stm32f4xx_rcc.o [1]
+RCC_APB1PeriphClockCmd  0x08002615     0x20  Code  Gb  stm32f4xx_rcc.o [1]
+RCC_APB1PeriphResetCmd  0x08002655     0x20  Code  Gb  stm32f4xx_rcc.o [1]
+RCC_APB2PeriphClockCmd  0x08002635     0x20  Code  Gb  stm32f4xx_rcc.o [1]
+RCC_BackupResetCmd      0x080025ed      0x8  Code  Gb  stm32f4xx_rcc.o [1]
+RCC_GetClocksFreq       0x08002515     0xd8  Code  Gb  stm32f4xx_rcc.o [1]
+RETRY_IN_MLSEC          0x20000168      0x2  Data  Lc  i2c.o [1]
+Region$$Table$$Base     0x08010e24            --   Gb  - Linker created -
+Region$$Table$$Limit    0x08010e44            --   Gb  - Linker created -
+ST_Sensors_I2C_ReadRegister
+                        0x08001e41    0x3d6  Code  Gb  i2c.o [1]
+ST_Sensors_I2C_WriteRegister
+                        0x08001cd3    0x16e  Code  Gb  i2c.o [1]
+SVC_Handler             0x08003d09           Code  Gb  portasm.o [1]
+SYSCFG_EXTILineConfig   0x08010b85     0x4e  Code  Gb  stm32f4xx_syscfg.o [1]
+Sensors_I2C_ReadRegister
+                        0x08001c7b     0x58  Code  Gb  i2c.o [1]
+Sensors_I2C_WriteRegister
+                        0x08001c23     0x58  Code  Gb  i2c.o [1]
+SetSysClock             0x08010615     0xce  Code  Lc  system_stm32f4xx.o [1]
+SysTick_Handler         0x080037df     0x28  Code  Gb  port.o [1]
+SystemCoreClock         0x20000054      0x4  Data  Gb  system_stm32f4xx.o [1]
+SystemCoreClockUpdate   0x0801057b     0x9a  Code  Gb  system_stm32f4xx.o [1]
+SystemInit              0x08010529     0x52  Code  Gb  system_stm32f4xx.o [1]
+TIM4_IRQHandler         0x08010c75     0x5c  Code  Gb  stm32f4xx_it.o [1]
+TIM_ARRPreloadConfig    0x08010299     0x1c  Code  Gb  stm32f4xx_tim.o [1]
+TIM_ClearITPendingBit   0x08010521      0x8  Code  Gb  stm32f4xx_tim.o [1]
+TIM_Cmd                 0x080102b5     0x1c  Code  Gb  stm32f4xx_tim.o [1]
+TIM_GetCapture1         0x08010519      0x4  Code  Gb  stm32f4xx_tim.o [1]
+TIM_GetCapture2         0x0801051d      0x4  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC1Init             0x080102d1     0x78  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC1PreloadConfig    0x080104d5     0x10  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC2Init             0x08010349     0x86  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC2PreloadConfig    0x080104e5     0x12  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC3Init             0x080103cf     0x84  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC3PreloadConfig    0x080104f7     0x10  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC4Init             0x08010453     0x62  Code  Gb  stm32f4xx_tim.o [1]
+TIM_OC4PreloadConfig    0x08010507     0x12  Code  Gb  stm32f4xx_tim.o [1]
+TIM_TimeBaseInit        0x08010231     0x68  Code  Gb  stm32f4xx_tim.o [1]
+USART_Cmd               0x0800fd41     0x1c  Code  Gb  stm32f4xx_usart.o [1]
+USART_ITConfig          0x0800fd65     0x52  Code  Gb  stm32f4xx_usart.o [1]
+USART_Init              0x0800fc7d     0xb6  Code  Gb  stm32f4xx_usart.o [1]
+USART_SendData          0x0800fd5d      0x8  Code  Gb  stm32f4xx_usart.o [1]
+USART_putc              0x0800f709     0x18  Code  Gb  printf2.o [1]
+USART_puts              0x0800f729     0x18  Code  Gb  printf2.o [1]
+UsageFault_Handler      0x08010c71      0x2  Code  Gb  stm32f4xx_it.o [1]
+_EncodingSb_Mbtowc      0x08007177     0x30  Code  Gb  xencoding_sb.o [3]
+_EncodingSb_Wctomb      0x0800715d     0x1a  Code  Gb  xencoding_sb.o [3]
+_GenldLarge             0x0800671b    0x236  Code  Lc  xprintflarge.o [3]
+_IsdstStr               0x200000f8      0x4  Data  Gb  setlocale.o [3]
+_LdtobLarge             0x0800650d    0x208  Code  Lc  xprintflarge.o [3]
+_LitobLarge             0x080063bd    0x106  Code  Lc  xprintflarge.o [3]
+_LocaleEncoding         0x08007149      0xe  Code  Gb  setlocale.o [3]
+_LocaleReturnString     0x20000118     0x50  Data  Lc  setlocale.o [3]
+_Locale_Profile         0x200000fc     0x1c  Data  Gb  setlocale.o [3]
+_Locale_aeabi_lconv     0x200000bc     0x38  Data  Gb  localeconv.o [3]
+_Locale_lconv           0x2000006c     0x50  Data  Gb  localeconv.o [3]
+_Mbtowc                 0x0800699b     0x20  Code  Gb  xmbtowc.o [3]
+_PrintfLarge            0x08005a01    0x62c  Code  Gb  xprintflarge.o [3]
+_PutcharsLarge          0x08006951     0x2e  Code  Lc  xprintflarge.o [3]
+_PutstrLarge            0x080060b1    0x306  Code  Lc  xprintflarge.o [3]
+_SNProut                0x0800226b     0x1a  Code  Gb  xsnprout.o [3]
+_SProut                 0x080022f3      0xa  Code  Gb  xsprout.o [3]
+_TzoneStr               0x200000f4      0x4  Data  Gb  setlocale.o [3]
+_Wctomb                 0x08006a6f     0x1a  Code  Gb  xwctomb.o [3]
+__aeabi_cdcmpeq         0x0800b845           Code  Gb  DblCmpEq.o [5]
+__aeabi_cdcmple         0x0800234d           Code  Gb  DblCmpLe.o [5]
+__aeabi_cdrcmple        0x0800a845           Code  Gb  DblCmpGe.o [5]
+__aeabi_cfcmpeq         0x0800b5a1           Code  Gb  FltCmpEq.o [5]
+__aeabi_cfcmple         0x08008a69           Code  Gb  FltCmpLe.o [5]
+__aeabi_cfrcmple        0x08009cdd           Code  Gb  FltCmpGe.o [5]
+__aeabi_d2f             0x0800a965           Code  Gb  DblToFlt.o [5]
+__aeabi_d2iz            0x08006ec5           Code  Gb  DblToI32.o [5]
+__aeabi_d2uiz           0x08006ef1           Code  Gb  DblToI32.o [5]
+__aeabi_dadd            0x080071bd           Code  Gb  DblAdd.o [5]
+__aeabi_ddiv            0x08006c6d           Code  Gb  DblDiv.o [5]
+__aeabi_dmul            0x08006a89           Code  Gb  DblMul.o [5]
+__aeabi_dsub            0x08006f4d           Code  Gb  DblSub.o [5]
+__aeabi_errno_addr      0x0800be2d      0x6  Code  Gb  errno.o [3]
+__aeabi_f2d             0x080022fd           Code  Gb  FltToDbl.o [5]
+__aeabi_f2iz            0x0800aa5d      0xe  Code  Gb  FltToS32.o [5]
+__aeabi_f2lz            0x0800bcc1           Code  Gb  FltToS64.o [5]
+__aeabi_fadd            0x0800a9f5     0x12  Code  Gb  FltAdd.o [5]
+__aeabi_fdiv            0x0800aa07     0x12  Code  Gb  FltDiv.o [5]
+__aeabi_fmul            0x0800a833     0x12  Code  Gb  FltMul.o [5]
+__aeabi_fsub            0x0800aa19     0x12  Code  Gb  FltSub.o [5]
+__aeabi_i2d             0x08006f1d           Code  Gb  I32ToDbl.o [5]
+__aeabi_i2f             0x0800a825      0xe  Code  Gb  S32ToFlt.o [5]
+__aeabi_l2f             0x0800b5bd           Code  Gb  I64ToFlt.o [5]
+__aeabi_lasr            0x0800bd39           Code  Gb  S64Shr.o [6]
+__aeabi_ldiv0           0x080034b9           Code  Gb  I64DivZer.o [6]
+__aeabi_ldivmod         0x0800237d           Code  Gb  I64DivMod.o [6]
+__aeabi_llsl            0x0800bd5d           Code  Gb  I64Shl.o [6]
+__aeabi_memclr4         0x0800fe21           Code  Gb  ABImemclr4.o [6]
+__aeabi_memset          0x08002285           Code  Gb  ABImemset.o [6]
+__aeabi_ui2d            0x08006f31           Code  Gb  I32ToDbl.o [5]
+__aeabi_ul2f            0x0800b5d9           Code  Gb  I64ToFlt.o [5]
+__aeabi_uldivmod        0x080023c1           Code  Gb  I64DivMod.o [6]
+__cmain                 0x08010ef5           Code  Gb  cmain.o [6]
+__data_GetMemChunk      0x080059c1     0x2c  Code  Gb  xgetmemchunk.o [3]
+__exit                  0x080059ed     0x14  Code  Gb  exit.o [7]
+__iar_Dint              0x0800bfa1     0x7a  Code  Gb  xdint.o [5]
+__iar_Dnorm             0x08006c2b     0x42  Code  Gb  xdnorm.o [5]
+__iar_Dscale            0x0800e681    0x114  Code  Gb  xdscale.o [5]
+__iar_Dtest             0x0800e63f     0x30  Code  Gb  xdtest.o [5]
+__iar_Errno             0x20000068      0x4  Data  Gb  errno.o [3]
+__iar_Exp               0x0800e379    0x2be  Code  Gb  xexp.o [5]
+__iar_FDint             0x0800d8d1     0x4e  Code  Gb  xfdint.o [5]
+__iar_FQuad             0x0800d7e5     0xc2  Code  Gb  xfquad.o [5]
+__iar_FSin              0x0800d679    0x12a  Code  Gb  xfsin.o [5]
+__iar_Locale_lconv_init
+                        0x080070cd     0x3a  Code  Gb  localeconv.o [3]
+__iar_Logpoly           0x0800e2c9     0x76  Code  Gb  xlog.o [5]
+__iar_Mbcurmax          0x08006a65      0xa  Code  Gb  xmbcurmax.o [3]
+__iar_Memchr            0x08006a0d           Code  Gb  memchr.o [6]
+__iar_Memset            0x08002285           Code  Gb  ABImemset.o [6]
+__iar_Memset4_word      0x0800fe29           Code  Gb  ABImemset48.o [6]
+__iar_Memset8_word      0x0800fe29           Code  Gb  ABImemset48.o [6]
+__iar_Memset_word       0x0800228d           Code  Gb  ABImemset.o [6]
+__iar_Quad              0x0800be39    0x12c  Code  Gb  xquad.o [5]
+__iar_Sin               0x0800b871    0x3b2  Code  Gb  xsin.o [5]
+__iar_Strchr            0x080069bd           Code  Gb  strchr.o [6]
+__iar_d2uiz             0x08006efd           Code  Gb  DblToI32.o [5]
+__iar_dadd              0x080071d1           Code  Gb  DblAdd.o [5]
+__iar_data_init3        0x08010dd9     0x28  Code  Gb  data_init.o [6]
+__iar_dlfree            0x0800549f    0x510  Code  Gb  dlmalloc.o [3]
+__iar_dlib_perthread_access
+                        0x080072a5      0x2  Code  Gb  xtls.o [3]
+__iar_dlmalloc          0x080051e9    0x2aa  Code  Gb  dlmalloc.o [3]
+__iar_dsub              0x08006f61           Code  Gb  DblSub.o [5]
+__iar_dsubStart         0x08006f73           Code  Gb  DblSub.o [5]
+__iar_edom              0x0800b865           Code  Gb  iarEdom.o [6]
+__iar_fmod              0x0800c01d           Code  Gb  fmod.o [5]
+__iar_fmodl             0x0800c01d           Code  Gb  fmod.o [5]
+__iar_init_vfp          0x08010e01           Code  Gb  fpinit_M.o [5]
+__iar_packbits_init_single3
+                        0x08010d79     0x38  Code  Gb  packbits_init_single.o [6]
+__iar_program_start     0x08011099           Code  Gb  cstartup_M.o [6]
+__iar_softfp_cosf       0x0800d655     0x12  Code  Gb  cosf.o [5]
+__iar_softfp_sinf       0x0800d667     0x12  Code  Gb  sinf.o [5]
+__iar_softfp_sqrtf      0x0800aa31           Code  Gb  sqrtf.o [5]
+__iar_sqrt              0x0800a875           Code  Gb  sqrt.o [5]
+__iar_ui2d              0x08006f35           Code  Gb  I32ToDbl.o [5]
+__iar_ul2f              0x0800b5e5           Code  Gb  I64ToFlt.o [5]
+__iar_unaligned___aeabi_memcpy
+                        0x08004451           Code  Gb  ABImemcpy_unaligned.o [6]
+__iar_unaligned___aeabi_memcpy4
+                        0x08004471           Code  Gb  ABImemcpy_unaligned.o [6]
+__iar_unaligned___aeabi_memcpy8
+                        0x08004471           Code  Gb  ABImemcpy_unaligned.o [6]
+__iar_unaligned___aeabi_memmove
+                        0x0800b729           Code  Gb  ABImemmove_unaligned.o [6]
+__iar_unaligned___aeabi_memmove4
+                        0x0800b729           Code  Gb  ABImemmove_unaligned.o [6]
+__iar_unaligned___aeabi_memmove8
+                        0x0800b729           Code  Gb  ABImemmove_unaligned.o [6]
+__iar_unaligned_memcmp  0x080024b1           Code  Gb  memcmp_unaligned.o [6]
+__iar_vfp_fmodf         0x0800d921           Code  Gb  fmodf.o [5]
+__iar_vfp_pow           0x0800de8b     0x18  Code  Gb  pow.o [5]
+__iar_xatanf            0x0800bd89           Code  Gb  xatanf.o [5]
+__iar_zero_init3        0x08010d39     0x40  Code  Gb  zero_init3.o [6]
+__low_level_init        0x08010f0f      0x4  Code  Gb  low_level_init.o [3]
+__print_result_location
+                        0x0800f779      0x2  Code  Lc  mpl.o [1]
+__print_result_location
+                        0x0800aa6d      0x2  Code  Lc  fast_no_motion.o [4]
+__print_result_location
+                        0x08007ea1      0x2  Code  Lc  accel_auto_cal.o [4]
+__vector_table          0x08000000           Data  Gb  startup_stm32f4xx.o [1]
+_call_main              0x08010f01           Code  Gb  cmain.o [6]
+_exit                   0x08010f19           Code  Gb  cexit.o [6]
+_gm_                    0x20017488    0x1d8  Data  Lc  dlmalloc.o [3]
+_main                   0x08010f0b           Code  Gb  cmain.o [6]
+abort                   0x080059b9      0x6  Code  Gb  abort.o [3]
+abs                     0x0800bd7f      0x8  Code  Gb  abs.o [3]
+accel_fusion            0x0800cc0d    0x1f2  Code  Lc  quaternion_supervisor.o [4]
+accel_self_test         0x080010a5     0xc2  Code  Lc  inv_mpu.o [1]
+atan2f                  0x0800b69d           Code  Gb  atan2f.o [5]
+auto_cal                0x20016d70    0x4b8  Data  Lc  accel_auto_cal.o [4]
+cos                     0x0800aa2b      0x6  Code  Gb  cos.o [5]
+counter                 0x200181dc      0x4  Data  Gb  imu.o [1]
+decode_gesture          0x0800c967     0x58  Code  Lc  inv_mpu_dmp_motion_driver.o [1]
+delay_ms                0x08002249      0xe  Code  Gb  freertos_time.o [1]
+div                     0x08007139      0xe  Code  Gb  div.o [3]
+dmp                     0x200181b0     0x10  Data  Lc  inv_mpu_dmp_motion_driver.o [1]
+dmp_enable_6x_lp_quat   0x0800c925     0x42  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_enable_feature      0x0800c671    0x230  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_enable_gyro_cal     0x0800c8a1     0x42  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_enable_lp_quat      0x0800c8e3     0x42  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_load_motion_driver_firmware
+                        0x0800c1c5     0x18  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_memory              0x080072a8    0xbf8  Data  Lc  inv_mpu_dmp_motion_driver.o [1]
+dmp_read_fifo           0x0800c9c5    0x220  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_fifo_rate       0x0800c32f     0x70  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_orientation     0x0800c1dd    0x152  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_shake_reject_thresh
+                        0x0800c5f3     0x32  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_shake_reject_time
+                        0x0800c625     0x26  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_shake_reject_timeout
+                        0x0800c64b     0x26  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_tap_axes        0x0800c539     0x46  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_tap_count       0x0800c57f     0x28  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_tap_thresh      0x0800c3a1    0x184  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_tap_time        0x0800c5a7     0x26  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+dmp_set_tap_time_multi  0x0800c5cd     0x26  Code  Gb  inv_mpu_dmp_motion_driver.o [1]
+ds                      0x200179bc    0x198  Data  Lc  storage_manager.o [1]
+eMPL_out                0x200180b0     0x28  Data  Lc  eMPL_outputs.o [1]
+exit                    0x08010f13      0x4  Code  Gb  exit.o [3]
+fmod                    0x0800c01d           Code  Gb  fmod.o [5]
+fmodf                   0x0800d925           Code  Gb  fmodf.o [5]
+fmodl                   0x0800c01d           Code  Gb  fmod.o [5]
+fnm                     0x20017228    0x260  Data  Gb  fast_no_motion.o [4]
+fnm_user                0x20018070     0x40  Data  Lc  fast_no_motion.o [4]
+get_accel_prod_shift    0x08000fd1     0xd0  Code  Lc  inv_mpu.o [1]
+get_st_biases           0x0800129d    0x476  Code  Lc  inv_mpu.o [1]
+get_tick_count          0x08002257     0x14  Code  Gb  freertos_time.o [1]
+gpio_init               0x08010a85     0x7a  Code  Gb  gpio.o [1]
+gyro_data_ready_cb      0x0800f057      0x8  Code  Gb  imu.o [1]
+gyro_pdata              0x20000008      0xc  Data  Lc  imu.o [1]
+gyro_self_test          0x08001169    0x114  Code  Lc  inv_mpu.o [1]
+hal                     0x200180d8     0x24  Data  Lc  imu.o [1]
+heapSTRUCT_SIZE         0x0800234a      0x2  Data  Lc  heap_2.o [1]
+hw                      0x08011038      0xc  Data  Gb  inv_mpu.o [1]
+i2c_init                0x08001b05     0xb0  Code  Gb  i2c.o [1]
+imu                     0x200181a0     0x10  Data  Gb  imu.o [1]
+imu_data                0x200181d8      0x4  Data  Gb  imu.o [1]
+imu_done                0x200181d4      0x4  Data  Gb  imu.o [1]
+imu_task                0x0800f065    0x236  Code  Gb  imu.o [1]
+init_hardware           0x080109e1     0x44  Code  Lc  main.o [1]
+init_mparams            0x080044e3     0x32  Code  Lc  dlmalloc.o [3]
+init_top                0x08004515     0x34  Code  Lc  dlmalloc.o [3]
+internal_Pow            0x0800da09    0x478  Code  Lc  pow.o [5]
+inv_9x_fusion_enable_jitter_reduction
+                        0x0800edb7      0xa  Code  Gb  fusion_9axis.o [4]
+inv_9x_fusion_use_timestamps
+                        0x0800edc1      0xa  Code  Gb  fusion_9axis.o [4]
+inv_add_accel_block_data
+                        0x08008367     0x9a  Code  Gb  accel_auto_cal.o [4]
+inv_apply_calibration   0x08009615     0x6a  Code  Gb  data_builder.o [1]
+inv_auto_calibrate      0x080085c9    0x32e  Code  Gb  accel_auto_cal.o [4]
+inv_build_accel         0x08009807     0xaa  Code  Gb  data_builder.o [1]
+inv_build_gyro          0x080098b1     0x44  Code  Gb  data_builder.o [1]
+inv_build_quat          0x0800992d     0x4a  Code  Gb  data_builder.o [1]
+inv_build_temp          0x080098f5     0x38  Code  Gb  data_builder.o [1]
+inv_check_coverage_set_bias
+                        0x080080b7    0x128  Code  Lc  accel_auto_cal.o [4]
+inv_check_push          0x08007f39    0x17e  Code  Lc  accel_auto_cal.o [4]
+inv_check_sample_balance
+                        0x08008401    0x18c  Code  Gb  accel_auto_cal.o [4]
+inv_combine_compass_data
+                        0x08009d01    0x154  Code  Gb  compass_vec_cal.o [4]
+inv_combine_data_calculate_bias
+                        0x080081df     0xb6  Code  Lc  accel_auto_cal.o [4]
+inv_compass_angle       0x08008aa1     0xa6  Code  Gb  ml_math_func.o [1]
+inv_compute_bias        0x0800a11d    0x6fe  Code  Gb  compass_vec_cal.o [4]
+inv_compute_quat_from_accel
+                        0x0800cdff    0x142  Code  Lc  quaternion_supervisor.o [4]
+inv_convert_to_body_with_scale
+                        0x080090ed     0x72  Code  Gb  ml_math_func.o [1]
+inv_data_builder        0x20017b54    0x140  Data  Lc  data_builder.o [1]
+inv_db_load_func        0x08009455     0x52  Code  Lc  data_builder.o [1]
+inv_db_save_func        0x080094a7     0x14  Code  Lc  data_builder.o [1]
+inv_detect_motion_by_gyro_accel
+                        0x0800b0e5     0xa4  Code  Gb  fast_no_motion.o [4]
+inv_disable_compass_soft_iron_matrix
+                        0x08009cad      0xa  Code  Gb  data_builder.o [1]
+inv_enable_9x_sensor_fusion
+                        0x0800edd7     0x1c  Code  Gb  fusion_9axis.o [4]
+inv_enable_eMPL_outputs
+                        0x0800f645     0x12  Code  Gb  eMPL_outputs.o [1]
+inv_enable_fast_nomot   0x0800b4f5     0x40  Code  Gb  fast_no_motion.o [4]
+inv_enable_gyro_tc      0x0800fc2b     0x36  Code  Gb  gyro_tc.o [4]
+inv_enable_in_use_auto_calibration
+                        0x08008959     0x40  Code  Gb  accel_auto_cal.o [4]
+inv_enable_quaternion   0x0800d5a9     0x18  Code  Gb  quaternion_supervisor.o [4]
+inv_enable_results_holder
+                        0x08009375     0x12  Code  Gb  results_holder.o [1]
+inv_execute_mpl_start_notification
+                        0x0800b66d     0x2a  Code  Gb  start_manager.o [1]
+inv_execute_on_data     0x08009a61     0x8e  Code  Gb  data_builder.o [1]
+inv_fast_nomot_get_time_elaps
+                        0x0800af81      0xc  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_parameter
+                        0x0800aad3    0x17a  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_parameter_3rd
+                        0x0800ac4d     0xf0  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_parameter_compass
+                        0x0800af8d     0x16  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_reset_data_compass
+                        0x0800af59     0x28  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_set_gyro_bias
+                        0x0800ad6f     0xfc  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_store_data
+                        0x0800ae6b     0x8e  Code  Gb  fast_no_motion.o [4]
+inv_fast_nomot_store_data_compass
+                        0x0800aef9     0x60  Code  Gb  fast_no_motion.o [4]
+inv_filter_correction_angle
+                        0x0800e853    0x184  Code  Gb  fusion_9axis.o [4]
+inv_find_synchronized_compass_angle
+                        0x0800e795     0xbe  Code  Lc  fusion_9axis.o [4]
+inv_generate_accel_gyro_quaternion
+                        0x0800d2fd    0x234  Code  Gb  quaternion_supervisor.o [4]
+inv_generate_eMPL_outputs
+                        0x0800f52d     0xf6  Code  Lc  eMPL_outputs.o [1]
+inv_generate_fast_nomot
+                        0x0800b215    0x228  Code  Gb  fast_no_motion.o [4]
+inv_generate_gyro_quaternion
+                        0x0800d01b    0x10e  Code  Gb  quaternion_supervisor.o [4]
+inv_generate_quaternion
+                        0x0800d531     0x58  Code  Lc  quaternion_supervisor.o [4]
+inv_generate_results    0x0800930f      0xa  Code  Gb  results_holder.o [1]
+inv_get_6axis_quaternion
+                        0x08009283     0x12  Code  Gb  results_holder.o [1]
+inv_get_accel_accuracy  0x08009c45      0x6  Code  Gb  data_builder.o [1]
+inv_get_accel_on        0x08009589      0xe  Code  Gb  data_builder.o [1]
+inv_get_accel_set       0x08009bf5     0x2c  Code  Gb  data_builder.o [1]
+inv_get_compass_on      0x0800956b     0x10  Code  Gb  data_builder.o [1]
+inv_get_current_calibrated_accel
+                        0x08007ef7     0x42  Code  Gb  accel_auto_cal.o [4]
+inv_get_gravity         0x0800921d     0x66  Code  Gb  results_holder.o [1]
+inv_get_gyro_accuracy   0x08009c29      0x6  Code  Gb  data_builder.o [1]
+inv_get_gyro_bias       0x080097e1     0x26  Code  Gb  data_builder.o [1]
+inv_get_gyro_bias_tc_set
+                        0x080097c3     0x1e  Code  Gb  data_builder.o [1]
+inv_get_gyro_on         0x0800957b      0xe  Code  Gb  data_builder.o [1]
+inv_get_gyro_sum_of_sqr
+                        0x08008b47     0x1a  Code  Gb  ml_math_func.o [1]
+inv_get_last_timestamp  0x08009597     0x6e  Code  Gb  data_builder.o [1]
+inv_get_linear_accel    0x08009393     0x42  Code  Gb  results_holder.o [1]
+inv_get_linear_accel_float
+                        0x080093d5     0x4c  Code  Gb  results_holder.o [1]
+inv_get_mag_accuracy    0x08009c2f     0x16  Code  Gb  data_builder.o [1]
+inv_get_magnetic_disturbance_state
+                        0x0800ee31      0x6  Code  Gb  mag_disturb.o [4]
+inv_get_motion_state    0x080091b5     0x12  Code  Gb  results_holder.o [1]
+inv_get_quaternion      0x08009295     0x34  Code  Gb  results_holder.o [1]
+inv_get_quaternion_set  0x080092c9     0x46  Code  Gb  results_holder.o [1]
+inv_get_sensor_type_euler_float
+                        0x0800f2f1    0x230  Code  Gb  eMPL_outputs.o [1]
+inv_gtc                 0x20017660    0x1c4  Data  Lc  gyro_tc.o [4]
+inv_gtc_add_data        0x0800f94f     0xaa  Code  Lc  gyro_tc.o [4]
+inv_gtc_compute_slope   0x0800f9f9    0x1fa  Code  Lc  gyro_tc.o [4]
+inv_gtc_data_cb         0x0800f861     0xc0  Code  Lc  gyro_tc.o [4]
+inv_gtc_get_bin         0x0800f921     0x2e  Code  Lc  gyro_tc.o [4]
+inv_gtc_load            0x0800f809     0x2a  Code  Lc  gyro_tc.o [4]
+inv_gtc_store           0x0800f833     0x2e  Code  Lc  gyro_tc.o [4]
+inv_if_enough_data      0x0800ad3d     0x32  Code  Lc  fast_no_motion.o [4]
+inv_init_9x_fusion      0x0800ed81     0x36  Code  Gb  fusion_9axis.o [4]
+inv_init_accel_maxmin   0x08007ea3     0x20  Code  Gb  accel_auto_cal.o [4]
+inv_init_check_sample_balance
+                        0x08008325     0x22  Code  Gb  accel_auto_cal.o [4]
+inv_init_check_sample_balance_parameter
+                        0x08008347     0x20  Code  Gb  accel_auto_cal.o [4]
+inv_init_data_builder   0x080094bb     0x3a  Code  Gb  data_builder.o [1]
+inv_init_eMPL_outputs   0x0800f633     0x12  Code  Lc  eMPL_outputs.o [1]
+inv_init_fast_nomot     0x0800b46d     0x52  Code  Gb  fast_no_motion.o [4]
+inv_init_gyro_ts        0x0800fbf3     0x2e  Code  Gb  gyro_tc.o [4]
+inv_init_in_use_auto_calibration
+                        0x080088f7     0x56  Code  Gb  accel_auto_cal.o [4]
+inv_init_maxmin         0x0800aa6f     0x64  Code  Gb  fast_no_motion.o [4]
+inv_init_mpl            0x0800f77b     0x5e  Code  Gb  mpl.o [1]
+inv_init_quaternion     0x0800d589     0x20  Code  Gb  quaternion_supervisor.o [4]
+inv_init_results_holder
+                        0x0800932b     0x4a  Code  Gb  results_holder.o [1]
+inv_init_start_manager  0x0800b635     0x12  Code  Gb  start_manager.o [1]
+inv_init_storage_manager
+                        0x0800b7a1     0x18  Code  Gb  storage_manager.o [1]
+inv_max_change          0x0800afa3     0x22  Code  Lc  fast_no_motion.o [4]
+inv_normalize_quat      0x0800cf41     0xda  Code  Lc  quaternion_supervisor.o [4]
+inv_orientation_matrix_to_scalar
+                        0x080090c7     0x26  Code  Gb  ml_math_func.o [1]
+inv_perform_9x_fusion   0x0800e9d7    0x32c  Code  Gb  fusion_9axis.o [4]
+inv_process_9x_sensor_fusion_cb
+                        0x0800ed03     0x7e  Code  Gb  fusion_9axis.o [4]
+inv_process_dmp_quaternion
+                        0x0800d129    0x1d4  Code  Lc  quaternion_supervisor.o [4]
+inv_q29_mult            0x08008b61      0xe  Code  Gb  ml_math_func.o [1]
+inv_q30_mult            0x08008b6f      0xe  Code  Gb  ml_math_func.o [1]
+inv_q30_to_float        0x08008a8d     0x12  Code  Lc  ml_math_func.o [1]
+inv_q_add               0x08008c43     0x26  Code  Gb  ml_math_func.o [1]
+inv_q_addf              0x08008da3     0x42  Code  Gb  ml_math_func.o [1]
+inv_q_invert            0x08008c71     0x18  Code  Gb  ml_math_func.o [1]
+inv_q_invertf           0x08008f75     0x2a  Code  Gb  ml_math_func.o [1]
+inv_q_mult              0x08008b7d     0xc6  Code  Gb  ml_math_func.o [1]
+inv_q_multf             0x08008cd1     0xd2  Code  Gb  ml_math_func.o [1]
+inv_q_norm4             0x08008eed     0x88  Code  Gb  ml_math_func.o [1]
+inv_q_normalizef        0x08008de5    0x104  Code  Gb  ml_math_func.o [1]
+inv_q_rotate            0x08008c91     0x40  Code  Gb  ml_math_func.o [1]
+inv_quat_data           0x20017f0c     0x6c  Data  Lc  quaternion_supervisor.o [4]
+inv_quaternion_to_rotation
+                        0x08008f9f     0xda  Code  Gb  ml_math_func.o [1]
+inv_record_good_accel_maxmin
+                        0x08007ec3     0x34  Code  Gb  accel_auto_cal.o [4]
+inv_record_max_moment_in_no_motion_accel
+                        0x0800b055     0x30  Code  Gb  fast_no_motion.o [4]
+inv_record_max_moment_in_no_motion_gyro
+                        0x0800b025     0x30  Code  Gb  fast_no_motion.o [4]
+inv_record_min_moment_in_motion_accel
+                        0x0800b0b5     0x30  Code  Gb  fast_no_motion.o [4]
+inv_record_min_moment_in_motion_gyro
+                        0x0800b085     0x30  Code  Gb  fast_no_motion.o [4]
+inv_register_data_cb    0x08009977     0xea  Code  Gb  data_builder.o [1]
+inv_register_load_store
+                        0x0800b7b9     0x86  Code  Gb  storage_manager.o [1]
+inv_register_mpl_start_notification
+                        0x0800b647     0x26  Code  Gb  start_manager.o [1]
+inv_reset_compass_soft_iron_matrix
+                        0x08009c5d     0x50  Code  Gb  data_builder.o [1]
+inv_reset_min_max_gyro_accel_statistics
+                        0x0800afc5     0x3a  Code  Gb  fast_no_motion.o [4]
+inv_reset_packet        0x0800afff     0x26  Code  Lc  fast_no_motion.o [4]
+inv_row_2_scale         0x08009079     0x4e  Code  Lc  ml_math_func.o [1]
+inv_sensor_data_preprocess
+                        0x0800b189     0x8a  Code  Gb  fast_no_motion.o [4]
+inv_set_accel_accuracy  0x080096cd     0x1c  Code  Gb  data_builder.o [1]
+inv_set_accel_bias      0x0800967f     0x4e  Code  Gb  data_builder.o [1]
+inv_set_accel_bias_found
+                        0x08009387      0x6  Code  Gb  results_holder.o [1]
+inv_set_accel_bias_mask
+                        0x080096e9     0x58  Code  Gb  data_builder.o [1]
+inv_set_accel_orientation_and_scale
+                        0x08009605     0x10  Code  Gb  data_builder.o [1]
+inv_set_accel_sample_rate
+                        0x08009539     0x32  Code  Gb  data_builder.o [1]
+inv_set_compass_bias_found
+                        0x0800938d      0x6  Code  Gb  results_holder.o [1]
+inv_set_compass_correction
+                        0x0800918b     0x2a  Code  Gb  results_holder.o [1]
+inv_set_contiguous      0x08009aef    0x106  Code  Lc  data_builder.o [1]
+inv_set_default_number_of_samples
+                        0x0800b43d     0x30  Code  Gb  fast_no_motion.o [4]
+inv_set_gyro_bias       0x08009741     0x82  Code  Gb  data_builder.o [1]
+inv_set_gyro_orientation_and_scale
+                        0x080094fb     0x10  Code  Gb  data_builder.o [1]
+inv_set_gyro_sample_rate
+                        0x0800950b     0x2e  Code  Gb  data_builder.o [1]
+inv_set_message         0x0800b709     0x1c  Code  Gb  message_layer.o [1]
+inv_set_motion_state    0x080091c7     0x56  Code  Gb  results_holder.o [1]
+inv_set_terms           0x08009e55    0x2c8  Code  Gb  compass_vec_cal.o [4]
+inv_sort_order_4_T      0x08008295     0x90  Code  Gb  accel_auto_cal.o [4]
+inv_start_9x_sensor_fusion
+                        0x0800edcb      0xc  Code  Gb  fusion_9axis.o [4]
+inv_start_cb            0x20017fdc     0x54  Data  Lc  start_manager.o [1]
+inv_start_eMPL_outputs  0x0800f623     0x10  Code  Lc  eMPL_outputs.o [1]
+inv_start_fast_nomot    0x0800b4bf     0x36  Code  Gb  fast_no_motion.o [4]
+inv_start_gyro_tc       0x0800fc21      0xa  Code  Gb  gyro_tc.o [4]
+inv_start_in_use_auto_calibration
+                        0x0800894d      0xc  Code  Gb  accel_auto_cal.o [4]
+inv_start_mpl           0x0800f7d9     0x22  Code  Gb  mpl.o [1]
+inv_start_quaternion    0x0800d5c5     0x26  Code  Gb  quaternion_supervisor.o [4]
+inv_start_results_holder
+                        0x08009319     0x12  Code  Gb  results_holder.o [1]
+inv_store_gaming_quaternion
+                        0x08009161     0x2a  Code  Gb  results_holder.o [1]
+labs                    0x080022eb      0x8  Code  Gb  labs.o [3]
+lnbias                  0x0800dea8    0x420  Data  Lc  pow.o [5]
+localeconv              0x08007107     0x16  Code  Gb  localeconv.o [3]
+mag_disturb             0x20017dcc     0xb8  Data  Gb  mag_disturb.o [4]
+main                    0x08010a25     0x40  Code  Gb  main.o [1]
+memchr                  0x08006a0d           Code  Gb  memchr.o [6]
+memcpy                  0x08009449      0xc  Code  Gb  memcpy.o [3]
+memmove                 0x0800943d      0xc  Code  Gb  memmove.o [6]
+memset                  0x0800b61f     0x14  Code  Gb  memset.o [3]
+mh                      0x200181e4      0x4  Data  Lc  message_layer.o [1]
+motors_task             0x08010bd9     0x90  Code  Gb  motors.o [1]
+mparams                 0x200180fc     0x18  Data  Lc  dlmalloc.o [3]
+mpl_key                 0x20000004      0x4  Data  Gb  imu.o [1]
+mpu_configure_fifo      0x08000b63     0x7e  Code  Gb  inv_mpu.o [1]
+mpu_get_accel_fsr       0x08000831     0x46  Code  Gb  inv_mpu.o [1]
+mpu_get_accel_sens      0x08000b0d     0x4c  Code  Gb  inv_mpu.o [1]
+mpu_get_fifo_config     0x08000b59      0xa  Code  Gb  inv_mpu.o [1]
+mpu_get_gyro_fsr        0x08000765     0x3c  Code  Gb  inv_mpu.o [1]
+mpu_get_gyro_sens       0x08000acb     0x3c  Code  Gb  inv_mpu.o [1]
+mpu_get_lpf             0x0800090b     0x4a  Code  Gb  inv_mpu.o [1]
+mpu_get_sample_rate     0x080009fd     0x1e  Code  Gb  inv_mpu.o [1]
+mpu_get_temperature     0x0800049d     0x98  Code  Gb  inv_mpu.o [1]
+mpu_init                0x08000241    0x15c  Code  Gb  inv_mpu.o [1]
+mpu_load_firmware       0x0800197d     0xe8  Code  Gb  inv_mpu.o [1]
+mpu_lp_accel_mode       0x0800039d     0xfe  Code  Gb  inv_mpu.o [1]
+mpu_read_fifo_stream    0x08000ccd     0xe4  Code  Gb  inv_mpu.o [1]
+mpu_read_mem            0x080018f5     0x88  Code  Gb  inv_mpu.o [1]
+mpu_reset_fifo          0x08000539    0x22c  Code  Gb  inv_mpu.o [1]
+mpu_run_self_test       0x08001719    0x14a  Code  Gb  inv_mpu.o [1]
+mpu_set_accel_fsr       0x08000877     0x94  Code  Gb  inv_mpu.o [1]
+mpu_set_bypass          0x08000db1    0x196  Code  Gb  inv_mpu.o [1]
+mpu_set_dmp_state       0x08001a65     0x94  Code  Gb  inv_mpu.o [1]
+mpu_set_gyro_fsr        0x080007a1     0x90  Code  Gb  inv_mpu.o [1]
+mpu_set_int_latched     0x08000f47     0x88  Code  Gb  inv_mpu.o [1]
+mpu_set_lpf             0x0800095d     0xa0  Code  Gb  inv_mpu.o [1]
+mpu_set_sample_rate     0x08000a1b     0xb0  Code  Gb  inv_mpu.o [1]
+mpu_set_sensors         0x08000be1     0xe8  Code  Gb  inv_mpu.o [1]
+mpu_write_mem           0x08001863     0x92  Code  Gb  inv_mpu.o [1]
+pcInterruptPriorityRegisters
+                        0x080110d4      0x4  Data  Lc  port.o [1]
+prepend_alloc           0x08004549    0x36c  Code  Lc  dlmalloc.o [3]
+printf2                 0x0800f741     0x38  Code  Gb  printf2.o [1]
+printf2_init            0x0800f675     0x94  Code  Gb  printf2.o [1]
+prvAddCurrentTaskToDelayedList
+                        0x080033f9     0x80  Code  Lc  tasks.o [1]
+prvAddNewTaskToReadyList
+                        0x08002afb     0xc0  Code  Lc  tasks.o [1]
+prvCheckForValidListAndQueue
+                        0x08003c17     0x4c  Code  Lc  timers.o [1]
+prvCheckTasksWaitingTermination
+                        0x0800319d     0x64  Code  Lc  tasks.o [1]
+prvCopyDataFromQueue    0x08004305     0x2a  Code  Lc  queue.o [1]
+prvCopyDataToQueue      0x08004283     0x82  Code  Lc  queue.o [1]
+prvDeleteTCB            0x08003201     0x12  Code  Lc  tasks.o [1]
+prvGetNextExpireTime    0x08003a35     0x28  Code  Lc  timers.o [1]
+prvHeapInit             0x080035ad     0x26  Code  Lc  heap_2.o [1]
+prvIdleTask             0x08003111     0x28  Code  Lc  tasks.o [1]
+prvInitialiseNewQueue   0x08003e35     0x22  Code  Lc  queue.o [1]
+prvInitialiseNewTask    0x08002a4b     0xb0  Code  Lc  tasks.o [1]
+prvInitialiseTaskLists  0x0800313d     0x54  Code  Lc  tasks.o [1]
+prvInsertTimerInActiveList
+                        0x08003a85     0x3e  Code  Lc  timers.o [1]
+prvIsQueueEmpty         0x0800439d     0x1c  Code  Lc  queue.o [1]
+prvIsQueueFull          0x080043b9     0x1e  Code  Lc  queue.o [1]
+prvProcessExpiredTimer  0x08003953     0x5a  Code  Lc  timers.o [1]
+prvProcessReceivedCommands
+                        0x08003ac3     0xd6  Code  Lc  timers.o [1]
+prvProcessTimerOrBlockTask
+                        0x080039c5     0x70  Code  Lc  timers.o [1]
+prvResetNextTaskUnblockTime
+                        0x08003213     0x28  Code  Lc  tasks.o [1]
+prvSampleTimeNow        0x08003a5d     0x28  Code  Lc  timers.o [1]
+prvSwitchTimerLists     0x08003b99     0x7e  Code  Lc  timers.o [1]
+prvTaskExitError        0x080036b1     0x2a  Code  Lc  port.o [1]
+prvTimerTask            0x080039b1     0x14  Code  Lc  timers.o [1]
+prvUnlockQueue          0x0800432f     0x6e  Code  Lc  queue.o [1]
+pvPortMalloc            0x080034bd     0xb6  Code  Gb  heap_2.o [1]
+pvTaskIncrementMutexHeldCount
+                        0x080033bb     0x1e  Code  Gb  tasks.o [1]
+pwm_get_prescaler       0x08010851     0x36  Code  Gb  pwm.o [1]
+pwm_gpio_init           0x08010735     0x5c  Code  Lc  pwm.o [1]
+pwm_init                0x08010725     0x10  Code  Gb  pwm.o [1]
+pwm_output_compare_init
+                        0x080107e1     0x6e  Code  Lc  pwm.o [1]
+pwm_timebase_init       0x08010791     0x50  Code  Lc  pwm.o [1]
+pxCurrentTCB            0x200181f8      0x4  Data  Gb  tasks.o [1]
+pxCurrentTimerList      0x20018234      0x4  Data  Lc  timers.o [1]
+pxDelayedTaskList       0x200181fc      0x4  Data  Lc  tasks.o [1]
+pxOverflowDelayedTaskList
+                        0x20018200      0x4  Data  Lc  tasks.o [1]
+pxOverflowTimerList     0x20018238      0x4  Data  Lc  timers.o [1]
+pxPortInitialiseStack   0x08003689     0x28  Code  Gb  port.o [1]
+pxReadyTasksLists       0x20017f78     0x64  Data  Lc  tasks.o [1]
+read_from_mpl_float     0x0800ee3d     0xa4  Code  Lc  imu.o [1]
+reg                     0x08010e64     0x20  Data  Gb  inv_mpu.o [1]
+rh                      0x20017e84     0x88  Data  Lc  results_holder.o [1]
+run_self_test           0x0800eee1    0x176  Code  Lc  imu.o [1]
+s9axis                  0x20017c94    0x138  Data  Gb  fusion_9axis.o [4]
+sStartAddress           0x0800237a      0x2  Data  Lc  inv_mpu_dmp_motion_driver.o [1]
+scale                   0x080064c3     0x46  Code  Lc  xprintflarge.o [3]
+segment_holding         0x080044c9     0x1a  Code  Lc  dlmalloc.o [3]
+sensors                 0x20017824    0x198  Data  Lc  data_builder.o [1]
+set_int_enable          0x08000189     0xb8  Code  Lc  inv_mpu.o [1]
+set_sample_rate         0x0800858d     0x3c  Code  Lc  accel_auto_cal.o [4]
+set_sensor_orientation_and_scale
+                        0x080094f5      0x6  Code  Gb  data_builder.o [1]
+sqrt                    0x0800a875           Code  Gb  sqrt.o [5]
+sqrtf                   0x0800aa41           Code  Gb  sqrtf.o [5]
+sqrtl                   0x0800a875           Code  Gb  sqrt.o [5]
+st                      0x20000014     0x2c  Data  Lc  inv_mpu.o [1]
+strchr                  0x080069bd           Code  Gb  strchr.o [6]
+strlen                  0x080069d5           Code  Gb  strlen.o [6]
+sys_alloc               0x080048b5    0x386  Code  Lc  dlmalloc.o [3]
+test                    0x08010db0     0x28  Data  Gb  inv_mpu.o [1]
+tmalloc_large           0x08004c49    0x390  Code  Lc  dlmalloc.o [3]
+tmalloc_small           0x08004fd9    0x210  Code  Lc  dlmalloc.o [3]
+ts2                     0x200181e0      0x4  Data  Gb  imu.o [1]
+uart_init               0x08010945     0x9c  Code  Gb  uart.o [1]
+ucHeap                  0x20004170  0x12c00  Data  Lc  heap_2.o [1]
+ucMaxSysCallPriority    0x20018250      0x1  Data  Lc  port.o [1]
+ulMaxPRIGROUPValue      0x200181e8      0x4  Data  Lc  port.o [1]
+ulRegTest1LoopCounter   0x200181ec      0x4  Data  Gb  reg_test.o [1]
+ulRegTest2LoopCounter   0x200181f0      0x4  Data  Gb  reg_test.o [1]
+ulRegTestCheckFlopRegistersContainParameterValue
+                        0x0801019b           Code  Gb  RegTest.o [1]
+uxCriticalNesting       0x20000040      0x4  Data  Lc  port.o [1]
+uxCurrentNumberOfTasks  0x20018208      0x4  Data  Lc  tasks.o [1]
+uxDeletedTasksWaitingCleanUp
+                        0x20018204      0x4  Data  Lc  tasks.o [1]
+uxListRemove            0x08003663     0x26  Code  Gb  list.o [1]
+uxPendedTicks           0x20018218      0x4  Data  Lc  tasks.o [1]
+uxSchedulerSuspended    0x20018230      0x4  Data  Lc  tasks.o [1]
+uxTaskNumber            0x20018224      0x4  Data  Lc  tasks.o [1]
+uxTopReadyPriority      0x20018210      0x4  Data  Lc  tasks.o [1]
+vApplicationIdleHook    0x08003c9f      0x2  Code  Gb  application_hooks.o [1]
+vApplicationMallocFailedHook
+                        0x08003c8f     0x10  Code  Gb  application_hooks.o [1]
+vApplicationStackOverflowHook
+                        0x08003ca1     0x10  Code  Gb  application_hooks.o [1]
+vApplicationTickHook    0x08003c8d      0x2  Code  Gb  application_hooks.o [1]
+vListInitialise         0x080035f1     0x1e  Code  Gb  list.o [1]
+vListInitialiseItem     0x0800360f      0x6  Code  Gb  list.o [1]
+vListInsert             0x0800362d     0x36  Code  Gb  list.o [1]
+vListInsertEnd          0x08003615     0x18  Code  Gb  list.o [1]
+vPortEnableVFP          0x08003d3d           Code  Gb  portasm.o [1]
+vPortEnterCritical      0x08003773     0x3a  Code  Gb  port.o [1]
+vPortExitCritical       0x080037ad     0x32  Code  Gb  port.o [1]
+vPortFree               0x08003573     0x3a  Code  Gb  heap_2.o [1]
+vPortSetupTimerInterrupt
+                        0x08003807     0x1a  Code  Wk  port.o [1]
+vPortStartFirstTask     0x08003d25           Code  Gb  portasm.o [1]
+vPortValidateInterruptPriority
+                        0x08003821     0x4a  Code  Gb  port.o [1]
+vQueueAddToRegistry     0x080043d7     0x24  Code  Gb  queue.o [1]
+vQueueWaitForMessageRestricted
+                        0x08004405     0x4a  Code  Gb  queue.o [1]
+vRegTest1Task           0x0800fe5d           Code  Gb  RegTest.o [1]
+vRegTest2Task           0x0800ffe7           Code  Gb  RegTest.o [1]
+vRegTestClearFlopRegistersToParameterValue
+                        0x08010179           Code  Gb  RegTest.o [1]
+vTaskDelay              0x08002bbb     0x4c  Code  Gb  tasks.o [1]
+vTaskMissedYield        0x08003101      0xa  Code  Gb  tasks.o [1]
+vTaskPlaceOnEventList   0x08002f51     0x2e  Code  Gb  tasks.o [1]
+vTaskPlaceOnEventListRestricted
+                        0x08002f7f     0x38  Code  Gb  tasks.o [1]
+vTaskPriorityInherit    0x0800325d     0xaa  Code  Gb  tasks.o [1]
+vTaskSetTimeOutState    0x08003053     0x26  Code  Gb  tasks.o [1]
+vTaskStartScheduler     0x08002c07     0x6e  Code  Gb  tasks.o [1]
+vTaskSuspendAll         0x08002c75     0x10  Code  Gb  tasks.o [1]
+vTaskSwitchContext      0x08002eb1     0xa0  Code  Gb  tasks.o [1]
+vsnprintf               0x0800fdb9     0x3c  Code  Gb  vsnprint.o [3]
+vsprintf                0x0800fdf5     0x2c  Code  Gb  vsprintf.o [3]
+xActiveTimerList1       0x20018178     0x14  Data  Lc  timers.o [1]
+xActiveTimerList2       0x2001818c     0x14  Data  Lc  timers.o [1]
+xDelayedTaskList1       0x20018114     0x14  Data  Lc  tasks.o [1]
+xDelayedTaskList2       0x20018128     0x14  Data  Lc  tasks.o [1]
+xEnd                    0x200181c8      0x8  Data  Lc  heap_2.o [1]
+xFreeBytesRemaining     0x20000000      0x4  Data  Lc  heap_2.o [1]
+xIdleTaskHandle         0x2001822c      0x4  Data  Lc  tasks.o [1]
+xNextTaskUnblockTime    0x20018228      0x4  Data  Lc  tasks.o [1]
+xNumOfOverflows         0x20018220      0x4  Data  Lc  tasks.o [1]
+xPendingReadyList       0x2001813c     0x14  Data  Lc  tasks.o [1]
+xPortStartScheduler     0x080036db     0x98  Code  Gb  port.o [1]
+xQueueGenericCreate     0x08003deb     0x4a  Code  Gb  queue.o [1]
+xQueueGenericReceive    0x080040c5    0x1be  Code  Gb  queue.o [1]
+xQueueGenericReset      0x08003d59     0x92  Code  Gb  queue.o [1]
+xQueueGenericSend       0x08003e57    0x196  Code  Gb  queue.o [1]
+xQueueGenericSendFromISR
+                        0x08003fed     0xd8  Code  Gb  queue.o [1]
+xQueueRegistry          0x20018030     0x40  Data  Gb  queue.o [1]
+xSchedulerRunning       0x20018214      0x4  Data  Lc  tasks.o [1]
+xStart                  0x200181c0      0x8  Data  Lc  heap_2.o [1]
+xSuspendedTaskList      0x20018164     0x14  Data  Lc  tasks.o [1]
+xTaskCheckForTimeOut    0x08003081     0x80  Code  Gb  tasks.o [1]
+xTaskCreate             0x080029d5     0x76  Code  Gb  tasks.o [1]
+xTaskGetSchedulerState  0x0800323b     0x20  Code  Gb  tasks.o [1]
+xTaskGetTickCount       0x08002d7f      0x8  Code  Gb  tasks.o [1]
+xTaskIncrementTick      0x08002d87    0x12a  Code  Gb  tasks.o [1]
+xTaskPriorityDisinherit
+                        0x08003307     0xb4  Code  Gb  tasks.o [1]
+xTaskRemoveFromEventList
+                        0x08002fd1     0x82  Code  Gb  tasks.o [1]
+xTaskResumeAll          0x08002c85     0xfa  Code  Gb  tasks.o [1]
+xTasksWaitingTermination
+                        0x20018150     0x14  Data  Lc  tasks.o [1]
+xTickCount              0x2001820c      0x4  Data  Lc  tasks.o [1]
+xTimerCreateTimerTask   0x0800389d     0x48  Code  Gb  timers.o [1]
+xTimerGenericCommand    0x080038e5     0x6e  Code  Gb  timers.o [1]
+xTimerQueue             0x2001823c      0x4  Data  Lc  timers.o [1]
+xTimerTaskHandle        0x20018240      0x4  Data  Lc  timers.o [1]
+xYieldPending           0x2001821c      0x4  Data  Lc  tasks.o [1]
+
+
+[1] = C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj
+[2] = command line
+[3] = dl7M_tlf.a
+[4] = libmpllib.a
+[5] = m7M_tls.a
+[6] = rt7M_tl.a
+[7] = shb_l.a
+
+  66 412 bytes of readonly  code memory
+   3 883 bytes of readonly  data memory
+  98 891 bytes of readwrite data memory
+
+Errors: none
+Warnings: 9
