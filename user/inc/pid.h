@@ -16,6 +16,6 @@ typedef struct{
     float k_d;
 }pid_data_t;
 
-void pid_calc(pid_data_t* pid, float dt);
+void pid_calc(pid_data_t* pid, unsigned long dt);
 
 #endif

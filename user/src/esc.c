@@ -12,8 +12,12 @@
 #define ESC_RUN_MIN 1173
 #define ESC_RUN_MAX 1860
 
+
 void esc_set_speed(esc_t *esc)
 {
+#ifdef DEBUG
+    printf2(" duty: %.4f ", esc->speed); 
+#endif
 	pwm_set_duty_cycle(esc->pin_number, esc->run_min + (uint16_t)(esc->speed * (esc->run_max - esc->run_min)));
 }
 
@@ -27,7 +31,7 @@ void esc_init(esc_t *esc, uint16_t pin)
 	delay_ms(500);
 	esc_set_speed(esc);
 	delay_ms(2500);
-
+    
 	esc->run_min = (((SystemCoreClock/1000)/ (2 * prescaler)) * (ESC_RUN_MIN));
 	esc->run_max = (((SystemCoreClock/1000)/ (2 * prescaler)) * (ESC_RUN_MAX));
 	esc->lift_quad_min = 0;

@@ -192,6 +192,7 @@
           <state>EMPL</state>
           <state>MPU6050</state>
           <state>EMPL_TARGET_STM32F4</state>
+          <state>xDEBUG</state>
         </option>
         <option>
           <name>CCPreprocFile</name>

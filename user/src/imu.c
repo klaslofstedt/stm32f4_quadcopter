@@ -24,7 +24,7 @@
 //#include "log.h"
 //#include "packet.h"
 xSemaphoreHandle imu_done = NULL;
-//xSemaphoreHandle gyro_new = NULL;
+xSemaphoreHandle gyro_new = NULL;
 xQueueHandle imu_data = 0;
 
 volatile uint32_t hal_timestamp = 0;
@@ -138,22 +138,28 @@ static void read_from_mpl_float(void)
         imu.dt = ts1 - ts2;
         ts2 = ts1;
         
-        if(counter >= 10){
+        if(!xQueueSend(imu_data, &imu, 1000)){
+            printf2("xQueueSend failed\n\r");
+        }
+        xSemaphoreGive(imu_done);
+        //taskYIELD();
+        
+        /*if(counter >= 10){
             counter = 0; 
             //printf2("dt: %d\n\r", (imu.dt));
             //ts_tot = 0;
             //printf2("ts2: %d\n\r", (timestamp2));
             
-            /*printf2(" roll: %7.4f", imu.roll);
-            printf2(" pitch: %7.4f", imu.pitch);
-            printf2(" yaw: %7.4f\n\r", imu.yaw);*/
+            //printf2(" roll: %7.4f", imu.roll);
+            //printf2(" pitch: %7.4f", imu.pitch);
+            //printf2(" yaw: %7.4f\n\r", imu.yaw);
             if(!xQueueSend(imu_data, &imu, 100)){
                 printf2("xQueueSend failed\n\r");
             }
             xSemaphoreGive(imu_done);
             //taskYIELD();
         }
-        counter++;
+        counter++;*/
     }
 }
 
@@ -299,8 +305,8 @@ void imu_task(void *pvParameters)
 {    
     printf2("start2\n\r");
 
-    imu_data = xQueueCreate(10, sizeof(imu_data_t));
-    //vSemaphoreCreateBinary(gyro_new);
+    imu_data = xQueueCreate(1, sizeof(imu_data_t));
+    vSemaphoreCreateBinary(gyro_new);
     vSemaphoreCreateBinary(imu_done);
     
     //-------------------------------------dmp--------------------------
@@ -505,8 +511,8 @@ void imu_task(void *pvParameters)
     
     while(1){
         //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){
-            //printf2("waste\n\r");
-        //if(hal.new_gyro == 1){
+        if(hal.new_gyro == 1){
+            //printf2("interrupt\n\r"); // går i 200hz medan resten går i 20hz
             unsigned long sensor_timestamp;
             int new_data = 0;
             /*if (USART_GetITStatus(USART2, USART_IT_RXNE)) {
@@ -671,7 +677,7 @@ void imu_task(void *pvParameters)
                 read_from_mpl_float();
             }
             //hal.new_gyro = 0;
-        //}
+        }
     }
 }
 
