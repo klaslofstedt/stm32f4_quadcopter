@@ -26,8 +26,11 @@ static void init_hardware(void)
 {
     // Setup STM32 system (clock, PLL and Flash configuration)
     SystemInit();
+    printf2_init();
     // Update the system clock variable (might not have been set before)
-    SystemCoreClockUpdate();                               
+    printf2("coreclock%d\n\r", SystemCoreClock);
+    SystemCoreClockUpdate();
+    printf2("coreclock%d\n\r", SystemCoreClock);
 
     // Enable PWR APB1 Clock
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
@@ -44,7 +47,8 @@ static void init_hardware(void)
     pwm_init();
     i2c_init(); 
     uart_init();
-    printf2_init();
+    //printf2_init();
+    
     
     // Ensure all priority bits are assigned as preemption priority bits
     NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );

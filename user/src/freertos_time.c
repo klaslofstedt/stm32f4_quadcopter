@@ -9,7 +9,7 @@ void delay_ms(uint32_t delay_time)
     // As long as the configTICK_RATE_HZ = portTICK_PERIOD_MS = 100000
     // times 100 is required. With 1000 (default) instead of 100000, just remove
     // the 100. This is a quick fix that should get a better solution.
-    vTaskDelay(SYSTICK_FREQUENCY / 1000 * delay_time / portTICK_PERIOD_MS);
+    vTaskDelay((SYSTICK_FREQUENCY / 1000) * (delay_time / portTICK_PERIOD_MS));
 }
 
 int get_tick_count(unsigned long *count)

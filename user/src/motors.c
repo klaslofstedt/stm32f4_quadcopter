@@ -27,6 +27,9 @@ pid_data_t roll = {
 	.set_point = 0,
 	.i_term = 0,
 	.output = 0,
+    /*.k_p = 0.0100,
+    .k_i = 0.0,
+    .k_d = 0*/
     .k_p = 0.0060 ,
     .k_i = 0.0,
     .k_d = 0.0018
@@ -38,6 +41,9 @@ pid_data_t pitch = {
 	.set_point = 0,
 	.i_term = 0,
 	.output = 0,
+    /*.k_p = 0.0100,
+    .k_i = 0.0,
+    .k_d = 0*/
     .k_p = 0.0060 ,
     .k_i = 0.0,
     .k_d = 0.0018
@@ -54,10 +60,11 @@ pid_data_t yaw = {
     .k_d = 0.0018
 };
 
-
+// den oscillerar lite
 static void motors_set(float roll, float pitch)
 {
-    float thrust = 0.10;//((float)USART1_RxByte) /100;
+    float thrust = 0.40; // sänk och ladda batteri
+    //((float)USART1_RxByte) /100;
     
     esc2.speed = thrust - pitch + roll; // - yawValue;
     esc1.speed = thrust + pitch + roll; // + yawValue;

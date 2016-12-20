@@ -5,7 +5,7 @@
 
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
-    dt = 5000;
+    dt = 3333;
     float p_term, i_term, d_term, error, output, input_rate;
     
     // Calculate input rate from old and new state instead from EKF output
