@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1767809460
+Checksum=-130911143
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -60,7 +60,7 @@ ProbeSetup0=2 1 1 2 0 0
 [JLinkDriver]
 CStepIntDis=_ 0
 [StLinkDriver]
-stlinkserialNo=F7A6E6E5
+stlinkserialNo=2798FD0D
 stlinkfoundProbes=
 CStepIntDis=_ 0
 [CodeCoverage]
@@ -107,6 +107,10 @@ ShowTimeLog=1
 SumEnabled=0
 ShowTimeSum=1
 SumSortOrder=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -124,10 +128,6 @@ ShowTiming=1
 mode=0
 [Breakpoints2]
 Count=0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -30,9 +30,9 @@ pid_data_t roll = {
     /*.k_p = 0.0100,
     .k_i = 0.0,
     .k_d = 0*/
-    .k_p = 0.0060 ,
+    .k_p = 0.0065,
     .k_i = 0.0,
-    .k_d = 0.0018
+    .k_d = 9.0
 };
 
 pid_data_t pitch = {
@@ -44,9 +44,9 @@ pid_data_t pitch = {
     /*.k_p = 0.0100,
     .k_i = 0.0,
     .k_d = 0*/
-    .k_p = 0.0060 ,
+    .k_p = 0.0065,
     .k_i = 0.0,
-    .k_d = 0.0018
+    .k_d = 9.0 // testa 9! (0,0018 *5000 = 9)
 };
 
 pid_data_t yaw = {
@@ -55,6 +55,10 @@ pid_data_t yaw = {
 	.set_point = 0,
 	.i_term = 0,
 	.output = 0,
+    /*
+    .k_p = 0.0065 ,
+    .k_i = 0.0,
+    .k_d = 0.003*/
     .k_p = 0.0060 ,
     .k_i = 0.0,
     .k_d = 0.0018
@@ -63,7 +67,7 @@ pid_data_t yaw = {
 // den oscillerar lite
 static void motors_set(float roll, float pitch)
 {
-    float thrust = 0.40; // sänk och ladda batteri
+    float thrust = 0.45; // sänk och ladda batteri
     //((float)USART1_RxByte) /100;
     
     esc2.speed = thrust - pitch + roll; // - yawValue;
@@ -82,7 +86,6 @@ static void motors_set(float roll, float pitch)
     esc_set_speed(&esc4);
 }
 
-unsigned long ms1 = 0, ms2 = 0;
 void motors_task(void *pvParameters)
 {
     imu_data_t imu;
@@ -93,9 +96,9 @@ void motors_task(void *pvParameters)
     
     
     while(1){
-        if( xSemaphoreTake(imu_done, portMAX_DELAY) == pdTRUE ){
-            if(!xQueueReceive(imu_data, &imu, 1000)){
-                printf2("xQueueReceived failed\n\r");
+        if(xSemaphoreTake(imu_done, portMAX_DELAY) == pdTRUE){
+            if(!xQueueReceive(imu_data, &imu, 1000)){ // 1000 ms?
+                printf2("No IMU data in queue\n\r");
             }
             /*printf2("dt: %d\n\r", (imu.dt));
             printf2(" roll: %7.4f", imu.roll);
@@ -108,20 +111,17 @@ void motors_task(void *pvParameters)
             
             pid_calc(&roll, imu.dt);
             pid_calc(&pitch, imu.dt);
-            pid_calc(&yaw, imu.dt);
-            get_tick_count(&ms2);
+            //pid_calc(&yaw, imu.dt);
+            //get_tick_count(&ms2);
 #ifdef DEBUG
-            printf2("ms: %d", ms2 - ms1);
-            ms1 = ms2;
-            printf2("dt: %d", imu.dt);
-            printf2("\n\r");
+            printf2("dt: %d\n\r", imu.dt);
 #endif
             
             motors_set(roll.output, pitch.output);
        
             // ta emot köad data från IMU
             
-            // FÅR VI UT RATE AV DMP??
+            // FÅR MAN INTE UT RATE AV DMP??
             //taskYIELD();
         }
     }

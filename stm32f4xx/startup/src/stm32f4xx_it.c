@@ -27,7 +27,7 @@
 #include "stm32f4xx_tim.h"  
 #include "stm32f4xx_gpio.h" 
 #include "imu.h"
-//#include "printf2.h"
+#include "printf2.h"
       
 /** @addtogroup Template_Project
   * @{
@@ -40,6 +40,10 @@
 __IO uint16_t IC2Value = 0;
 __IO uint16_t DutyCycle = 0;
 __IO uint32_t Frequency = 0;
+
+__IO uint16_t ic1_val = 0, ic2_val = 0, ic3_val = 0, ic4_val = 0;
+__IO uint16_t ic1_duty = 0, ic2_duty = 0, ic3_duty = 0, ic4_duty = 0;
+__IO uint32_t ic1_freq = 0, ic2_freq = 0, ic3_freq = 0, ic4_freq = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -209,9 +213,84 @@ void TIM4_IRQHandler(void)
   * @retval None
   */
  
-void EXTI1_IRQHandler(void)
+void EXTI4_IRQHandler(void)
 {
   /* Handle new gyro*/
   gyro_data_ready_cb();
-  EXTI_ClearITPendingBit(EXTI_Line1);
+  EXTI_ClearITPendingBit(EXTI_Line4);
+}
+
+void TIM2_IRQHandler(void)
+{
+    // Clear TIM2 Capture compare interrupt pending bit
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC3);
+    TIM_ClearITPendingBit(TIM2, TIM_IT_CC4);
+    
+    // Get the Input Capture value
+    ic1_val = TIM_GetCapture1(TIM2);
+    ic2_val = TIM_GetCapture2(TIM2);
+    ic3_val = TIM_GetCapture3(TIM2);
+    ic4_val = TIM_GetCapture4(TIM2);
+    
+    if (ic1_val != 0)
+    {
+        //Duty cycle computation
+        ic1_duty = (TIM_GetCapture1(TIM2) * 100) / ic1_val;
+        //Frequency computation
+        ic1_freq = SystemCoreClock / ic1_val;
+        printf2("duty: %d", ic1_duty);
+        printf2("freq: %d\n\r", ic1_freq);
+    }
+    else
+    {
+        ic1_duty = 0;
+        ic1_freq = 0;
+    }
+    
+    if (ic2_val != 0)
+    {
+        //Duty cycle computation
+        ic2_duty = (TIM_GetCapture2(TIM2) * 100) / ic2_val;
+        //Frequency computation
+        ic2_freq = SystemCoreClock / ic2_val;
+        printf2("duty: %d", ic2_duty);
+        printf2("freq: %d\n\r", ic2_freq);
+    }
+    else
+    {
+        ic2_duty = 0;
+        ic2_freq = 0;
+    }
+    
+    if (ic3_val != 0)
+    {
+        //Duty cycle computation
+        ic3_duty = (TIM_GetCapture3(TIM2) * 100) / ic3_val;
+        //Frequency computation
+        ic3_freq = SystemCoreClock / ic3_val;
+        printf2("duty: %d", ic3_duty);
+        printf2("freq: %d\n\r", ic3_freq);
+    }
+    else
+    {
+        ic3_duty = 0;
+        ic3_freq = 0;
+    }
+
+    if (ic4_val != 0)
+    {
+        //Duty cycle computation
+        ic4_duty = (TIM_GetCapture4(TIM2) * 100) / ic4_val;
+        //Frequency computation
+        ic4_freq = SystemCoreClock / ic4_val;
+        printf2("duty: %d", ic4_duty);
+        printf2("freq: %d\n\r", ic4_freq);
+    }
+    else
+    {
+        ic4_duty = 0;
+        ic4_freq = 0;
+    }
 }
