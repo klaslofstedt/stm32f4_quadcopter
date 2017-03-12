@@ -4,6 +4,7 @@
 
 
 void motors_task(void *pvParameters);
+void print_task(void *pvParameters);
 
 #endif
 

@@ -30,6 +30,7 @@ extern "C" {
     int inv_get_sensor_type_rot_mat(long *data, int8_t *accuracy, inv_time_t *timestamp);
     int inv_get_sensor_type_heading(long *data, int8_t *accuracy, inv_time_t *timestamp);
     int inv_get_sensor_type_euler_float(float *data, int8_t *accuracy, inv_time_t *timestamp);
+    int inv_get_sensor_type_gyro_float(float *data, int8_t *accuracy, inv_time_t *timestamp);
 
     inv_error_t inv_enable_eMPL_outputs(void);
     inv_error_t inv_disable_eMPL_outputs(void);

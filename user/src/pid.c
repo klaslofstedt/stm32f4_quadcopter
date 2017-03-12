@@ -5,7 +5,7 @@
 
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
-    dt = 3333;
+    //dt = 3333;
     // These are used for ease to read
     float p_term, i_term, d_term, error, output, input_rate;
     

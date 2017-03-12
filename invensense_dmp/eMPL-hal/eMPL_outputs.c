@@ -68,6 +68,27 @@ int inv_get_sensor_type_gyro(long *data, int8_t *accuracy, inv_time_t *timestamp
     else
         return 0;
 }
+                              
+/**
+ *  @brief      Angular velocity (degrees per second) in body frame.
+ *  @param[out] data        Angular velocity in dps, floating point.
+ *  @param[out] accuracy    Accuracy of the measurement from 0 (least accurate)
+ *                          to 3 (most accurate).
+ *  @param[out] timestamp   The time in milliseconds when this sensor was read.
+ *  @return     1 if data was updated. 
+ */
+int inv_get_sensor_type_gyro_float(float *data, int8_t *accuracy, inv_time_t *timestamp)
+{
+    long *values;
+    inv_get_gyro_set(values, accuracy, timestamp);
+    data[0] = (float)(values[0] / 65536.f);
+    data[1] = (float)(values[1] / 65536.f);
+    data[2] = (float)(values[2] / 65536.f);
+    if (eMPL_out.gyro_status & INV_NEW_DATA)
+        return 1;
+    else
+        return 0;
+}
 
 /**
  *  @brief      Magnetic field strength in body frame.

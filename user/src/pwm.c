@@ -13,7 +13,158 @@ static void pwm_gpio_init(void);
 static void pwm_timebase_init(void);
 static void pwm_output_compare_init(void);
 
-void pwm_input_init(void)
+void pwm_input_init1(void)
+{
+}
+
+void pwm_input_init2(void)
+{
+}
+
+void pwm_input_init3(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    // TIM2 clock enable
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM13, ENABLE);
+    
+    // GPIOB clock enable
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    
+    // TIM2 chennel2 configuration : PB.03
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP ;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    // Connect TIM pin to AF2 
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_TIM13);
+    
+    // Enable the TIM2 global Interrupt
+    NVIC_InitTypeDef NVIC_InitStructure;
+    
+    NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_TIM13_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1; // second lowest interrupt level
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1; // second lowest sub int level
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    
+    /* ---------------------------------------------------------------------------
+    TIM2 configuration: PWM Input mode
+    The external signal is connected to TIM2 CH2 pin (PB.03)
+    TIM2 CCR2 is used to compute the frequency value
+    TIM2 CCR1 is used to compute the duty cycle value
+    
+    In this example TIM2 input clock (TIM2CLK) is set to APB1 clock (PCLK1), since
+    APB1 prescaler is set to 1.
+    TIM2CLK = PCLK1 = HCLK = SystemCoreClock
+    
+    External Signal Frequency = SystemCoreClock / TIM2_CCR2 in Hz.
+    External Signal DutyCycle = (TIM2_CCR1*100)/(TIM2_CCR2) in %.
+    Note:
+    SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f0xx.c file.
+    Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
+    function to update SystemCoreClock variable value. Otherwise, any configuration
+    based on this variable will be incorrect.
+    --------------------------------------------------------------------------- */
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0;
+    
+    TIM_PWMIConfig(TIM13, &TIM_ICInitStructure);
+    
+    // Select the TIM2 Input Trigger: TI2FP2
+    TIM_SelectInputTrigger(TIM13, TIM_TS_TI2FP2);
+    
+    // Select the slave Mode: Reset Mode
+    TIM_SelectSlaveMode(TIM13, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM13,TIM_MasterSlaveMode_Enable);
+    
+    // TIM enable counter
+    TIM_Cmd(TIM13, ENABLE);
+    
+    // Enable the CC2 Interrupt Request
+    TIM_ITConfig(TIM13, TIM_IT_CC1, ENABLE);
+}
+
+void pwm_input_init4(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    // TIM2 clock enable
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM14, ENABLE);
+    
+    // GPIOB clock enable
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    
+    // TIM2 chennel2 configuration : PB.03
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP ;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    // Connect TIM pin to AF2 
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_TIM14);
+    
+    // Enable the TIM2 global Interrupt
+    NVIC_InitTypeDef NVIC_InitStructure;
+    
+    NVIC_InitStructure.NVIC_IRQChannel = TIM8_TRG_COM_TIM14_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1; // second lowest interrupt level
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1; // second lowest sub int level
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    
+    /* ---------------------------------------------------------------------------
+    TIM2 configuration: PWM Input mode
+    The external signal is connected to TIM2 CH2 pin (PB.03)
+    TIM2 CCR2 is used to compute the frequency value
+    TIM2 CCR1 is used to compute the duty cycle value
+    
+    In this example TIM2 input clock (TIM2CLK) is set to APB1 clock (PCLK1), since
+    APB1 prescaler is set to 1.
+    TIM2CLK = PCLK1 = HCLK = SystemCoreClock
+    
+    External Signal Frequency = SystemCoreClock / TIM2_CCR2 in Hz.
+    External Signal DutyCycle = (TIM2_CCR1*100)/(TIM2_CCR2) in %.
+    Note:
+    SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f0xx.c file.
+    Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
+    function to update SystemCoreClock variable value. Otherwise, any configuration
+    based on this variable will be incorrect.
+    --------------------------------------------------------------------------- */
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;//| TIM_Channel_2 //*| TIM_Channel_3;*/ | TIM_Channel_4;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0;
+    
+    TIM_PWMIConfig(TIM14, &TIM_ICInitStructure);
+    
+    // Select the TIM2 Input Trigger: TI2FP2
+    TIM_SelectInputTrigger(TIM14, TIM_TS_TI2FP2); // TIM_TS_TI1FP1 
+    
+    // Select the slave Mode: Reset Mode
+    TIM_SelectSlaveMode(TIM14, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM14,TIM_MasterSlaveMode_Enable);
+    
+    // TIM enable counter
+    TIM_Cmd(TIM14, ENABLE);
+    
+    // Enable the CC2 Interrupt Request
+    TIM_ITConfig(TIM14, TIM_IT_CC1, ENABLE); // TIM_IT_CC1 or TIM_IT_CC2
+}
+
+
+void pwm_input_init_tim2(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
     
@@ -24,17 +175,17 @@ void pwm_input_init(void)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); //Change here, to GPIOA
     
     // TIM2 chennel2 configuration : PB.03
-    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0;// | GPIO_Pin_1;// | GPIO_Pin_2 | GPIO_Pin_3;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP ;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL ;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
     // Connect TIM pin to AF2 
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM2);
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
-    GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM2);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM2);
     
     // Enable the TIM2 global Interrupt
     NVIC_InitTypeDef NVIC_InitStructure;
@@ -65,7 +216,7 @@ void pwm_input_init(void)
     --------------------------------------------------------------------------- */
     TIM_ICInitTypeDef TIM_ICInitStructure;
     
-    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1 | TIM_Channel_2 | TIM_Channel_3 | TIM_Channel_4;
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;// | TIM_Channel_2;// | TIM_Channel_3 | TIM_Channel_4;
     TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
     TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
     TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
@@ -74,7 +225,8 @@ void pwm_input_init(void)
     TIM_PWMIConfig(TIM2, &TIM_ICInitStructure);
     
     // Select the TIM2 Input Trigger: TI2FP2
-    TIM_SelectInputTrigger(TIM2, TIM_TS_TI2FP2);
+    TIM_SelectInputTrigger(TIM2, TIM_TS_TI1FP1);
+    //TIM_SelectInputTrigger(TIM2, TIM_TS_TI2FP2);
     
     // Select the slave Mode: Reset Mode
     TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);
@@ -85,10 +237,165 @@ void pwm_input_init(void)
     
     // Enable the CC2 Interrupt Request
     TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
-    TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
-    TIM_ITConfig(TIM2, TIM_IT_CC3, ENABLE);
-    TIM_ITConfig(TIM2, TIM_IT_CC4, ENABLE);
+    //TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
+    //TIM_ITConfig(TIM2, TIM_IT_CC3, ENABLE);
+    //TIM_ITConfig(TIM2, TIM_IT_CC4, ENABLE);
 }
+
+void pwm_input_init_tim5(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    // TIM2 clock enable
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+    
+    // GPIOB clock enable
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE); //Change here, to GPIOA
+    
+    // TIM2 chennel2 configuration : PB.03
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_1;// | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;*/
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL ;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    // Connect TIM pin to AF2 
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM5);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM5);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM5);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM5);
+    
+    // Enable the TIM2 global Interrupt
+    NVIC_InitTypeDef NVIC_InitStructure;
+    
+    NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1; // second lowest interrupt level
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1; // second lowest sub int level
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    
+    /* ---------------------------------------------------------------------------
+    TIM2 configuration: PWM Input mode
+    The external signal is connected to TIM2 CH2 pin (PB.03)
+    TIM2 CCR2 is used to compute the frequency value
+    TIM2 CCR1 is used to compute the duty cycle value
+    
+    In this example TIM2 input clock (TIM2CLK) is set to APB1 clock (PCLK1), since
+    APB1 prescaler is set to 1.
+    TIM2CLK = PCLK1 = HCLK = SystemCoreClock
+    
+    External Signal Frequency = SystemCoreClock / TIM2_CCR2 in Hz.
+    External Signal DutyCycle = (TIM2_CCR1*100)/(TIM2_CCR2) in %.
+    Note:
+    SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f0xx.c file.
+    Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
+    function to update SystemCoreClock variable value. Otherwise, any configuration
+    based on this variable will be incorrect.
+    --------------------------------------------------------------------------- */
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;// | TIM_Channel_2 | TIM_Channel_3 | TIM_Channel_4;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0;
+    
+    TIM_PWMIConfig(TIM5, &TIM_ICInitStructure);
+    
+    // Select the TIM2 Input Trigger: TI2FP2
+    TIM_SelectInputTrigger(TIM5, TIM_TS_TI2FP2);
+    
+    // Select the slave Mode: Reset Mode
+    TIM_SelectSlaveMode(TIM5, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM5,TIM_MasterSlaveMode_Enable);
+    
+    // TIM enable counter
+    TIM_Cmd(TIM5, ENABLE);
+    
+    // Enable the CC2 Interrupt Request
+    //TIM_ITConfig(TIM5, TIM_IT_CC1, ENABLE);
+    TIM_ITConfig(TIM5, TIM_IT_CC2, ENABLE);
+    /*TIM_ITConfig(TIM5, TIM_IT_CC3, ENABLE);
+    TIM_ITConfig(TIM5, TIM_IT_CC4, ENABLE);*/
+}
+
+void pwm_input_init_tim12(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+    
+    // TIM2 clock enable
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM12, ENABLE);
+    
+    // GPIOB clock enable
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); //Change here, to GPIOA
+    
+    // TIM2 chennel2 configuration : PB.03
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_15;// | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3;*/
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL ;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    // Connect TIM pin to AF2 
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM5);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM5);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource15, GPIO_AF_TIM12);
+    //GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_TIM5);
+    
+    // Enable the TIM2 global Interrupt
+    NVIC_InitTypeDef NVIC_InitStructure;
+    
+    NVIC_InitStructure.NVIC_IRQChannel = TIM8_BRK_TIM12_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1; // second lowest interrupt level
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1; // second lowest sub int level
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    
+    /* ---------------------------------------------------------------------------
+    TIM2 configuration: PWM Input mode
+    The external signal is connected to TIM2 CH2 pin (PB.03)
+    TIM2 CCR2 is used to compute the frequency value
+    TIM2 CCR1 is used to compute the duty cycle value
+    
+    In this example TIM2 input clock (TIM2CLK) is set to APB1 clock (PCLK1), since
+    APB1 prescaler is set to 1.
+    TIM2CLK = PCLK1 = HCLK = SystemCoreClock
+    
+    External Signal Frequency = SystemCoreClock / TIM2_CCR2 in Hz.
+    External Signal DutyCycle = (TIM2_CCR1*100)/(TIM2_CCR2) in %.
+    Note:
+    SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f0xx.c file.
+    Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
+    function to update SystemCoreClock variable value. Otherwise, any configuration
+    based on this variable will be incorrect.
+    --------------------------------------------------------------------------- */
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;// | TIM_Channel_2 | TIM_Channel_3 | TIM_Channel_4;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0;
+    
+    TIM_PWMIConfig(TIM12, &TIM_ICInitStructure);
+    
+    // Select the TIM2 Input Trigger: TI2FP2
+    TIM_SelectInputTrigger(TIM12, TIM_TS_TI2FP2);
+    
+    // Select the slave Mode: Reset Mode
+    TIM_SelectSlaveMode(TIM12, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM12,TIM_MasterSlaveMode_Enable);
+    
+    // TIM enable counter
+    TIM_Cmd(TIM12, ENABLE);
+    
+    // Enable the CC2 Interrupt Request
+    //TIM_ITConfig(TIM5, TIM_IT_CC1, ENABLE);
+    TIM_ITConfig(TIM12, TIM_IT_CC2, ENABLE);
+    /*TIM_ITConfig(TIM5, TIM_IT_CC3, ENABLE);
+    TIM_ITConfig(TIM5, TIM_IT_CC4, ENABLE);*/
+}
+
 
 
 void pwm_init(void)
@@ -151,11 +458,11 @@ static void pwm_timebase_init(void)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
     
     uint16_t prescaler = pwm_get_prescaler();
-    printf2("prescaler: %d", prescaler);
+    printf2("Prescaler: %d\n\r", prescaler);
     TIM_BaseStruct.TIM_Prescaler = prescaler - 1;
     TIM_BaseStruct.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_BaseStruct.TIM_Period = (((SystemCoreClock / 2) / PWM_FREQUENCY) / prescaler) -1;
-    printf2("period: %d", TIM_BaseStruct.TIM_Period);
+    printf2("Period: %d\n\r", TIM_BaseStruct.TIM_Period);
     TIM_BaseStruct.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_BaseStruct.TIM_RepetitionCounter = 0x0000;
     TIM_TimeBaseInit(TIM4, &TIM_BaseStruct);

@@ -1,25 +1,25 @@
 /**
-  ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    30-September-2011
-  * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and
-  *          peripherals interrupt service routine.
-  ******************************************************************************
-  * @attention
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************
-  */
+******************************************************************************
+* @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c
+* @author  MCD Application Team
+* @version V1.0.0
+* @date    30-September-2011
+* @brief   Main Interrupt Service Routines.
+*          This file provides template for all exceptions handler and
+*          peripherals interrupt service routine.
+******************************************************************************
+* @attention
+*
+* THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
+* WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
+* TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
+* DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
+* FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
+* CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+*
+* <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+******************************************************************************
+*/
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
@@ -28,22 +28,22 @@
 #include "stm32f4xx_gpio.h" 
 #include "imu.h"
 #include "printf2.h"
-      
+
 /** @addtogroup Template_Project
-  * @{
-  */
+* @{
+*/
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-__IO uint16_t IC2Value = 0;
-__IO uint16_t DutyCycle = 0;
-__IO uint32_t Frequency = 0;
+volatile uint16_t IC2Value = 0;
+volatile uint16_t DutyCycle = 0;
+volatile uint32_t Frequency = 0;
 
-__IO uint16_t ic1_val = 0, ic2_val = 0, ic3_val = 0, ic4_val = 0;
-__IO uint16_t ic1_duty = 0, ic2_duty = 0, ic3_duty = 0, ic4_duty = 0;
-__IO uint32_t ic1_freq = 0, ic2_freq = 0, ic3_freq = 0, ic4_freq = 0;
+volatile float ic1_val = 0, ic2_val = 0, ic3_val = 0, ic4_val = 0;
+volatile float ic1_duty = 0, ic2_duty = 0, ic3_duty = 0, ic4_duty = 0;
+volatile float ic1_freq = 0, ic2_freq = 0, ic3_freq = 0, ic4_freq = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -52,117 +52,117 @@ __IO uint32_t ic1_freq = 0, ic2_freq = 0, ic3_freq = 0, ic4_freq = 0;
 /******************************************************************************/
 
 /**
-  * @brief   This function handles NMI exception.
-  * @param  None
-  * @retval None
-  */
+* @brief   This function handles NMI exception.
+* @param  None
+* @retval None
+*/
 void NMI_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles Hard Fault exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles Hard Fault exception.
+* @param  None
+* @retval None
+*/
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1)
+    {
+    }
 }
 
 /**
-  * @brief  This function handles Memory Manage exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles Memory Manage exception.
+* @param  None
+* @retval None
+*/
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1)
+    {
+    }
 }
 
 /**
-  * @brief  This function handles Bus Fault exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles Bus Fault exception.
+* @param  None
+* @retval None
+*/
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1)
+    {
+    }
 }
 
 /**
-  * @brief  This function handles Usage Fault exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles Usage Fault exception.
+* @param  None
+* @retval None
+*/
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1)
+    {
+    }
 }
 
 /**
-  * @brief  This function handles SVCall exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles SVCall exception.
+* @param  None
+* @retval None
+*/
 __weak void SVC_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles Debug Monitor exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles Debug Monitor exception.
+* @param  None
+* @retval None
+*/
 void DebugMon_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles PendSVC exception.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles PendSVC exception.
+* @param  None
+* @retval None
+*/
 __weak void PendSV_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles SysTick Handler.
+* @param  None
+* @retval None
+*/
 __weak void SysTick_Handler(void)
 {
-
+    
 }
 
 /**
-  * @brief  This function handles EXTI 3 interrupt request.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EXTI 3 interrupt request.
+* @param  None
+* @retval None
+*/
 __weak void EXTI9_5_IRQHandler(void)
 {
 }
 
 /**
-  * @brief  This function handles EXTI 15-10 interrupt request.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EXTI 15-10 interrupt request.
+* @param  None
+* @retval None
+*/
 __weak void EXTI15_10_IRQHandler(void)
 {
 }
@@ -175,122 +175,240 @@ __weak void EXTI15_10_IRQHandler(void)
 /*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
 /**
-  * @brief  This function handles TIM4 global interrupt request.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles TIM4 global interrupt request.
+* @param  None
+* @retval None
+*/
 void TIM4_IRQHandler(void)
 {
-  RCC_ClocksTypeDef RCC_Clocks;
-  RCC_GetClocksFreq(&RCC_Clocks);
-
-  /* Clear TIM4 Capture compare interrupt pending bit */
-  TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
-
-  /* Get the Input Capture value */
-  IC2Value = TIM_GetCapture2(TIM4);
-
-  if (IC2Value != 0)
-  {
-    /* Duty cycle computation */
-    DutyCycle = (TIM_GetCapture1(TIM4) * 100) / IC2Value;
-
-    /* Frequency computation 
-       TIM4 counter clock = (RCC_Clocks.HCLK_Frequency)/2 */
-
-    Frequency = (RCC_Clocks.HCLK_Frequency)/2 / IC2Value;
-  }
-  else
-  {
-    DutyCycle = 0;
-    Frequency = 0;
-  }
+    RCC_ClocksTypeDef RCC_Clocks;
+    RCC_GetClocksFreq(&RCC_Clocks);
+    
+    /* Clear TIM4 Capture compare interrupt pending bit */
+    TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
+    
+    /* Get the Input Capture value */
+    IC2Value = TIM_GetCapture2(TIM4);
+    
+    if (IC2Value != 0)
+    {
+        /* Duty cycle computation */
+        DutyCycle = (TIM_GetCapture1(TIM4) * 100) / IC2Value;
+        
+        /* Frequency computation 
+        TIM4 counter clock = (RCC_Clocks.HCLK_Frequency)/2 */
+        
+        Frequency = (RCC_Clocks.HCLK_Frequency)/2 / IC2Value;
+    }
+    else
+    {
+        DutyCycle = 0;
+        Frequency = 0;
+    }
 }
 
 /**
-  * @brief  This function handles external interrupts generated by MPU.
-  * @param  None
-  * @retval None
-  */
- 
+* @brief  This function handles external interrupts generated by MPU.
+* @param  None
+* @retval None
+*/
+
 void EXTI4_IRQHandler(void)
 {
-  /* Handle new gyro*/
-  gyro_data_ready_cb();
-  EXTI_ClearITPendingBit(EXTI_Line4);
+    /* Handle new gyro*/
+    gyro_data_ready_cb();
+    EXTI_ClearITPendingBit(EXTI_Line4);
 }
 
 void TIM2_IRQHandler(void)
 {
-    // Clear TIM2 Capture compare interrupt pending bit
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC3);
-    TIM_ClearITPendingBit(TIM2, TIM_IT_CC4);
     
+    if (TIM_GetITStatus(TIM2, TIM_IT_CC1)) {
+        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+        // Get the Input Capture value
+        ic1_val = (float)TIM_GetCapture1(TIM2);
+        
+        
+        
+        if (ic1_val != 0)
+        {
+            //Duty cycle computation
+            ic1_duty = (float)(TIM_GetCapture2(TIM2) * 100) / ic1_val;
+            //Frequency computation
+            ic1_freq = (float)SystemCoreClock / (float)(2 * ic1_val);
+            //printf2("duty: %d", ic1_duty);
+            //printf2("freq: %d\n\r", ic1_freq);
+        }
+        else
+        {
+            ic1_duty = 0;
+            ic1_freq = 0;
+        }
+    }
+}
+
+void TIM5_IRQHandler(void)
+{
+    if (TIM_GetITStatus(TIM5, TIM_IT_CC2)) {
+        TIM_ClearITPendingBit(TIM5, TIM_IT_CC2);
+        // Get the Input Capture value
+        ic2_val = TIM_GetCapture2(TIM5);
+        if (ic2_val != 0)
+        {
+            //Duty cycle computation
+            ic2_duty = (float)(TIM_GetCapture1(TIM5) * 100) / ic2_val;
+            //Frequency computation
+            ic2_freq = (float)SystemCoreClock / (float)(2 * ic2_val);
+            //printf2("duty: %d", ic2_duty);
+            //printf2("freq: %d\n\r", ic2_freq);
+        }
+        else
+        {
+            ic2_duty = 0;
+            ic2_freq = 0;
+        }
+    }
+}
+
+/*void TIM8_BRK_TIM12_IRQHandler(void)
+{
+    //printf2("isr ");
+    if (TIM_GetITStatus(TIM12, TIM_IT_CC2)) {
+        TIM_ClearITPendingBit(TIM12, TIM_IT_CC2);
+        // Get the Input Capture value
+        ic3_val = (float)TIM_GetCapture2(TIM12);
+        
+        
+        
+        if (ic3_val != 0)
+        {
+            //Duty cycle computation
+            ic3_duty = (float)(TIM_GetCapture1(TIM12) * 100) / ic3_val;
+            //Frequency computation
+            ic3_freq = (float)SystemCoreClock / (float)(2 * ic3_val);
+            //printf2("duty: %d", ic1_duty);
+            //printf2("freq: %d\n\r", ic1_freq);
+        }
+        else
+        {
+            ic3_duty = 0;
+            ic3_freq = 0;
+        }
+    }
+}*/
+
+/*void TIM3_IRQHandler(void)
+{
+printf2("interrupt\n\r");
+// Clear TIM2 Capture compare interrupt pending bit
+TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
+TIM_ClearITPendingBit(TIM3, TIM_IT_CC2);
+TIM_ClearITPendingBit(TIM3, TIM_IT_CC3);
+TIM_ClearITPendingBit(TIM3, TIM_IT_CC4);
+
+// Get the Input Capture value
+ic1_val = TIM_GetCapture1(TIM3);
+ic2_val = TIM_GetCapture2(TIM3);
+ic3_val = TIM_GetCapture3(TIM3);
+ic4_val = TIM_GetCapture4(TIM3);
+
+if (ic1_val != 0)
+{
+//Duty cycle computation
+ic1_duty = (TIM_GetCapture1(TIM3) * 100) / ic1_val;
+//Frequency computation
+ic1_freq = SystemCoreClock / ic1_val;
+printf2("duty: %d", ic1_duty);
+printf2("freq: %d\n\r", ic1_freq);
+    }
+    else
+{
+ic1_duty = 0;
+ic1_freq = 0;
+    }
+
+if (ic2_val != 0)
+{
+//Duty cycle computation
+ic2_duty = (TIM_GetCapture2(TIM3) * 100) / ic2_val;
+//Frequency computation
+ic2_freq = SystemCoreClock / ic2_val;
+printf2("duty: %d", ic2_duty);
+printf2("freq: %d\n\r", ic2_freq);
+    }
+    else
+{
+ic2_duty = 0;
+ic2_freq = 0;
+    }
+
+if (ic3_val != 0)
+{
+//Duty cycle computation
+ic3_duty = (TIM_GetCapture3(TIM3) * 100) / ic3_val;
+//Frequency computation
+ic3_freq = SystemCoreClock / ic3_val;
+printf2("duty: %d", ic3_duty);
+printf2("freq: %d\n\r", ic3_freq);
+    }
+    else
+{
+ic3_duty = 0;
+ic3_freq = 0;
+    }
+
+if (ic4_val != 0)
+{
+//Duty cycle computation
+ic4_duty = (TIM_GetCapture4(TIM3) * 100) / ic4_val;
+//Frequency computation
+ic4_freq = SystemCoreClock / ic4_val;
+printf2("duty: %d", ic4_duty);
+printf2("freq: %d\n\r", ic4_freq);
+    }
+    else
+{
+ic4_duty = 0;
+ic4_freq = 0;
+    }
+}*/
+
+/*void TIM8_UP_TIM13_IRQHandler(void)
+{
+    // Clear TIM2 Capture compare interrupt pending bit
+    TIM_ClearITPendingBit(TIM13, TIM_IT_CC1);
     // Get the Input Capture value
-    ic1_val = TIM_GetCapture1(TIM2);
-    ic2_val = TIM_GetCapture2(TIM2);
-    ic3_val = TIM_GetCapture3(TIM2);
-    ic4_val = TIM_GetCapture4(TIM2);
+    ic1_val = (float)TIM_GetCapture1(TIM13);
     
     if (ic1_val != 0)
     {
         //Duty cycle computation
-        ic1_duty = (TIM_GetCapture1(TIM2) * 100) / ic1_val;
+        ic1_duty = (float)(TIM_GetCapture2(TIM13) * 100) / ic1_val;
         //Frequency computation
-        ic1_freq = SystemCoreClock / ic1_val;
-        printf2("duty: %d", ic1_duty);
-        printf2("freq: %d\n\r", ic1_freq);
+        ic1_freq = (float)SystemCoreClock / (float)(2 * ic2_val);
     }
     else
     {
         ic1_duty = 0;
         ic1_freq = 0;
     }
+}
+
+void TIM8_TRG_COM_TIM14_IRQHandler(void)
+{
+    // Clear TIM2 Capture compare interrupt pending bit
+    TIM_ClearITPendingBit(TIM14, TIM_IT_CC1);
+    // Get the Input Capture value
+    ic2_val = (float)TIM_GetCapture1(TIM14);
     
     if (ic2_val != 0)
     {
-        //Duty cycle computation
-        ic2_duty = (TIM_GetCapture2(TIM2) * 100) / ic2_val;
-        //Frequency computation
-        ic2_freq = SystemCoreClock / ic2_val;
-        printf2("duty: %d", ic2_duty);
-        printf2("freq: %d\n\r", ic2_freq);
+        ic2_duty = (float)(TIM_GetCapture2(TIM4) * 100) / ic2_val;
+        ic2_freq = (float)SystemCoreClock / (float)(2 * ic2_val);
     }
     else
     {
         ic2_duty = 0;
         ic2_freq = 0;
     }
-    
-    if (ic3_val != 0)
-    {
-        //Duty cycle computation
-        ic3_duty = (TIM_GetCapture3(TIM2) * 100) / ic3_val;
-        //Frequency computation
-        ic3_freq = SystemCoreClock / ic3_val;
-        printf2("duty: %d", ic3_duty);
-        printf2("freq: %d\n\r", ic3_freq);
-    }
-    else
-    {
-        ic3_duty = 0;
-        ic3_freq = 0;
-    }
-
-    if (ic4_val != 0)
-    {
-        //Duty cycle computation
-        ic4_duty = (TIM_GetCapture4(TIM2) * 100) / ic4_val;
-        //Frequency computation
-        ic4_freq = SystemCoreClock / ic4_val;
-        printf2("duty: %d", ic4_duty);
-        printf2("freq: %d\n\r", ic4_freq);
-    }
-    else
-    {
-        ic4_duty = 0;
-        ic4_freq = 0;
-    }
-}
+}*/

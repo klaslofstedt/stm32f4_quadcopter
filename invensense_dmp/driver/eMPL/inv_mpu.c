@@ -23,6 +23,7 @@ $
 #include <string.h>
 #include <math.h>
 #include "inv_mpu.h"
+#include "printf2.h"
 
 /* The following functions must be defined for this platform:
 * i2c_write(unsigned char slave_addr, unsigned char reg_addr,
@@ -644,20 +645,23 @@ int mpu_read_reg(unsigned char reg, unsigned char *data)
 */
 int mpu_init(struct int_param_s *int_param)
 {
+    printf2("1");
     unsigned char data[6];
-    
+    printf2("2");
     /* Reset device. */
     data[0] = BIT_RESET;
     if (Sensors_I2C_WriteRegister(st.hw->addr, st.reg->pwr_mgmt_1, 1, data)){
         return -1;
     }
+    printf2("3");
     delay_ms(100);
     /* Wake up chip. */
     data[0] = 0x00;
+    printf2("4");
     if (Sensors_I2C_WriteRegister(st.hw->addr, st.reg->pwr_mgmt_1, 1, data)){
         return -1;
     }
-    
+    printf2("5");
     st.chip_cfg.accel_half = 0;
     
 #ifdef MPU6500

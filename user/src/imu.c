@@ -66,9 +66,12 @@ struct hal_s {
 static struct hal_s hal = {0};
 
 imu_data_t imu = {
-    .roll = 0,
-    .pitch = 0,
-    .yaw = 0,
+    .dmp_roll = 0,
+    .dmp_pitch = 0,
+    .dmp_yaw = 0,
+    .gyro_roll = 0,
+    .gyro_pitch = 0,
+    .gyro_yaw = 0,
     .dt = 0
 };
 
@@ -132,11 +135,14 @@ static void read_from_mpl_float(void)
     {
         //get_tick_count(&ts1);
         //ts_tot += (ts1 - ts2);
-        imu.roll = data[0];
-        imu.pitch = data[1];
-        imu.yaw = data[2];
+        imu.dmp_roll = data[0];
+        imu.dmp_pitch = data[1];
+        imu.dmp_yaw = data[2];
         imu.dt = ts1 - ts2;
         ts2 = ts1;
+        
+        //printf2(" roll: %7.4f", imu.gyro_roll);
+        //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
         
         if(!xQueueSend(imu_data, &imu, 1000)){
             printf2("xQueueSend failed\n\r");
@@ -145,22 +151,42 @@ static void read_from_mpl_float(void)
         //taskYIELD();
         
         /*if(counter >= 10){
-            counter = 0; 
-            //printf2("dt: %d\n\r", (imu.dt));
-            //ts_tot = 0;
-            //printf2("ts2: %d\n\r", (timestamp2));
-            
-            //printf2(" roll: %7.4f", imu.roll);
-            //printf2(" pitch: %7.4f", imu.pitch);
-            //printf2(" yaw: %7.4f\n\r", imu.yaw);
-            if(!xQueueSend(imu_data, &imu, 100)){
-                printf2("xQueueSend failed\n\r");
-            }
-            xSemaphoreGive(imu_done);
-            //taskYIELD();
-        }
+        counter = 0; 
+        //printf2("dt: %d\n\r", (imu.dt));
+        //ts_tot = 0;
+        //printf2("ts2: %d\n\r", (timestamp2));
+        
+        //printf2(" roll: %7.4f", imu.roll);
+        //printf2(" pitch: %7.4f", imu.pitch);
+        //printf2(" yaw: %7.4f\n\r", imu.yaw);
+        if(!xQueueSend(imu_data, &imu, 100)){
+        printf2("xQueueSend failed\n\r");
+    }
+        xSemaphoreGive(imu_done);
+        //taskYIELD();
+    }
         counter++;*/
     }
+    else{
+        printf2("dmp failed\n\r");
+    }
+    /*if (inv_get_sensor_type_gyro_float(data, &accuracy, (inv_time_t*)&ts1))
+    {
+        imu.gyro_roll = data[0];
+        imu.gyro_pitch = data[1];
+        imu.gyro_yaw = data[2];
+        imu.dt = ts1 - ts2;
+        ts2 = ts1;
+        //printf2(" roll: %7.4f", imu.gyro_roll);
+        //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
+        if(!xQueueSend(imu_data, &imu, 1000)){
+            printf2("xQueueSend failed\n\r");
+        }
+        xSemaphoreGive(imu_done);
+    }
+    else{
+        printf2("gyro failed\n\r");
+    }*/
 }
 
 #ifdef COMPASS_ENABLED
@@ -220,15 +246,15 @@ static inline void run_self_test(void)
     result = mpu_run_self_test(gyro, accel);
 #endif
     if (result == 0x7) {
-        printf2("Self test passed\n\r");
-        printf2("accel: %7.4f %7.4f %7.4f\n\r",
+        printf2("Self test passed2\n\r");
+        /*printf2("accel: %7.4f %7.4f %7.4f\n\r",
                 accel[0]/65536.f,
                 accel[1]/65536.f,
                 accel[2]/65536.f);
         printf2("gyro: %7.4f %7.4f %7.4f\n\r",
                 gyro[0]/65536.f,
                 gyro[1]/65536.f,
-                gyro[2]/65536.f);
+                gyro[2]/65536.f);*/
         /* Test passed. We can trust the gyro data here, so now we need to update calibrated data*/
         
 #ifdef USE_CAL_HW_REGISTERS
@@ -304,7 +330,7 @@ void gyro_data_ready_cb(void)
 void imu_task(void *pvParameters)
 {    
     printf2("start2\n\r");
-
+    
     imu_data = xQueueCreate(1, sizeof(imu_data_t));
     vSemaphoreCreateBinary(gyro_new);
     vSemaphoreCreateBinary(imu_done);
@@ -361,7 +387,7 @@ void imu_task(void *pvParameters)
     * handle_input), but this algorithm can be enabled if the self-test can't
     * be executed in your application.
     */
-    inv_enable_in_use_auto_calibration();
+    //inv_enable_in_use_auto_calibration();
     
 #ifdef COMPASS_ENABLED
     /* Compass calibration algorithms. */
@@ -507,21 +533,13 @@ void imu_task(void *pvParameters)
     mpu_set_dmp_state(1);
     hal.dmp_on = 1;
     
-    run_self_test();
-    
     while(1){
         //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){
-        if(hal.new_gyro == 1){
-            //printf2("interrupt\n\r"); // går i 200hz medan resten går i 20hz
+        if(hal.new_gyro == 1){ //vTaskDelay(hal.new_gyro == 1) ???????????????
             unsigned long sensor_timestamp;
             int new_data = 0;
-            /*if (USART_GetITStatus(USART2, USART_IT_RXNE)) {
-            // maybe read commands here?
-            USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-            }*/
-            //printf2("waste\n\r");
+           
             get_tick_count(&timestamp);
-            //printf2("timestamp%d\n\r", timestamp);
             
 #ifdef COMPASS_ENABLED
             /* We're not using a data ready interrupt for the compass, so we'll
@@ -536,33 +554,12 @@ void imu_task(void *pvParameters)
             /* Temperature data doesn't need to be read with every gyro sample.
             * Let's make them timer-based like the compass reads.
             */
-            //printf2("timestamp%d\n\r", timestamp - hal.next_temp_ms);
             if (timestamp > hal.next_temp_ms) {
-                //printf2("1\n\r");
                 hal.next_temp_ms = timestamp + TEMP_READ_MS;
                 new_temp = 1;
             }
-            // this shit does nothing?
-            /*if (!hal.sensors || !hal.new_gyro) {
-                printf2("2\n\r");
-                continue;
-                
-            }  */ 
             
-            /*if (hal.new_gyro && hal.lp_accel_mode) {
-                printf2("3\n\r");
-                short accel_short[3];
-                long accel[3];
-                mpu_get_accel_reg(accel_short, &sensor_timestamp);
-                accel[0] = (long)accel_short[0];
-                accel[1] = (long)accel_short[1];
-                accel[2] = (long)accel_short[2];
-                inv_build_accel(accel, 0, sensor_timestamp);
-                new_data = 1;
-                hal.new_gyro = 0;
-            } */
             else if (hal.new_gyro && hal.dmp_on) {
-                //printf2("4\n\r");
                 short gyro[3], accel_short[3], sensors;
                 unsigned char more;
                 long accel[3], quat[4], temperature;
@@ -604,48 +601,8 @@ void imu_task(void *pvParameters)
                     new_data = 1;
                 }
             } 
-            
-            /*else if (hal.new_gyro) {
-                printf2("5\n\r");
-                short gyro[3], accel_short[3];
-                unsigned char sensors, more;
-                long accel[3], temperature;*/
-                /* This function gets new data from the FIFO. The FIFO can contain
-                * gyro, accel, both, or neither. The sensors parameter tells the
-                * caller which data fields were actually populated with new data.
-                * For example, if sensors == INV_XYZ_GYRO, then the FIFO isn't
-                * being filled with accel data. The more parameter is non-zero if
-                * there are leftover packets in the FIFO. The HAL can use this
-                * information to increase the frequency at which this function is
-                * called.
-                */
-                /*hal.new_gyro = 0;
-                mpu_read_fifo(gyro, accel_short, &sensor_timestamp,
-                              &sensors, &more);
-                if (more)
-                    hal.new_gyro = 1;
-                if (sensors & INV_XYZ_GYRO) {
-                    // Push the new data to the MPL. 
-                    inv_build_gyro(gyro, sensor_timestamp);
-                    new_data = 1;
-                    if (new_temp) {
-                        new_temp = 0;
-                        // Temperature only used for gyro temp comp.
-                        mpu_get_temperature(&temperature, &sensor_timestamp);
-                        inv_build_temp(temperature, sensor_timestamp);
-                    }
-                }
-                if (sensors & INV_XYZ_ACCEL) {
-                    accel[0] = (long)accel_short[0];
-                    accel[1] = (long)accel_short[1];
-                    accel[2] = (long)accel_short[2];
-                    inv_build_accel(accel, 0, sensor_timestamp);
-                    new_data = 1;
-                }
-            }*/
 #ifdef COMPASS_ENABLED
             if (new_compass) {
-                printf2("6\n\r");
                 short compass_short[3];
                 long compass[3];
                 new_compass = 0;
@@ -667,7 +624,6 @@ void imu_task(void *pvParameters)
             }
 #endif
             if (new_data) {
-                //printf2("7\n\r");
                 inv_execute_on_data();
                 /* This function reads bias-compensated sensor data and sensor
                 * fusion outputs from the MPL. The outputs are formatted as seen
@@ -676,7 +632,6 @@ void imu_task(void *pvParameters)
                 */
                 read_from_mpl_float();
             }
-            //hal.new_gyro = 0;
         }
     }
 }

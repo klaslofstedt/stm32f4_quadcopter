@@ -10,9 +10,12 @@
 
 
 typedef struct{
-	float roll;
-	float pitch;
-	float yaw;
+	float dmp_roll;
+	float dmp_pitch;
+	float dmp_yaw;
+    float gyro_roll;
+    float gyro_pitch;
+    float gyro_yaw;
     unsigned long dt;
 } imu_data_t;
 
