@@ -17,5 +17,5 @@ Purpose :
 void gpio_init(void);
 void EnableInvInterrupt(void);
 void DisableInvInterrupt(void);
-#endif // __GPIO_H__
+#endif
 

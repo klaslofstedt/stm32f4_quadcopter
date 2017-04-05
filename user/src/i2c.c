@@ -54,7 +54,7 @@ unsigned long ST_Sensors_I2C_ReadRegister(unsigned char Address, unsigned char R
 /*******************************  Function ************************************/
 
 
-void i2c_init(void)
+void i2c2_init(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   I2C_InitTypeDef I2C_InitStructure;

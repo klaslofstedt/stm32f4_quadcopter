@@ -13,7 +13,7 @@ Purpose :
 
 #define I2C_Config() I2cMaster_Init();
 
-void i2c_init(void);
+void i2c2_init(void);
 void Set_I2C_Retry(unsigned short ml_sec);
 unsigned short Get_I2C_Retry();
 

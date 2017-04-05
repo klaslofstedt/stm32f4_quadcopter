@@ -9,7 +9,7 @@ Purpose :
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_syscfg.h"
 
-#include "GPIO.h"
+#include "gpio.h"
 
 /********************************* Defines ************************************/
 

@@ -12,8 +12,14 @@ void delay_ms(uint32_t delay_time)
     vTaskDelay((SYSTICK_FREQUENCY / 1000) * (delay_time / portTICK_PERIOD_MS));
 }
 
-int get_tick_count(unsigned long *count)
+int get_ms_count(unsigned long *count)
 {
     count[0] = xTaskGetTickCount() / portTICK_PERIOD_MS;
+	return 0;
+}
+
+int get_tick_count(unsigned long *count) // Same as ms in my case?
+{
+    count[0] = xTaskGetTickCount();
 	return 0;
 }

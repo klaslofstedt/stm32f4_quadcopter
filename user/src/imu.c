@@ -11,7 +11,6 @@
 #include "printf2.h"
 #include "freertos_time.h"
 #include "imu.h"
-//#include "motors.h"
 
 // dmp
 #include "inv_mpu.h"
@@ -72,7 +71,11 @@ imu_data_t imu = {
     .gyro_roll = 0,
     .gyro_pitch = 0,
     .gyro_yaw = 0,
-    .dt = 0
+    .acc_x = 0,
+    .acc_y = 0,
+    .acc_z = 0,
+    .dt = 0,
+    .stack_size = 0
 };
 
 /* USB RX binary semaphore. Actually, it's just a flag. Not included in struct
@@ -130,11 +133,22 @@ static void read_from_mpl_float(void)
     unsigned long ts1 = 0;
     float data[3] = {0};
     
+    if (inv_get_sensor_type_accel_float(data, &accuracy, (inv_time_t*)&ts1))
+    {
+        imu.acc_x = data[0];
+        imu.acc_y = data[1];
+        imu.acc_z = data[2];
+    }
+    
+    if (inv_get_sensor_type_gyro_float(data, &accuracy, (inv_time_t*)&ts1))
+    {
+        imu.gyro_roll = data[0];
+        imu.gyro_pitch = data[1];
+        imu.gyro_yaw = data[2];
+    }
     
     if (inv_get_sensor_type_euler_float(data, &accuracy, (inv_time_t*)&ts1))
     {
-        //get_tick_count(&ts1);
-        //ts_tot += (ts1 - ts2);
         imu.dmp_roll = data[0];
         imu.dmp_pitch = data[1];
         imu.dmp_yaw = data[2];
@@ -150,43 +164,16 @@ static void read_from_mpl_float(void)
         xSemaphoreGive(imu_done);
         //taskYIELD();
         
-        /*if(counter >= 10){
-        counter = 0; 
-        //printf2("dt: %d\n\r", (imu.dt));
-        //ts_tot = 0;
-        //printf2("ts2: %d\n\r", (timestamp2));
-        
-        //printf2(" roll: %7.4f", imu.roll);
-        //printf2(" pitch: %7.4f", imu.pitch);
-        //printf2(" yaw: %7.4f\n\r", imu.yaw);
+        /*
         if(!xQueueSend(imu_data, &imu, 100)){
         printf2("xQueueSend failed\n\r");
     }
         xSemaphoreGive(imu_done);
-        //taskYIELD();
-    }
-        counter++;*/
+        //taskYIELD();*/
     }
     else{
         printf2("dmp failed\n\r");
     }
-    /*if (inv_get_sensor_type_gyro_float(data, &accuracy, (inv_time_t*)&ts1))
-    {
-        imu.gyro_roll = data[0];
-        imu.gyro_pitch = data[1];
-        imu.gyro_yaw = data[2];
-        imu.dt = ts1 - ts2;
-        ts2 = ts1;
-        //printf2(" roll: %7.4f", imu.gyro_roll);
-        //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
-        if(!xQueueSend(imu_data, &imu, 1000)){
-            printf2("xQueueSend failed\n\r");
-        }
-        xSemaphoreGive(imu_done);
-    }
-    else{
-        printf2("gyro failed\n\r");
-    }*/
 }
 
 #ifdef COMPASS_ENABLED
@@ -328,8 +315,10 @@ void gyro_data_ready_cb(void)
 
 
 void imu_task(void *pvParameters)
-{    
-    printf2("start2\n\r");
+{
+    UBaseType_t stack_size;
+    stack_size = uxTaskGetStackHighWaterMark(NULL);
+    printf2("imu task\n\r");
     
     imu_data = xQueueCreate(1, sizeof(imu_data_t));
     vSemaphoreCreateBinary(gyro_new);
@@ -477,7 +466,7 @@ void imu_task(void *pvParameters)
     
     /* Compass reads are handled by scheduler. */
     
-    get_tick_count(&timestamp); // remove??
+    get_ms_count(&timestamp); // remove??
     
     /* To initialize the DMP:
     * 1. Call dmp_load_motion_driver_firmware(). This pushes the DMP image in
@@ -539,7 +528,7 @@ void imu_task(void *pvParameters)
             unsigned long sensor_timestamp;
             int new_data = 0;
            
-            get_tick_count(&timestamp);
+            get_ms_count(&timestamp);
             
 #ifdef COMPASS_ENABLED
             /* We're not using a data ready interrupt for the compass, so we'll
@@ -633,6 +622,8 @@ void imu_task(void *pvParameters)
                 read_from_mpl_float();
             }
         }
+        stack_size = uxTaskGetStackHighWaterMark(NULL);
+        imu.stack_size = stack_size;
     }
 }
 

@@ -8,82 +8,194 @@
 #include "task.h"
 #include "timers.h"
 #include "semphr.h"
+#include "queue.h"
 // User includes
-#include "i2c.h"
+#include "main.h"
 #include "pwm.h"
-#include "uart.h"
-#include "gpio.h"
 #include "imu.h"
-#include "motors.h"
+#include "hardware.h"
+#include "esc.h"
+#include "pid.h"
 #include "printf2.h"
+#include "joystick.h"
+#include "altitude.h"
 
 
-
-static void init_hardware(void);
+static void main_task(void *pvParameters);
+static void telemetry_task(void *pvParameters);
 
 // 168000000=168Mhz
 extern uint32_t SystemCoreClock; 
 
-/*extern volatile float ic1_val, ic2_val, ic3_val, ic4_val;
-extern volatile float ic1_duty, ic2_duty, ic3_duty, ic4_duty;
-extern volatile float ic1_freq, ic2_freq, ic3_freq, ic4_freq;*/
+UBaseType_t stack_size_main;
 
-static void init_hardware(void)
-{
-    // Setup STM32 system (clock, PLL and Flash configuration)
-    SystemInit();
-    printf2_init();
-    // Update the system clock variable (might not have been set before)
-    SystemCoreClockUpdate();
-    printf2("CoreClock: %d\n\r", SystemCoreClock);
-    
-    // Enable PWR APB1 Clock
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-    
-    // Allow access to Backup
-    PWR_BackupAccessCmd(ENABLE);
-    
-    // Reset RTC Do
-    RCC_BackupResetCmd(ENABLE);
-    RCC_BackupResetCmd(DISABLE);
-    
-    //Configure Interrupts
-    gpio_init();
-    pwm_init();
-    i2c_init(); 
-    // Ensure all priority bits are assigned as preemption priority bits (FREERTOS)
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-    
-    
-    //uart_init();
+
+static imu_data_t imu; // _g or _g?
+static altitude_data_t altitude;
+
+static float thrust = 0; // _g or _g?
+static float toggle = 0;
+
+
+
+void main_task(void *pvParameters)
+{    
+    esc_init(&esc1);
+    esc_init(&esc2);
+    esc_init(&esc3);
+    esc_init(&esc4);
+    float last_yaw = 0;
+    stack_size_main = uxTaskGetStackHighWaterMark( NULL );
+    while(1){
+        if(xSemaphoreTake(imu_done, portMAX_DELAY) == pdTRUE){
+            if(!xQueueReceive(imu_data, &imu, 1000)){ // 1000 ms?
+                printf2("No IMU data in queue\n\r");
+            }
+         
+            // Read setpoints --------------------------------------------------
+            pitch.setpoint = joystick_get_setpoint(&joystick_pitch_g);
+            roll.setpoint = joystick_get_setpoint(&joystick_roll_g);
+            yaw.setpoint = joystick_get_setpoint(&joystick_yaw_g);
+            thrust = joystick_get_thrust(&joystick_thrust_g);
+            toggle = joystick_get_toggle(&joystick_toggle_g);
+            
+            // Read inputs -----------------------------------------------------
+            roll.input = imu.dmp_roll;
+            pitch.input = imu.dmp_pitch;
+            // Set yaw to the derivative of IMU reading
+            yaw.input = (imu.dmp_yaw - last_yaw) / imu.dt;
+            last_yaw = imu.dmp_yaw;
+            
+            /* 
+            readdata(ifp, SV_Pos, SV_Rho);
+
+            model(&ekf, SV_Pos);
+
+            ekf_step(&ekf, SV_Rho);
+            */
+            
+            // Calculate outputs -----------------------------------------------
+            pid_calc(&roll, imu.dt);
+            pid_calc(&pitch, imu.dt);
+            pid_calc(&yaw, imu.dt);
+            
+            // Set outputs ----------------------------------------------------- 
+            //  1  front  2
+            //  left    right
+            //  4   back  3  
+            if(toggle > 0.5) { // armed
+            esc_set_speed(&esc1, thrust + pitch.output + roll.output + yaw.output);
+            esc_set_speed(&esc2, thrust - pitch.output + roll.output - yaw.output);
+            esc_set_speed(&esc3, thrust - pitch.output - roll.output + yaw.output);
+            esc_set_speed(&esc4, thrust + pitch.output - roll.output - yaw.output);
+            }
+            else{
+                esc_set_speed(&esc1, 0);
+                esc_set_speed(&esc2, 0);
+                esc_set_speed(&esc3, 0);
+                esc_set_speed(&esc4, 0);
+            }
+            
+            //taskYIELD();
+        }
+        /*if(xSemaphoreTake(altitude_done, portMAX_DELAY) == pdTRUE){
+            if(!xQueueReceive(altitude_data, &altitude, 1000)){ // 1000 ms?
+                printf2("No altitude data in queue\n\r");
+            }
+        }*/
+        stack_size_main = uxTaskGetStackHighWaterMark( NULL );
+    }
 }
 
+
+void telemetry_task(void *pvParameters)
+{
+    TickType_t last_wake_time = xTaskGetTickCount();
+    const TickType_t frequency = 100; // 1000ms / 5 = 200Hz
+    UBaseType_t stack_size_tele;
+    stack_size_tele = uxTaskGetStackHighWaterMark( NULL );
+    while(1)
+    {
+        vTaskDelayUntil(&last_wake_time, frequency / portTICK_PERIOD_MS); // good shit!
+        
+        //#ifdef DEBUG
+        //printf2(" pitch: %.3f", joystick_pitch_g.duty_input);
+        //printf2(" %.3f", joystick_pitch_g.freq_input);
+        //printf2(" roll: %.3f", joystick_roll_g.duty_input);
+        //printf2(" %.3f", joystick_roll_g.freq_input);
+        //printf2(" yaw: %.3f", joystick_yaw_g.duty_input);
+        //printf2(" %.3f", joystick_yaw_g.freq_input);
+        //printf2(" thrust: %.3f", joystick_thrust_g.duty_input);
+        //printf2(" %.3f", joystick_thrust_g.freq_input);
+        //printf2(" toggle: %.3f", joystick_toggle_g.duty_input);
+        //printf2(" %.3f", joystick_toggle_g.freq_input);
+        
+        //printf2(" pitch k_p: %.4f", pitch.k_p);
+        //printf2(" pitch k_d: %.4f", pitch.k_d);
+        //printf2(" yaw k_d: %.4f", yaw.k_d);
+        //printf2("dt: %d", (imu.dt));
+        
+        printf2(" roll_set_point: %.3f", roll.setpoint);
+        printf2(" pitch_set_point: %.3f", pitch.setpoint);
+        printf2(" yaw_set_point: %.3f", yaw.setpoint);
+        //printf2(" thrust: %.3f", thrust);
+        //printf2(" toggle: %.3f", toggle);
+        
+        //printf2(" x acc: %.3f", imu.acc_x);
+        //printf2(" y acc: %.3f", imu.acc_y);
+        //printf2(" z acc: %.3f", imu.acc_z);
+        
+        //printf2(" roll gyro: %.3f", imu.gyro_roll);
+        //printf2(" pitch gyro: %.3f", imu.gyro_pitch);
+        //printf2(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
+        
+        printf2(" roll dmp: %.3f", imu.dmp_roll);
+        printf2(" pitch dmp: %.3f", imu.dmp_pitch);
+        //printf2(" yaw dmp ori: %.3f", imu.dmp_yaw);
+        //printf2(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
+        //printf2(" yaw set_point: %.3f", yaw.setpoint);
+        //printf2(" yaw speed: %.3f", 
+        //printf2(" yaw: %7.4f", imu.yaw);
+        
+        //printf2(" esc1: %.3f", esc1.speed);
+        //printf2(" esc2: %.3f", esc2.speed);
+        //printf2(" esc3: %.3f", esc3.speed);
+        //printf2(" esc4: %.3f", esc4.speed);
+        
+        printf2(" pwm1: %d", pwm_get_duty_cycle(12));
+        printf2(" pwm2: %d", pwm_get_duty_cycle(13));
+        printf2(" pwm3: %d", pwm_get_duty_cycle(14));
+        printf2(" pwm4: %d", pwm_get_duty_cycle(15));
+        
+        // stack sizes
+        //printf2(" main size: %d", stack_size_main);
+        //printf2(" tele size: %d", stack_size_tele);
+        //printf2(" imu size: %d", imu.stack_size);
+        printf2("\n\r");
+        //#endif  
+        stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
+    }
+}
 
 
 int main(void)
 {
     // systick is 100000Hz = 100kHz = 0.1MHz It's not though? 1000Hz i think
-    init_hardware();
-    pwm_input_init_tim2();
-    pwm_input_init_tim5();
-    //pwm_input_init_tim12();
-    /*pwm_input_init1();
-    pwm_input_init2();
-    pwm_input_init3();
-    pwm_input_init4();*/
+    hardware_init();
     
-    xTaskCreate(imu_task, (const char *)"imu_task", 1024, NULL, 2, NULL);
+    xTaskCreate(imu_task, (const char *)"imu_task", 300, NULL, 2, NULL);
     
-    xTaskCreate(print_task, (const char *)"print_task", 128, NULL, 2, NULL);
+    xTaskCreate(telemetry_task, (const char *)"telemetry_task", 300, NULL, 2, NULL); // telemery_task
     
-    //xTaskCreate(barometer_task, (const char *)"barometer_task", 512, NULL, 2, NULL);
-    //xTaskCreate(ultrasonic_task, (const char *)"ultrasonic_task", 512, NULL, 2, NULL);
+    //xTaskCreate(altitude_task, (const char *)"altitude_task", 200, NULL, 2, NULL);
+    
+    //xTaskCreate(barometer_task, (const char *)"barometer_task", 200, NULL, 2, NULL);
+    
+    //xTaskCreate(ultrasonic_task, (const char *)"ultrasonic_task", 128, NULL, 2, NULL);
+    
     //xTaskCreate(gps_task, (const char *)"gps_task", 512, NULL, 2, NULL);
     
-    xTaskCreate(motors_task, (const char *)"motors_task", 512, NULL, 2, NULL); // rename?
-    
-    //xTaskCreate(transmission_task, (const char *)"transmission_task", 512, NULL, 2, NULL);
-    //xTaskCreate(telemetry_task, (const char *)"telemetry_task", 512, NULL, 2, NULL);
+    xTaskCreate(main_task, (const char *)"main_task", 250, NULL, 2, NULL); // main_task?
     
     vTaskStartScheduler();
     

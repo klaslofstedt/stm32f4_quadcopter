@@ -193,6 +193,7 @@
           <state>MPU6050</state>
           <state>EMPL_TARGET_STM32F4</state>
           <state>xDEBUG</state>
+          <state>ARM_MATH_CM4</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1431,6 +1432,12 @@
     <group>
       <name>inc</name>
       <file>
+        <name>$PROJ_DIR$\user\inc\altitude.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\barometer.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\discover_board.h</name>
       </file>
       <file>
@@ -1443,13 +1450,25 @@
         <name>$PROJ_DIR$\user\inc\gpio.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\inc\hardware.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\i2c.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\i2c_1.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\inc\imu.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\user\inc\motors.h</name>
+        <name>$PROJ_DIR$\user\inc\joystick.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\kalman.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\main.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\inc\pid.h</name>
@@ -1461,13 +1480,25 @@
         <name>$PROJ_DIR$\user\inc\pwm.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\inc\tiny_ekf.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\uart.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\ultrasonic.h</name>
       </file>
     </group>
     <group>
       <name>src</name>
       <file>
+        <name>$PROJ_DIR$\user\src\altitude.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\application_hooks.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\barometer.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\esc.c</name>
@@ -1479,16 +1510,25 @@
         <name>$PROJ_DIR$\user\src\gpio.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\src\hardware.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\i2c.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\i2c_1.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\imu.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\user\src\main.c</name>
+        <name>$PROJ_DIR$\user\src\joystick.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\user\src\motors.c</name>
+        <name>$PROJ_DIR$\user\src\kalman.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\main.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\pid.c</name>
@@ -1503,7 +1543,13 @@
         <name>$PROJ_DIR$\user\src\reg_test.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\src\tiny_ekf.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\uart.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\ultrasonic.c</name>
       </file>
     </group>
   </group>

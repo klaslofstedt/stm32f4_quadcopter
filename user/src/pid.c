@@ -5,18 +5,15 @@
 
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
-    //dt = 3333;
     // These are used for ease to read
-    float p_term, i_term, d_term, error, output, input_rate;
+    float p_term, i_term, d_term, error, output;
     
-    // Calculate input rate from old and new state instead from EKF output
-    input_rate = (pid->input - pid->last_input) / (float)dt;
-    
-    //printf2("input %0.4f", pid->input);
-    //printf2("input_rate %0.4f", input_rate);
+    // Calculate input rate with derivation of position instead from EKF output
+    // *** IMPORTANT *** Does it need low pass-filter?                           
+    pid->rate = (pid->input - pid->last_input) / (float)dt;
     
     // Calculate error between current and desired position
-    error = pid->set_point - pid->input;
+    error = pid->setpoint - pid->input;
     
     // Calculate the P contribution
     p_term = pid->k_p * error;
@@ -32,8 +29,7 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     i_term = pid->i_term;
 
     // Calculate the D contribution
-    d_term = pid->k_d * input_rate;
-    //printf2("d_term %0.4f\n\r", d_term);
+    d_term = pid->k_d * pid->rate;
     
     //Calculate output
     output = p_term + i_term - d_term;

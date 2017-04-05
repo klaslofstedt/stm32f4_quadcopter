@@ -16,7 +16,11 @@ typedef struct{
     float gyro_roll;
     float gyro_pitch;
     float gyro_yaw;
+    float acc_x; // y?
+    float acc_y; // x??
+    float acc_z;
     unsigned long dt;
+    UBaseType_t stack_size;
 } imu_data_t;
 
 //extern xSemaphoreHandle gyro_new;

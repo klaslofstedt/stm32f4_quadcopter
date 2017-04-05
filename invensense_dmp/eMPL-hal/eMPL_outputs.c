@@ -52,6 +52,21 @@ int inv_get_sensor_type_accel(long *data, int8_t *accuracy, inv_time_t *timestam
         return 0;
 }
 
+int inv_get_sensor_type_accel_float(float *data, int8_t *accuracy, inv_time_t *timestamp)
+{
+    long values[3];
+    
+    if (eMPL_out.accel_status & INV_NEW_DATA){
+        inv_get_accel_set(values, accuracy, timestamp);
+        data[0] = (float)(values[0] / 65536.f);
+        data[1] = (float)(values[1] / 65536.f);
+        data[2] = (float)(values[2] / 65536.f);
+        return 1;
+    }
+    else
+        return 0;
+}
+
 /**
  *  @brief      Angular velocity (degrees per second) in body frame.
  *  @param[out] data        Angular velocity in dps, q16 fixed point.
@@ -79,13 +94,15 @@ int inv_get_sensor_type_gyro(long *data, int8_t *accuracy, inv_time_t *timestamp
  */
 int inv_get_sensor_type_gyro_float(float *data, int8_t *accuracy, inv_time_t *timestamp)
 {
-    long *values;
-    inv_get_gyro_set(values, accuracy, timestamp);
-    data[0] = (float)(values[0] / 65536.f);
-    data[1] = (float)(values[1] / 65536.f);
-    data[2] = (float)(values[2] / 65536.f);
-    if (eMPL_out.gyro_status & INV_NEW_DATA)
+    long values[3];
+
+    if (eMPL_out.gyro_status & INV_NEW_DATA){
+        inv_get_gyro_set(values, accuracy, timestamp);
+        data[0] = (float)(values[0] / 65536.f);
+        data[1] = (float)(values[1] / 65536.f);
+        data[2] = (float)(values[2] / 65536.f);
         return 1;
+    }
     else
         return 0;
 }

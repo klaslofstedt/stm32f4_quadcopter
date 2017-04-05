@@ -37,7 +37,7 @@
 //#include "main.h"
 //#include "board-st_discovery.h"
    
-#define get_ms      get_tick_count
+#define get_ms      get_ms_count
 
 
 /* These defines are copied from dmpDefaultMPU6050.c in the general MPL
@@ -600,7 +600,6 @@ int dmp_set_accel_bias(long *bias)
 
     mpu_get_accel_sens(&accel_sens);
     accel_sf = (long long)accel_sens << 15;
-    __no_operation();
 
     accel_bias_body[0] = bias[dmp.orient & 3];
     if (dmp.orient & 4)

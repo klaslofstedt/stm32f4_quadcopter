@@ -45,7 +45,7 @@ $
 //#include "delay.h"
 
 //#define delay_ms    DelayMicros
-#define get_ms      get_tick_count
+#define get_ms      get_ms_count
 #define log_i       MPL_LOGI
 #define log_e       MPL_LOGE
 #define min(a,b) ((a<b)?a:b)
@@ -609,7 +609,6 @@ int mpu_reg_dump(void)
             continue;
         if (Sensors_I2C_ReadRegister(st.hw->addr, ii, 1, &data))
             return -1;
-        log_i("%#5x: %#5x\r\n", ii, data);
     }
     return 0;
 }

@@ -8,7 +8,8 @@
 typedef struct{
 	float input;
     float last_input;
-	float set_point;
+    float rate;
+	float setpoint;
 	float i_term;
 	float output;
     float k_p;

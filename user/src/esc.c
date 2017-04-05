@@ -14,42 +14,30 @@
 #define ESC_RUN_MAX 1860
 
 
-void esc_set_speed(esc_t *esc)
+void esc_set_speed(esc_t *esc, float speed)
 {
-    
-//#ifdef DEBUG
-    //printf2(" duty: %.4f ", esc->speed);
-    //printf2("%d %d ", esc->pin_number, (esc->run_min + (uint16_t)(esc->speed * (esc->run_max - esc->run_min))));
-    //if(esc->pin_number == 15){
-    //    printf2("\n\r");
-    //}
-//#endif
+    esc->speed = speed;
+    if(esc->speed > esc->speed_max){
+		esc->speed = esc->speed_max;
+	}else if(esc->speed < esc->speed_min){
+		esc->speed = esc->speed_min;
+	}
 	pwm_set_duty_cycle(esc->pin_number, (esc->run_min + (uint16_t)(esc->speed * (esc->run_max - esc->run_min))));
 }
 
-void esc_init(esc_t *esc, uint16_t pin)
+void esc_init(esc_t *esc)
 {
 	uint16_t prescaler = pwm_get_prescaler();
-	esc->pin_number = pin;
-	esc->speed = 0;
+	float speed = 0;
 	// devided by 1000000 because ESC data is in the base of us instead of s
     // This line is shitty since it's not actually init run_min but init the esc
 	esc->run_min = (((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_INIT_HIGH));
     printf2("%d %d\n\r ", esc->pin_number, ((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_INIT_HIGH));
 	delay_ms(500);
-	esc_set_speed(esc);
+	esc_set_speed(esc, speed);
 	delay_ms(2500);
     
 	esc->run_min = (((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_RUN_MIN));
 	esc->run_max = (((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_RUN_MAX));
 	esc->lift_quad_min = 0;
-}
-
-void esc_check_bondaries(esc_t *esc)
-{
-	if(esc->speed > 1.0){
-		esc->speed = 1.0;
-	}else if(esc->speed < 0){
-		esc->speed = 0;
-	}
 }
