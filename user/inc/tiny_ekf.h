@@ -59,8 +59,8 @@
         double tmp5[M]; 
     * </pre>
   */
-
-void ekf_init(void * ekf, int n, int m);
+void ekf_init(void* v, int n, int m);
+//void ekf_init(void * ekf, int n, int m);
 
 /**
   * Runs one step of EKF prediction and update. Your code should first build a model, setting
@@ -69,6 +69,6 @@ void ekf_init(void * ekf, int n, int m);
   * @param z array of measurement (observation) values
   * @return 0 on success, 1 on failure caused by non-positive-definite matrix.
   */
-int ekf_step(void * ekf, double * z);
+int ekf_step(void* ekf, double* z);
 
 #endif

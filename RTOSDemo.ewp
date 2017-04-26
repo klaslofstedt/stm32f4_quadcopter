@@ -194,6 +194,7 @@
           <state>EMPL_TARGET_STM32F4</state>
           <state>xDEBUG</state>
           <state>ARM_MATH_CM4</state>
+          <state>USE_I2C_2V8</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -344,6 +345,8 @@
           <state>$PROJ_DIR$\invensense_dmp\mllite</state>
           <state>$PROJ_DIR$\invensense_dmp\mpl</state>
           <state>$PROJ_DIR$\invensense_dmp\eMPL-hal</state>
+          <state>$PROJ_DIR$\vl53l0x\inc</state>
+          <state>$PROJ_DIR$\vl53l0x\src</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1444,6 +1447,9 @@
         <name>$PROJ_DIR$\user\inc\esc.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\inc\filter.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\freertos_time.h</name>
       </file>
       <file>
@@ -1466,6 +1472,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\user\inc\kalman.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\laser.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\lidar.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\inc\main.h</name>
@@ -1504,6 +1516,9 @@
         <name>$PROJ_DIR$\user\src\esc.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\src\filter.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\freertos_time.c</name>
       </file>
       <file>
@@ -1528,6 +1543,12 @@
         <name>$PROJ_DIR$\user\src\kalman.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\src\laser.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\lidar.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\main.c</name>
       </file>
       <file>
@@ -1550,6 +1571,81 @@
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\ultrasonic.c</name>
+      </file>
+    </group>
+  </group>
+  <group>
+    <name>vl53l0x</name>
+    <group>
+      <name>inc</name>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_api.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_api_calibration.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_api_core.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_api_ranging.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_api_strings.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_def.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_device.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_i2c_platform.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_interrupt_threshold_settings.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_platform.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_platform_log.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_tuning.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\inc\vl53l0x_types.h</name>
+      </file>
+    </group>
+    <group>
+      <name>src</name>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_api.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_api_calibration.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_api_core.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_api_ranging.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_api_strings.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_i2c_comms.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\vl53l0x\src\vl53l0x_platform.c</name>
       </file>
     </group>
   </group>

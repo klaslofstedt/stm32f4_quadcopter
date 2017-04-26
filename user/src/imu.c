@@ -22,11 +22,7 @@
 #include "mpu.h"
 //#include "log.h"
 //#include "packet.h"
-xSemaphoreHandle imu_done = NULL;
-xSemaphoreHandle gyro_new = NULL;
-xQueueHandle imu_data = 0;
 
-volatile uint32_t hal_timestamp = 0;
 #define ACCEL_ON        (0x01)
 #define GYRO_ON         (0x02)
 #define COMPASS_ON      (0x04)
@@ -43,6 +39,32 @@ volatile uint32_t hal_timestamp = 0;
 #define PEDO_READ_MS    (1000)
 #define TEMP_READ_MS    (500)
 #define COMPASS_READ_MS (100)
+
+xSemaphoreHandle imu_attitude_sem = NULL;
+xSemaphoreHandle imu_altitude_sem = NULL;
+
+//xSemaphoreHandle gyro_new = NULL;
+
+xQueueHandle imu_attitude_queue = 0;
+xQueueHandle imu_altitude_queue = 0;
+
+imu_data_t imu = {
+    .dmp_roll = 0,
+    .dmp_pitch = 0,
+    .dmp_yaw = 0,
+    .gyro_roll = 0,
+    .gyro_pitch = 0,
+    .gyro_yaw = 0,
+    .acc_x = 0,
+    .acc_y = 0,
+    .acc_z = 0,
+    .dt = 0,
+    .stack_size = 0
+};
+
+volatile uint32_t hal_timestamp = 0;
+
+
 struct rx_s {
     unsigned char header[3];
     unsigned char cmd;
@@ -64,19 +86,7 @@ struct hal_s {
 };
 static struct hal_s hal = {0};
 
-imu_data_t imu = {
-    .dmp_roll = 0,
-    .dmp_pitch = 0,
-    .dmp_yaw = 0,
-    .gyro_roll = 0,
-    .gyro_pitch = 0,
-    .gyro_yaw = 0,
-    .acc_x = 0,
-    .acc_y = 0,
-    .acc_z = 0,
-    .dt = 0,
-    .stack_size = 0
-};
+
 
 /* USB RX binary semaphore. Actually, it's just a flag. Not included in struct
 * because it's declared extern elsewhere.
@@ -126,7 +136,47 @@ static struct platform_data_s compass_pdata = {
 #define COMPASS_ENABLED 1
 #endif
 
-unsigned long counter = 0, ts2 = 0;// ts_tot = 0;
+void imu_read(imu_data_t* in)
+{
+    in->acc_x = imu.acc_x;
+    in->acc_y = imu.acc_y;
+    in->acc_z = imu.acc_z;
+    in->gyro_roll = imu.gyro_roll;
+    in->gyro_pitch = imu.gyro_pitch;
+    in->gyro_yaw = imu.gyro_yaw;
+    in->dmp_roll = imu.dmp_roll;
+    in->dmp_pitch = imu.dmp_pitch;
+    in->dmp_yaw = imu.dmp_yaw;
+    in->dt = imu.dt;
+}
+
+float imu_read_acc_z(void)
+{
+    return -imu.acc_z;
+}
+
+float imu_read_dmp_roll(void)
+{
+    return imu.dmp_roll;
+}
+
+float imu_read_dmp_pitch(void)
+{
+    return imu.dmp_pitch;
+}
+
+float imu_acc_z_average(uint32_t samples)
+{
+    // You should probably wait 10 seconds for the sensor to stabilize
+    uint32_t i;
+    imu.acc_z_average = 0;
+    for(i = 0; i < samples; i++){
+        imu.acc_z_average += imu.acc_z / samples;
+    }
+    return imu.acc_z_average;
+}
+
+unsigned long ts2 = 0;
 static void read_from_mpl_float(void)
 {
     int8_t accuracy;
@@ -158,18 +208,18 @@ static void read_from_mpl_float(void)
         //printf2(" roll: %7.4f", imu.gyro_roll);
         //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
         
-        if(!xQueueSend(imu_data, &imu, 1000)){
+        // Send attitude data to main
+        /*if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
             printf2("xQueueSend failed\n\r");
-        }
-        xSemaphoreGive(imu_done);
-        //taskYIELD();
+        }*/
+        xQueueOverwrite(imu_attitude_queue, &imu);
+        xSemaphoreGive(imu_attitude_sem);
         
-        /*
-        if(!xQueueSend(imu_data, &imu, 100)){
-        printf2("xQueueSend failed\n\r");
-    }
-        xSemaphoreGive(imu_done);
-        //taskYIELD();*/
+        // Send same data to altitude for futher calculations
+        xQueueOverwrite(imu_altitude_queue, &imu);
+        xSemaphoreGive(imu_altitude_sem);
+        
+        //taskYIELD();
     }
     else{
         printf2("dmp failed\n\r");
@@ -320,9 +370,11 @@ void imu_task(void *pvParameters)
     stack_size = uxTaskGetStackHighWaterMark(NULL);
     printf2("imu task\n\r");
     
-    imu_data = xQueueCreate(1, sizeof(imu_data_t));
-    vSemaphoreCreateBinary(gyro_new);
-    vSemaphoreCreateBinary(imu_done);
+    imu_attitude_queue = xQueueCreate(1, sizeof(imu_data_t));
+    imu_altitude_queue = xQueueCreate(1, sizeof(imu_data_t));
+    //vSemaphoreCreateBinary(gyro_new);
+    vSemaphoreCreateBinary(imu_attitude_sem);
+    vSemaphoreCreateBinary(imu_altitude_sem);
     
     //-------------------------------------dmp--------------------------
     // gör något åt hastigheten på loopen..? den verkar gå på 5-6 ms ~150-200 Hz

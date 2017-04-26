@@ -7,6 +7,7 @@
 #include "uart.h"
 #include "gpio.h"
 #include "printf2.h"
+#include "freertos_time.h"
 
 void hardware_init(void)
 {

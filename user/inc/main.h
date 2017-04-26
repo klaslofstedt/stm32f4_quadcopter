@@ -62,7 +62,19 @@ pid_data_t yaw = {
 	.setpoint = 0,
 	.i_term = 0,
 	.output = 0,
-    .k_p = -2.0, //-4.2// lower this in order to get more stable flight
+    .k_p = -2.0,
+    .k_i = 0.0,
+    .k_d = 0.0
+};
+
+pid_data_t pid_altitude = {
+    .input = 0,
+	.last_input = 0,
+    .rate = 0,
+	.setpoint = 0,
+	.i_term = 0,
+	.output = 0,
+    .k_p = -2.0,
     .k_i = 0.0,
     .k_d = 0.0
 };

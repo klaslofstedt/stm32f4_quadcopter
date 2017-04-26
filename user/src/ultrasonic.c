@@ -27,7 +27,7 @@ void ultrasonic_read(ultrasonic_data_t* ultrasonic)
     delay_ms(70);
     printf2("3\n\r");
     uint8_t temp[2];
-    I2C_Receive(SRF02_ASSIGNED_ADDRESS, temp, 2);
+    I2C_Receive(SRF02_ASSIGNED_ADDRESS, temp, 2); // pointer???
     printf2("4\n\r");
     ultrasonic->distance_cm = temp[0] << 8 | temp[1];
 }

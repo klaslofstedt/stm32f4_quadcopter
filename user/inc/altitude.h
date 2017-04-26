@@ -3,8 +3,8 @@
 
 // FreeRTOS kernel includes
 #include "FreeRTOS.h"
-//#include "task.h"
-//#include "timers.h"
+#include "task.h"
+#include "timers.h"
 #include "semphr.h"
 #include "queue.h"
 
@@ -51,10 +51,19 @@ typedef struct {
 } ekf_t; 
 
 typedef struct {
+    float acc_z;
+    float acc_offset;
+    float laser_offset;
     float altitude_cm;
+    float rate_cm_s;
     float dt;
+    UBaseType_t stack_size;
 } altitude_data_t;
 
+
+
 void altitude_task(void *pvParameters);
+float altitude_read_cm(void);
+float altitude_read_speed(void);
 
 #endif

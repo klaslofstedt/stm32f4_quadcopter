@@ -39,7 +39,10 @@ typedef struct{
     float mbar;
     float temp_c;
     float altitude_m;
-    UBaseType_t stack_size;
+    float altitude_cm;
+    float altitude_ground_m;
+    float altitude_ground_cm;
+    float offset;
 } barometer_data_t;
 
 //void barometer_task(void *pvParameters);

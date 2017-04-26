@@ -46,6 +46,10 @@ C:\Users\klasl\Desktop\freertos_dmp2\invensense_dmp\mpl
 -I
 C:\Users\klasl\Desktop\freertos_dmp2\invensense_dmp\eMPL-hal
 -I
+C:\Users\klasl\Desktop\freertos_dmp2\vl53l0x\inc
+-I
+C:\Users\klasl\Desktop\freertos_dmp2\vl53l0x\src
+-I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\arm\CMSIS\Include
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\arm\inc
@@ -96,6 +100,10 @@ C:\Users\klasl\Desktop\freertos_dmp2\invensense_dmp\mpl
 -I
 C:\Users\klasl\Desktop\freertos_dmp2\invensense_dmp\eMPL-hal
 -I
+C:\Users\klasl\Desktop\freertos_dmp2\vl53l0x\inc
+-I
+C:\Users\klasl\Desktop\freertos_dmp2\vl53l0x\src
+-I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\arm\CMSIS\Include
 -DUSE_STDPERIPH_DRIVER=1
 -DSTM32F4XX=1
@@ -106,6 +114,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\arm\CMSIS\Include
 -DEMPL_TARGET_STM32F4=1
 -DxDEBUG=1
 -DARM_MATH_CM4=1
+-DUSE_I2C_2V8=1
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

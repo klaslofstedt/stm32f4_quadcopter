@@ -3,6 +3,9 @@
 #define BOUNDARY_MIN -1.0f
 #define BOUNDARY_MAX 1.0f
 
+// Might wanna have a better error handling when using delta input as rate:
+// https://github.com/Lauszus/LaunchPadFlightController/blob/fddbe4eb9303ea4301a714585d7383a2de275d80/src/PID.c
+
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
     // These are used for ease to read
