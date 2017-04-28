@@ -48,6 +48,7 @@ xSemaphoreHandle imu_altitude_sem = NULL;
 xQueueHandle imu_attitude_queue = 0;
 xQueueHandle imu_altitude_queue = 0;
 
+
 imu_data_t imu = {
     .dmp_roll = 0,
     .dmp_pitch = 0,

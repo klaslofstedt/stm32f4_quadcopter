@@ -31,7 +31,7 @@ esc_t esc4 = {
     .speed_min = 0
 };
 
-pid_data_t roll = {
+pid_data_t pid_roll = {
     .input = 0,
     .last_input = 0,
     .rate = 0,
@@ -40,10 +40,10 @@ pid_data_t roll = {
 	.output = 0,
     .k_p = 0.006,
     .k_i = 0.0,
-    .k_d = 0.9 // kanske höja?
+    .k_d = 0.0009 // 0.9
 };
 
-pid_data_t pitch = {
+pid_data_t pid_pitch = {
     .input = 0,
 	.last_input = 0,
     .rate = 0,
@@ -52,17 +52,17 @@ pid_data_t pitch = {
 	.output = 0,
     .k_p = 0.006,
     .k_i = 0.0,
-    .k_d = 0.9
+    .k_d = 0.0009 // 0.9
 };
 
-pid_data_t yaw = {
+pid_data_t pid_yaw = {
     .input = 0,
 	.last_input = 0,
     .rate = 0,
 	.setpoint = 0,
 	.i_term = 0,
 	.output = 0,
-    .k_p = -2.0,
+    .k_p = -0.002,
     .k_i = 0.0,
     .k_d = 0.0
 };
@@ -79,7 +79,7 @@ pid_data_t pid_altitude = {
     .k_d = 0.0
 };
 
-joystick_data_t joystick_roll_g = {
+joystick_data_t joystick_roll = {
     .pin_num = 5,
     .freq_desired = 55,
     .freq_input = 0,
@@ -94,7 +94,7 @@ joystick_data_t joystick_roll_g = {
     .output_limit = 15
 };
 
-joystick_data_t joystick_pitch_g = {
+joystick_data_t joystick_pitch = {
     .pin_num = 2,
     .freq_desired = 55,
     .freq_input = 0,
@@ -109,7 +109,7 @@ joystick_data_t joystick_pitch_g = {
     .output_limit = 15
 };
 
-joystick_data_t joystick_yaw_g = {
+joystick_data_t joystick_yaw = {
     .pin_num = 9,
     .freq_desired = 55,
     .freq_input = 0,
@@ -119,12 +119,12 @@ joystick_data_t joystick_yaw_g = {
     .duty_center = 8.43,
     .duty_thresh = 0.15,
     .duty_input = 0,
-    .scalefactor = 0.1,
+    .scalefactor = 100, // TODO: calculate this instead for set on init
     .output = 0,
-    .output_limit = 2 //????? fixa detta!
+    .output_limit = 200 // TODO: measure an actual max rate
 };
 
-joystick_data_t joystick_thrust_g = {
+joystick_data_t joystick_thrust = {
     .pin_num = 12,
     .freq_desired = 55,
     .freq_input = 0,
@@ -139,7 +139,7 @@ joystick_data_t joystick_thrust_g = {
     .output_limit = 1 //????? fixa detta!
 };
 
-joystick_data_t joystick_toggle_g = {
+joystick_data_t joystick_toggle = {
     .pin_num = 3,
     .freq_desired = 55,
     .freq_input = 0,

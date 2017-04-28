@@ -13,7 +13,7 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     
     // Calculate input rate with derivation of position instead from EKF output
     // *** IMPORTANT *** Does it need low pass-filter?                           
-    pid->rate = (pid->input - pid->last_input) / (float)dt;
+    //pid->rate = (pid->input - pid->last_input) / (float)dt;
     
     // Calculate error between current and desired position
     error = pid->setpoint - pid->input;

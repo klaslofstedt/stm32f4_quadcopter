@@ -20,23 +20,32 @@
 #include "joystick.h"
 #include "altitude.h"
 
+#define X_CONFIG 1
+
 
 static void main_task(void *pvParameters);
-static void telemetry_task(void *pvParameters);
-
-// 168000000=168Mhz
-extern uint32_t SystemCoreClock; 
+static void telemetry_task(void *pvParameters); 
+uint8_t armed(void);
 
 UBaseType_t stack_size_main;
 
 
 static imu_data_t imu; // _g or _g?
-//static altitude_data_t altitude;
+static altitude_data_t altitude;
 
 static float thrust = 0; // _g or _g?
 static float toggle = 0;
 
-
+uint8_t armed(void)
+{
+    toggle = joystick_read_toggle(&joystick_toggle);
+    if(toggle > 0.5) {
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
 
 void main_task(void *pvParameters)
 {    
@@ -44,74 +53,102 @@ void main_task(void *pvParameters)
     esc_init(&esc2);
     esc_init(&esc3);
     esc_init(&esc4);
-    //send a semaphore that it's clear to start acc_measurements ?
+
+    // Not needed?
+    stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     
-    float last_yaw = 0;
-    stack_size_main = uxTaskGetStackHighWaterMark( NULL );
     while(1){
+        // Wait forever for semaphore from imu task.
+        // This sem sets the frequency of the main loop (~5 ms = 200 Hz interval)
         if(xSemaphoreTake(imu_attitude_sem, portMAX_DELAY) == pdTRUE){
             if(!xQueueReceive(imu_attitude_queue, &imu, 1000)){ // 1000 ms?
                 printf2("No IMU data in queue\n\r");
             }
          
-            // Read setpoints --------------------------------------------------
-            pitch.setpoint = joystick_get_setpoint(&joystick_pitch_g);
-            roll.setpoint = joystick_get_setpoint(&joystick_roll_g);
-            yaw.setpoint = joystick_get_setpoint(&joystick_yaw_g);
-            //altitude.setpoint = joystick_get_thrust(&joystick_thrust_g);
-            thrust = joystick_get_thrust(&joystick_thrust_g);
-            toggle = joystick_get_toggle(&joystick_toggle_g);
+            // Build pitch pid object ------------------------------------------
+            pid_pitch.setpoint = joystick_read_setpoint(&joystick_pitch);
+            pid_pitch.input = imu.dmp_pitch;
+            pid_pitch.rate = imu.gyro_pitch;
+            pid_calc(&pid_pitch, imu.dt);
             
-            // Read inputs -----------------------------------------------------
-            roll.input = imu.dmp_roll;
-            pitch.input = imu.dmp_pitch;
-            // TODO: Also read gyro here!!!
+            // Build roll pid object -------------------------------------------
+            pid_roll.setpoint = joystick_read_setpoint(&joystick_roll);
+            pid_roll.input = imu.dmp_roll;
+            pid_roll.rate = imu.gyro_roll;
+            pid_calc(&pid_roll, imu.dt);
+
+            // Build yaw pid object --------------------------------------------
+            pid_yaw.setpoint = joystick_read_setpoint(&joystick_yaw);
+            //printf2(" $ %d;", (int32_t)(20000+100*pid_yaw.setpoint));
             
-            // Set yaw to the derivative of IMU reading
+            //data1 = (int32_t)(2000*pid_yaw.setpoint);
+            //data1 = (int32_t)(data1 - (0.5 * data1) + 0.5 * data2);
+            //data1 = (int32_t)(data1/4 + data2/5 + data3/6 + data4/7 + data5/8 + data6/9 + (11*data7/2520));// + data6/64 + data7/128 + data8/256 + data9/512 + data10/1024);
+
+            //data10 = data9;
+            //data9 = data8;
+            //data8 = data7;
+            /*data7 = data6;
+            data6 = data5;
+            data5 = data4;
+            data4 = data3;
+            data3 = data2;
+            data2 = data1;*/
             
-            yaw.input = (imu.dmp_yaw - last_yaw) / imu.dt;
-            last_yaw = imu.dmp_yaw;
             
-            pid_altitude.input = altitude_read_cm();
-            pid_altitude.rate = altitude_read_speed();
+
+            printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));
+            printf2(" %d", 15000);
+            printf2(" %d;", 20000);
             
-            // Poll altitude data
-            /*if(xSemaphoreTake(altitude_sem, 0) == pdTRUE){
-                if(!xQueueReceive(altitude_data_queue, &altitude, 0)){
-                    printf2("No altitude data in queue\n\r");
-                }
-                //printf2("main altitude\n\r");
-                printf2("altitude: %.4f ", altitude.dt);
-                printf2("altitude: %.4f\n\r ", altitude.altitude_cm);
-            }*/
-            
-            // Calculate outputs -----------------------------------------------
-            pid_calc(&roll, imu.dt);
-            pid_calc(&pitch, imu.dt);
-            pid_calc(&yaw, imu.dt);
-            //pid_calc(&pid_altitude, imu.dt);
-            
+            pid_yaw.input = imu.gyro_yaw;
+            pid_calc(&pid_yaw, imu.dt);
+
+            // Build altitude pid object ---------------------------------------
+            // Poll queue for altitude data (~25 ms = 40 Hz interval)
+            if(xQueueReceive(altitude_queue, &altitude, 0)){
+                //uart_print("Found altitude data in queue\n\r"); // expected
+                pid_altitude.setpoint = joystick_read_thrust(&joystick_thrust);
+                pid_altitude.input = altitude.altitude_cm;
+                pid_altitude.rate = altitude.rate_cm_s;
+                //pid_calc(&pid_altitude, altitude.dt);
+                
+                // Fake line!
+                pid_altitude.output = joystick_read_thrust(&joystick_thrust);
+            }
+
             // Set outputs ----------------------------------------------------- 
-            //  1  front  2
-            //  left    right
-            //  4   back  3  
-            if(toggle > 0.5) { // armed
-            esc_set_speed(&esc1, thrust + pitch.output + roll.output + yaw.output);
-            esc_set_speed(&esc2, thrust - pitch.output + roll.output - yaw.output);
-            esc_set_speed(&esc3, thrust - pitch.output - roll.output + yaw.output);
-            esc_set_speed(&esc4, thrust + pitch.output - roll.output - yaw.output);
+            if(armed()) { // picture below is wrong
+#if X_CONFIG
+                //  1  front  2
+                //  left    right
+                //  4   back  3 
+                //printf2("ARM x\n\r");
+                esc_set_speed(&esc1, pid_altitude.output + pid_pitch.output + pid_roll.output + pid_yaw.output);
+                esc_set_speed(&esc2, pid_altitude.output - pid_pitch.output + pid_roll.output - pid_yaw.output);
+                esc_set_speed(&esc3, pid_altitude.output - pid_pitch.output - pid_roll.output + pid_yaw.output);
+                esc_set_speed(&esc4, pid_altitude.output + pid_pitch.output - pid_roll.output - pid_yaw.output);
+#elif PLUS_CONFIG
+                //      1 front
+                //  4 left  2 right
+                //      3 back
+                //printf2("ARM +n\r");
+                esc_set_speed(&esc1, pid_altitude.output + pid_pitch.output + pid_yaw.output);
+                esc_set_speed(&esc2, pid_altitude.output + pid_roll.output - pid_yaw.output);
+                esc_set_speed(&esc3, pid_altitude.output - pid_pitch.output + pid_yaw.output);
+                esc_set_speed(&esc4, pid_altitude.output - pid_roll.output - pid_yaw.output);
+#endif
             }
             else{
+                //printf2("Not armed\n\r");
                 esc_set_speed(&esc1, 0);
                 esc_set_speed(&esc2, 0);
                 esc_set_speed(&esc3, 0);
                 esc_set_speed(&esc4, 0);
             }
-            
-            //taskYIELD();
         }
-
-        stack_size_main = uxTaskGetStackHighWaterMark( NULL );
+        // Read the size of this task in order to refine assigned stack size
+        stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     }
 }
 
@@ -119,7 +156,7 @@ void main_task(void *pvParameters)
 void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
-    const TickType_t frequency = 100; // 1000ms / 5 = 200Hz
+    const TickType_t frequency = 200; // 1000ms / 5 = 200Hz
     UBaseType_t stack_size_tele;
     stack_size_tele = uxTaskGetStackHighWaterMark( NULL );
     while(1)
@@ -130,8 +167,8 @@ void telemetry_task(void *pvParameters)
         //printf2(" %.3f", joystick_pitch_g.freq_input);
         //printf2(" roll: %.3f", joystick_roll_g.duty_input);
         //printf2(" %.3f", joystick_roll_g.freq_input);
-        //printf2(" yaw: %.3f", joystick_yaw_g.duty_input);
-        //printf2(" %.3f", joystick_yaw_g.freq_input);
+        //printf2(" yaw: %.3f", joystick_yaw.duty_input);
+        //printf2(" %.3f", joystick_yaw.freq_input);
         //printf2(" thrust: %.3f", joystick_thrust_g.duty_input);
         //printf2(" %.3f", joystick_thrust_g.freq_input);
         //printf2(" toggle: %.3f", joystick_toggle_g.duty_input);
@@ -159,11 +196,15 @@ void telemetry_task(void *pvParameters)
         //printf2(" roll dmp: %.3f", imu.dmp_roll);
         //printf2(" pitch dmp: %.3f", imu.dmp_pitch);
         //printf2(" yaw dmp ori: %.3f", imu.dmp_yaw);
+
         //printf2(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
-        //printf2(" yaw set_point: %.3f", yaw.setpoint);
+        //printf2(" yaw set_point: %.3f", pid_yaw.setpoint);
         //printf2(" yaw speed: %.3f", 
         //printf2(" yaw: %7.4f", imu.yaw);
         
+        //printf2(" altitude_cm: %.3f", altitude.altitude_cm);
+        //printf2(" altitude_acc: %.3f", altitude.acc_z);
+        //printf2(" altitude_dt: %d", altitude.dt);
         
         //printf2(" esc1: %.3f", esc1.speed);
         //printf2(" esc2: %.3f", esc2.speed);

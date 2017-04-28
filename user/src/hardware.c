@@ -9,6 +9,9 @@
 #include "printf2.h"
 #include "freertos_time.h"
 
+// 168000000=168Mhz
+extern uint32_t SystemCoreClock;
+
 void hardware_init(void)
 {
     // Setup STM32 system (clock, PLL and Flash configuration)

@@ -14,7 +14,7 @@
 #define Mobs 3
 
 extern xSemaphoreHandle altitude_done;
-extern xQueueHandle altitude_data;
+extern xQueueHandle altitude_queue;
 
 // This is only kalman filter struct for ONE tiny_ekf object!! this case altitude
 typedef struct {
@@ -56,7 +56,7 @@ typedef struct {
     float laser_offset;
     float altitude_cm;
     float rate_cm_s;
-    float dt;
+    unsigned long dt;
     UBaseType_t stack_size;
 } altitude_data_t;
 

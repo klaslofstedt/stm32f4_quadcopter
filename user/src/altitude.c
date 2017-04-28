@@ -12,27 +12,27 @@
 #include <math.h>
 #include "tiny_ekf.h"
 
-#define LOOP_TIME_MS 250
+#define LOOP_TIME_MS 25
 #define M_PI 3.14159265358979323846
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
+static float altitude_remove_angle_contribution(float measured, float x, float y);
 
-xSemaphoreHandle altitude_sem = NULL;
-xQueueHandle altitude_data_queue = 0;
 
+//xSemaphoreHandle altitude_sem = NULL;
+xQueueHandle altitude_queue = 0;
 
 static imu_data_t imu;
+static altitude_data_t altitude;
 
 
-static float altitude_remove_angle_contribution(float measured, float x, float y);
 
 //static void altitude_update(ekf_t* ekf, altitude_data_t* alt);
 //static void altitude_set(ekf_t* ekf);
 //static void altitude_read_offset(void);
 
 
-altitude_data_t altitude;
-//imu_data_t imu;
+
 
 
 barometer_data_t barometer = {
@@ -54,67 +54,67 @@ lidar_data_t lidar = {
 
 static void altitude_update(ekf_t* ekf, altitude_data_t* alt)//float u_in, float dt_in)
 { 
-    double u = (double)alt->acc_z;
-    double dt = (double)alt->dt / 1000;
-    // x = Fx + Bu
-    ekf->fx[0] = (u * pow(dt, 2)/2) + (dt * ekf->x[1]) + ekf->x[0];
-    ekf->fx[1] = u * dt + ekf->x[1];
-    ekf->fx[2] = ekf->x[2];
-    ekf->fx[3] = ekf->x[3];
-    
-    //ekf->hx = H*ekf->fx;
-    ekf->hx[0] = ekf->fx[0] + ekf->fx[2];
-    ekf->hx[1] = ekf->fx[0];
-    ekf->hx[2] = ekf->fx[0] + ekf->fx[3];
-    
-    alt->altitude_cm = (float)ekf->fx[0];
-    alt->rate_cm_s = (float)ekf->fx[1];
+double u = (double)alt->acc_z;
+double dt = (double)alt->dt / 1000;
+// x = Fx + Bu
+ekf->fx[0] = (u * pow(dt, 2)/2) + (dt * ekf->x[1]) + ekf->x[0];
+ekf->fx[1] = u * dt + ekf->x[1];
+ekf->fx[2] = ekf->x[2];
+ekf->fx[3] = ekf->x[3];
+
+//ekf->hx = H*ekf->fx;
+ekf->hx[0] = ekf->fx[0] + ekf->fx[2];
+ekf->hx[1] = ekf->fx[0];
+ekf->hx[2] = ekf->fx[0] + ekf->fx[3];
+
+alt->altitude_cm = (float)ekf->fx[0];
+alt->rate_cm_s = (float)ekf->fx[1];
 }
 
 static void altitude_set(ekf_t* ekf)
 {
-    // Important (process noise, how characteristics change over time). Small
-    ekf->Q[0][0] = 0.001; // height 0.3
-    ekf->Q[1][1] = 0.001; // speed  0.5
-    
-    // Not as important
-    ekf->P[0][0] = 0.1;    //0.1
-    ekf->P[1][1] = 0.1;    //0.1
-    ekf->P[2][2] = 10000;
-    ekf->P[3][3] = 10000;
-    
-    // Important! Needs better method to update this as it needs to be changed runtime
-    ekf->R[0][0] = 1;
-    ekf->R[1][1] = 0.025; // if echo
-    ekf->R[2][2] = 10000; // if no satellites
+// Important (process noise, how characteristics change over time). Small
+ekf->Q[0][0] = 0.001; // height 0.3
+ekf->Q[1][1] = 0.001; // speed  0.5
 
-    ekf->x[0] = 0;
-    ekf->x[1] = 0;
-    ekf->x[2] = 100;
-    ekf->x[3] = 100;
-    
-    ekf->F[0][0] = 1;
-    ekf->F[1][1] = 1;
-    ekf->F[2][2] = 1;
-    ekf->F[3][3] = 1;
-    ekf->F[0][1] = LOOP_TIME_MS / 1000; // is this right row/column?
-    
-    ekf->H[0][0] = 1;
-    ekf->H[0][2] = 1;
-    ekf->H[1][0] = 1;
-    ekf->H[2][0] = 1;
-    ekf->H[2][3] = 1;
+// Not as important
+ekf->P[0][0] = 0.1;    //0.1
+ekf->P[1][1] = 0.1;    //0.1
+ekf->P[2][2] = 10000;
+ekf->P[3][3] = 10000;
+
+// Important! Needs better method to update this as it needs to be changed runtime
+ekf->R[0][0] = 1;
+ekf->R[1][1] = 0.025; // if echo
+ekf->R[2][2] = 10000; // if no satellites
+
+ekf->x[0] = 0;
+ekf->x[1] = 0;
+ekf->x[2] = 100;
+ekf->x[3] = 100;
+
+ekf->F[0][0] = 1;
+ekf->F[1][1] = 1;
+ekf->F[2][2] = 1;
+ekf->F[3][3] = 1;
+ekf->F[0][1] = LOOP_TIME_MS / 1000; // is this right row/column?
+
+ekf->H[0][0] = 1;
+ekf->H[0][2] = 1;
+ekf->H[1][0] = 1;
+ekf->H[2][0] = 1;
+ekf->H[2][3] = 1;
 }
 
 static void altitude_read_offset(void)
 {
-    delay_ms(10000);
-    uint16_t i;
-    for(i = 0; i < SAMPLES; i++){
-        altitude.acc_offset += (imu_read_acc_z() / SAMPLES);
-        delay_ms(1);
-        
-        //printf2("Acc offset: %.5f\n\r", altitude.acc_offset);
+delay_ms(10000);
+uint16_t i;
+for(i = 0; i < SAMPLES; i++){
+altitude.acc_offset += (imu_read_acc_z() / SAMPLES);
+delay_ms(1);
+
+//printf2("Acc offset: %.5f\n\r", altitude.acc_offset);
     } 
 }*/
 static float altitude_remove_angle_contribution(float measured, float x, float y)
@@ -143,14 +143,14 @@ void altitude_task(void *pvParameters)
     //printf2("init ultrasonic\n\r");
     //ultrasonic_init();
     barometer_init(&barometer);
-   
+    
     laser_init(&laser);
     laser_read_average(&laser, 50);
     float range = laser.range_avg;
     barometer.offset = laser.range_avg;
     
     
-    //altitude_data = xQueueCreate(1, sizeof(altitude_data_t));
+    altitude_queue = xQueueCreate(1, sizeof(altitude_data_t));
     
     //ekf_init(&ekf_altitude, Nsta, Mobs);
     //altitude_set(&ekf_altitude);
@@ -164,56 +164,65 @@ void altitude_task(void *pvParameters)
             if(!xQueueReceive(imu_altitude_queue, &imu, 0)){
                 printf2("No altitude IMU data in queue\n\r");
             }
-        }
-
-        //barometer_read(&barometer);
-        
-        
-        laser_read(&laser);
-        lidar_read(&lidar);
-        
-        // If both lidar and laser are working well
-        if(laser.range_cm != -1 && lidar.range_cm != -1){
-            // If range is too low for lidar, use only laser
-            if(laser.range_cm >= laser.range_min && laser.range_cm < lidar.range_min){
-                range = laser.range_cm;
+            
+            //barometer_read(&barometer);
+            laser_read(&laser);
+            lidar_read(&lidar);
+            
+            //printf2(" z acc: %.3f", imu.acc_z);
+            //printf2("\n\r");
+            
+            // If both lidar and laser are working well
+            if(laser.range_cm != -1 && lidar.range_cm != -1){
+                // If range is too low for lidar, use only laser
+                if(laser.range_cm >= laser.range_min && laser.range_cm < lidar.range_min){
+                    range = laser.range_cm;
+                }
+                // If range is too high for laser, use only lidar
+                else if(lidar.range_cm > laser.range_max && lidar.range_cm <= lidar.range_max){
+                    range = lidar.range_cm;
+                }
+                // Else use both sensors
+                else{
+                    // Constrain in case distance was not previously set and then calculate value in the range [0,1]
+                    float damping = (float)(constrain(range, lidar.range_min, laser.range_max) - lidar.range_min) / (laser.range_max - lidar.range_min); 
+                    filter_transition(&range, laser.range_cm, lidar.range_cm, damping);
+                }
             }
-            // If range is too high for laser, use only lidar
-            else if(lidar.range_cm > laser.range_max && lidar.range_cm <= lidar.range_max){
-                range = lidar.range_cm;
+            // If only laser is active
+            else if(laser.range_cm != -1){
+                if(laser.range_cm >= laser.range_min && laser.range_cm <= laser.range_max){
+                    range = laser.range_cm;
+                }
             }
-            // Else use both sensors
+            // If only lidar is active
+            else if(lidar.range_cm != -1){
+                if(lidar.range_cm >= lidar.range_min && lidar.range_cm <= lidar.range_max){
+                    range = lidar.range_cm;
+                }
+            }
             else{
-                // Constrain in case distance was not previously set and then calculate value in the range [0,1]
-                float damping = (float)(constrain(range, lidar.range_min, laser.range_max) - lidar.range_min) / (laser.range_max - lidar.range_min); 
-                filter_transition(&range, laser.range_cm, lidar.range_cm, damping);
+                // range = ????
+                printf2("Laser & Lidar measurements failed\n\r");
             }
+            //printf2(" range: %.4f", range);
+            float range_true = altitude_remove_angle_contribution(range, imu_read_dmp_roll(), imu_read_dmp_pitch());
+            //printf2(" range_true : %.4f", range_true);
+            altitude.acc_z = imu.acc_z;
+            altitude.altitude_cm = range_true;
+            
+            altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
+            last_wake_time = wake_time;
+
+            xQueueOverwrite(altitude_queue, &altitude);
         }
-        else if(laser.range_cm != -1){
-            if(laser.range_cm >= laser.range_min && laser.range_cm <= laser.range_max){
-                range = laser.range_cm;
-            }
-        }
-        else if(lidar.range_cm != -1){
-            if(lidar.range_cm >= lidar.range_min && lidar.range_cm <= lidar.range_max){
-                range = lidar.range_cm;
-            }
-        }
-        else{
-            // range = ????
-            printf2("Laser & Lidar measurements failed\n\r");
-        }
-        printf2(" range: %.4f", range);
-        float range_true = altitude_remove_angle_contribution(range, imu_read_dmp_roll(), imu_read_dmp_pitch());
-        printf2(" range_true : %.4f", range_true);
+        
+        
         // Remove additional contribution due to roll & pitch angles
         // h_measured = sqrt(h_true^2 + roll^2 + pitch^2) gives:
         
         
-        //altitude.dt = (float)(wake_time - last_wake_time);
-        //altitude.acc_z = imu_read_acc_z() - altitude.acc_offset;
         
-        //last_wake_time = wake_time;
         // plot
         //printf2(" $ %d %d;", (int16_t)(10*laser.range_cm), (int16_t)(-1000*altitude.acc_z - altitude.laser_offset));
         
@@ -232,14 +241,14 @@ void altitude_task(void *pvParameters)
         //z[0] = 0;//barometer.altitude_cm;
         //z[1] = (double)laser.range_cm - altitude.laser_offset; // or lidar //ultrasonic.distance_cm;
         //z[2] = 0; // gps?
-
+        
         
         //altitude_update(&ekf_altitude, &altitude); 
         //ekf_step(&ekf_altitude, z); // baro, ultrasonic, GPS?
         
         //printf2(" altitude: %.3f ", altitude.altitude_cm);
         //printf2(" speed: %.4f ", altitude.rate_cm_s);
-        printf2("\n\r");
+        
         
         
         /*
