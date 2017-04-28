@@ -79,27 +79,10 @@ void main_task(void *pvParameters)
 
             // Build yaw pid object --------------------------------------------
             pid_yaw.setpoint = joystick_read_setpoint(&joystick_yaw);
-            //printf2(" $ %d;", (int32_t)(20000+100*pid_yaw.setpoint));
             
-            //data1 = (int32_t)(2000*pid_yaw.setpoint);
-            //data1 = (int32_t)(data1 - (0.5 * data1) + 0.5 * data2);
-            //data1 = (int32_t)(data1/4 + data2/5 + data3/6 + data4/7 + data5/8 + data6/9 + (11*data7/2520));// + data6/64 + data7/128 + data8/256 + data9/512 + data10/1024);
-
-            //data10 = data9;
-            //data9 = data8;
-            //data8 = data7;
-            /*data7 = data6;
-            data6 = data5;
-            data5 = data4;
-            data4 = data3;
-            data3 = data2;
-            data2 = data1;*/
-            
-            
-
-            printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));
+            /*printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));
             printf2(" %d", 15000);
-            printf2(" %d;", 20000);
+            printf2(" %d;", 20000);*/
             
             pid_yaw.input = imu.gyro_yaw;
             pid_calc(&pid_yaw, imu.dt);

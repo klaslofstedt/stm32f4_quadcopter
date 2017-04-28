@@ -66,7 +66,7 @@ float joystick_read_setpoint(joystick_data_t* in)
     in->duty_input = isr_read_duty(in->pin_num);
     joystick_filter(in);
     
-    /*float output = 0;
+    float output = 0;
     if(joystick_accuracy(in->freq_input, in->freq_desired, in->freq_accuracy) == 0) {
         if(joystick_accuracy(in->duty_input, in->duty_center, in->duty_thresh) == -1){
             output = (in->scalefactor * (in->duty_center - in->duty_input));
@@ -84,8 +84,8 @@ float joystick_read_setpoint(joystick_data_t* in)
     if(output < -in->output_limit){
         output = -in->output_limit;
     }
-    return output;*/
-    return in->duty_input;
+    return output;
+    //return in->duty_input;
 }
 
 float joystick_read_thrust(joystick_data_t* in)

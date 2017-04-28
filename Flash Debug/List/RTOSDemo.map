@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V7.50.2.10312/W32 for ARM                28/Apr/2017  00:49:05
+# IAR ELF Linker V7.50.2.10312/W32 for ARM                28/Apr/2017  13:01:42
 # Copyright 2007-2015 IAR Systems AB.
 #
 #    Output file  =  
@@ -237,7 +237,7 @@ __dlib_dynamic_initialization = normal
   .intvec             ro code  0x08000000    0x188  startup_stm32f4xx.o [1]
                              - 0x08000188    0x188
 
-"P1":                                      0x14615
+"P1":                                      0x1466e
   .text               ro code  0x08000188   0x14f0  dlmalloc.o [3]
   .text               ro code  0x08001678      0x6  abort.o [3]
   .text               ro code  0x0800167e     0x76  lz77_init_single.o [6]
@@ -372,105 +372,81 @@ __dlib_dynamic_initialization = normal
   .text               ro code  0x08012d50    0x1b0  vl53l0x.o [1]
   .text               ro code  0x08012f00    0x3a0  pwm.o [1]
   .text               ro code  0x080132a0     0x80  misc.o [1]
-  .text               ro code  0x08013320    0x354  main.o [1]
-  .text               ro code  0x08013674    0x1e4  joystick.o [1]
-  .text               ro code  0x08013858    0x11c  esc.o [1]
-  .text               ro code  0x08013974     0xac  pid.o [1]
-  .text               ro code  0x08013a20     0xac  hardware.o [1]
-  .text               ro code  0x08013acc    0x1fc  system_stm32f4xx.o [1]
-  .text               ro code  0x08013cc8      0xc  stm32f4xx_pwr.o [1]
-  .text               ro code  0x08013cd4     0x80  gpio.o [1]
-  .text               ro code  0x08013d54     0x54  stm32f4xx_syscfg.o [1]
-  .rodata             const    0x08013da8     0x44  mpl.o [1]
-  .rodata             const    0x08013dec     0x40  vl53l0x_api.o [1]
-  .text               ro code  0x08013e2c     0x40  zero_init3.o [6]
-  .rodata             const    0x08013e6c     0x28  inv_mpu.o [1]
-  .text               ro code  0x08013e94     0x28  data_init.o [6]
-  .rodata             const    0x08013ebc     0x24  altitude.o [1]
-  .text               ro code  0x08013ee0     0x22  fpinit_M.o [5]
-  .iar.init_table     const    0x08013f04     0x20  - Linker created -
-  .rodata             const    0x08013f24     0x20  altitude.o [1]
-  .rodata             const    0x08013f44     0x20  imu.o [1]
-  .rodata             const    0x08013f64     0x20  inv_mpu.o [1]
-  .rodata             const    0x08013f84     0x1c  barometer.o [1]
-  .rodata             const    0x08013fa0     0x1c  imu.o [1]
-  .rodata             const    0x08013fbc     0x1c  imu.o [1]
-  .text               ro code  0x08013fd8     0x1a  cmain.o [6]
-  .text               ro code  0x08013ff2      0x4  low_level_init.o [3]
-  .text               ro code  0x08013ff6      0x4  exit.o [3]
-  .text               ro code  0x08013ffc      0xa  cexit.o [6]
-  .rodata             const    0x08014008     0x18  barometer.o [1]
-  .rodata             const    0x08014020     0x18  main.o [1]
-  .rodata             const    0x08014038     0x18  vl53l0x.o [1]
-  .rodata             const    0x08014050     0x18  vl53l0x.o [1]
-  .rodata             const    0x08014068     0x18  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014080     0x14  imu.o [1]
-  .rodata             const    0x08014094     0x14  imu.o [1]
-  .rodata             const    0x080140a8     0x10  altitude.o [1]
-  .rodata             const    0x080140b8     0x10  barometer.o [1]
-  .rodata             const    0x080140c8     0x10  hardware.o [1]
-  .rodata             const    0x080140d8     0x10  imu.o [1]
-  .rodata             const    0x080140e8     0x10  main.o [1]
-  .rodata             const    0x080140f8     0x10  main.o [1]
-  .rodata             const    0x08014108     0x10  mpl.o [1]
-  .rodata             const    0x08014118     0x10  mpl.o [1]
-  .rodata             const    0x08014128     0x10  pwm.o [1]
-  .rodata             const    0x08014138     0x10  pwm.o [1]
-  .rodata             const    0x08014148     0x10  vl53l0x.o [1]
-  .rodata             const    0x08014158     0x10  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014168     0x10  vl53l0x_api_strings.o [1]
-  .text               ro code  0x08014178     0x10  startup_stm32f4xx.o [1]
-  .rodata             const    0x08014188      0xc  esc.o [1]
-  .rodata             const    0x08014194      0xc  imu.o [1]
-  .rodata             const    0x080141a0      0xc  imu.o [1]
-  .rodata             const    0x080141ac      0xc  inv_mpu.o [1]
-  .rodata             const    0x080141b8      0xc  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x080141c4      0xc  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x080141d0      0xc  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x080141dc      0xc  main.o [1]
-  .rodata             const    0x080141e8      0xc  main.o [1]
-  .rodata             const    0x080141f4      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014200      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x0801420c      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014218      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014224      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014230      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x0801423c      0xc  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014248      0xc  vl53l0x_api_strings.o [1]
-  .text               ro code  0x08014254      0xc  cstartup_M.o [6]
-  .rodata             const    0x08014260      0x8  main.o [1]
-  .rodata             const    0x08014268      0x8  main.o [1]
-  .rodata             const    0x08014270      0x8  tasks.o [1]
-  .rodata             const    0x08014278      0x8  timers.o [1]
-  .rodata             const    0x08014280      0x8  timers.o [1]
-  .rodata             const    0x08014288      0x8  vl53l0x_api_strings.o [1]
-  .rodata             const    0x08014290      0x4  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x08014294      0x4  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x08014298      0x4  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x0801429c      0x4  inv_mpu_dmp_motion_driver.o [1]
-  .rodata             const    0x080142a0      0x4  port.o [1]
-  .text               ro code  0x080142a4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142a8      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142ac      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142b0      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142b4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142b8      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142bc      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142c0      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142c4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142c8      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142cc      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142d0      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142d4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142d8      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142dc      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142e0      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142e4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142e8      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142ec      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142f0      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142f4      0x4  startup_stm32f4xx.o [1]
-  .text               ro code  0x080142f8      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08013320    0x314  main.o [1]
+  .text               ro code  0x08013634    0x28c  joystick.o [1]
+  .text               ro code  0x080138c0    0x11c  esc.o [1]
+  .text               ro code  0x080139dc     0xac  pid.o [1]
+  .text               ro code  0x08013a88     0xac  hardware.o [1]
+  .text               ro code  0x08013b34    0x1fc  system_stm32f4xx.o [1]
+  .text               ro code  0x08013d30      0xc  stm32f4xx_pwr.o [1]
+  .text               ro code  0x08013d3c     0x80  gpio.o [1]
+  .text               ro code  0x08013dbc     0x54  stm32f4xx_syscfg.o [1]
+  .rodata             const    0x08013e10     0x44  mpl.o [1]
+  .rodata             const    0x08013e54     0x40  vl53l0x_api.o [1]
+  .text               ro code  0x08013e94     0x40  zero_init3.o [6]
+  .rodata             const    0x08013ed4     0x28  inv_mpu.o [1]
+  .text               ro code  0x08013efc     0x28  data_init.o [6]
+  .rodata             const    0x08013f24     0x24  altitude.o [1]
+  .text               ro code  0x08013f48     0x22  fpinit_M.o [5]
+  .iar.init_table     const    0x08013f6c     0x20  - Linker created -
+  .rodata             const    0x08013f8c     0x20  altitude.o [1]
+  .rodata             const    0x08013fac     0x20  imu.o [1]
+  .rodata             const    0x08013fcc     0x20  inv_mpu.o [1]
+  .rodata             const    0x08013fec     0x1c  barometer.o [1]
+  .rodata             const    0x08014008     0x1c  imu.o [1]
+  .rodata             const    0x08014024     0x1c  imu.o [1]
+  .text               ro code  0x08014040     0x1a  cmain.o [6]
+  .text               ro code  0x0801405a      0x4  low_level_init.o [3]
+  .text               ro code  0x0801405e      0x4  exit.o [3]
+  .text               ro code  0x08014064      0xa  cexit.o [6]
+  .rodata             const    0x08014070     0x18  barometer.o [1]
+  .rodata             const    0x08014088     0x18  main.o [1]
+  .rodata             const    0x080140a0     0x18  vl53l0x.o [1]
+  .rodata             const    0x080140b8     0x18  vl53l0x.o [1]
+  .rodata             const    0x080140d0     0x18  vl53l0x_api_strings.o [1]
+  .rodata             const    0x080140e8     0x14  imu.o [1]
+  .rodata             const    0x080140fc     0x14  imu.o [1]
+  .rodata             const    0x08014110     0x10  altitude.o [1]
+  .rodata             const    0x08014120     0x10  barometer.o [1]
+  .rodata             const    0x08014130     0x10  hardware.o [1]
+  .rodata             const    0x08014140     0x10  imu.o [1]
+  .rodata             const    0x08014150     0x10  main.o [1]
+  .rodata             const    0x08014160     0x10  main.o [1]
+  .rodata             const    0x08014170     0x10  mpl.o [1]
+  .rodata             const    0x08014180     0x10  mpl.o [1]
+  .rodata             const    0x08014190     0x10  pwm.o [1]
+  .rodata             const    0x080141a0     0x10  pwm.o [1]
+  .rodata             const    0x080141b0     0x10  vl53l0x.o [1]
+  .rodata             const    0x080141c0     0x10  vl53l0x_api_strings.o [1]
+  .rodata             const    0x080141d0     0x10  vl53l0x_api_strings.o [1]
+  .text               ro code  0x080141e0     0x10  startup_stm32f4xx.o [1]
+  .rodata             const    0x080141f0      0xc  esc.o [1]
+  .rodata             const    0x080141fc      0xc  imu.o [1]
+  .rodata             const    0x08014208      0xc  imu.o [1]
+  .rodata             const    0x08014214      0xc  inv_mpu.o [1]
+  .rodata             const    0x08014220      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x0801422c      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x08014238      0xc  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x08014244      0xc  main.o [1]
+  .rodata             const    0x08014250      0xc  main.o [1]
+  .rodata             const    0x0801425c      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x08014268      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x08014274      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x08014280      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x0801428c      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x08014298      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x080142a4      0xc  vl53l0x_api_strings.o [1]
+  .rodata             const    0x080142b0      0xc  vl53l0x_api_strings.o [1]
+  .text               ro code  0x080142bc      0xc  cstartup_M.o [6]
+  .rodata             const    0x080142c8      0x8  tasks.o [1]
+  .rodata             const    0x080142d0      0x8  timers.o [1]
+  .rodata             const    0x080142d8      0x8  timers.o [1]
+  .rodata             const    0x080142e0      0x8  vl53l0x_api_strings.o [1]
+  .rodata             const    0x080142e8      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080142ec      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080142f0      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080142f4      0x4  inv_mpu_dmp_motion_driver.o [1]
+  .rodata             const    0x080142f8      0x4  port.o [1]
   .text               ro code  0x080142fc      0x4  startup_stm32f4xx.o [1]
   .text               ro code  0x08014300      0x4  startup_stm32f4xx.o [1]
   .text               ro code  0x08014304      0x4  startup_stm32f4xx.o [1]
@@ -540,10 +516,32 @@ __dlib_dynamic_initialization = normal
   .text               ro code  0x08014404      0x4  startup_stm32f4xx.o [1]
   .text               ro code  0x08014408      0x4  startup_stm32f4xx.o [1]
   .text               ro code  0x0801440c      0x4  startup_stm32f4xx.o [1]
-  .rodata             const    0x08014410      0x0  zero_init3.o [6]
-  .rodata             const    0x08014410      0x0  lz77_init_single.o [6]
-  Initializer bytes   const    0x08014410    0x38d  <for P2-1>
-                             - 0x0801479d  0x14615
+  .text               ro code  0x08014410      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014414      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014418      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801441c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014420      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014424      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014428      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801442c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014430      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014434      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014438      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801443c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014440      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014444      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014448      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801444c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014450      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014454      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014458      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x0801445c      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014460      0x4  startup_stm32f4xx.o [1]
+  .text               ro code  0x08014464      0x4  startup_stm32f4xx.o [1]
+  .rodata             const    0x08014468      0x0  zero_init3.o [6]
+  .rodata             const    0x08014468      0x0  lz77_init_single.o [6]
+  Initializer bytes   const    0x08014468    0x38e  <for P2-1>
+                             - 0x080147f6  0x1466e
 
 "P2", part 1 of 3:                           0x6b6
   P2-1                         0x20000000    0x6b6  <Init block>
@@ -695,8 +693,8 @@ Zero (__iar_zero_init3)
           0x200046b8  0x13f4a
 
 Copy/lz77 (__iar_lz77_init_single3)
-    1 source range, total size 0x38d (52% of destination):
-          0x08014410    0x38d
+    1 source range, total size 0x38e (52% of destination):
+          0x08014468    0x38e
     1 destination range, total size 0x6b6:
           0x20000000    0x6b6
 
@@ -726,11 +724,11 @@ C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj: [1]
     imu.o                            928      176      120
     inv_mpu.o                      4 160      107       44
     inv_mpu_dmp_motion_driver.o    2 632    3 118       16
-    joystick.o                       484
+    joystick.o                       652
     laser.o                          144                28
     lidar.o                           12
     list.o                           152
-    main.o                           852      424      704
+    main.o                           788      409      704
     message_layer.o                   32                 4
     misc.o                           128
     ml_math_func.o                 1 746
@@ -750,7 +748,7 @@ C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj: [1]
     stm32f4xx_i2c.o                  578
     stm32f4xx_it.o                 1 140                68
     stm32f4xx_pwr.o                   12
-    stm32f4xx_rcc.o                  392        9       16
+    stm32f4xx_rcc.o                  392        8       16
     stm32f4xx_syscfg.o                84
     stm32f4xx_tim.o                1 288
     stm32f4xx_usart.o                314
@@ -760,13 +758,13 @@ C:\Users\klasl\Desktop\freertos_dmp2\Flash Debug\Obj: [1]
     timers.o                       1 008       16       60
     vl53l0x.o                        432       66      457
     vl53l0x_api.o                  4 410      426      684
-    vl53l0x_api_calibration.o      2 346        8       16
+    vl53l0x_api_calibration.o      2 346        9       16
     vl53l0x_api_core.o             5 112
     vl53l0x_api_strings.o            404      160
     vl53l0x_i2c_comms.o              198
     vl53l0x_platform.o               358
     ------------------------------------------------------
-    Total:                        49 696    4 870   80 972
+    Total:                        49 800    4 855   80 972
 
 command line: [2]
     ------------------------------------------------------
@@ -889,7 +887,7 @@ shb_l.a: [7]
     Gaps                              60        6
     Linker created                             32   16 384
 ----------------------------------------------------------
-    Grand Total:                  78 826    5 043   99 840
+    Grand Total:                  78 930    5 028   99 840
 
 
 *******************************************************************************
@@ -898,9 +896,9 @@ shb_l.a: [7]
 
 Entry                      Address     Size  Type      Object
 -----                      -------     ----  ----      ------
-.iar.init_table$$Base   0x08013f04            --   Gb  - Linker created -
-.iar.init_table$$Limit  0x08013f24            --   Gb  - Linker created -
-?main                   0x08013fd9           Code  Gb  cmain.o [6]
+.iar.init_table$$Base   0x08013f6c            --   Gb  - Linker created -
+.iar.init_table$$Limit  0x08013f8c            --   Gb  - Linker created -
+?main                   0x08014041           Code  Gb  cmain.o [6]
 AHBPrescTable           0x200002e4     0x10  Data  Gb  system_stm32f4xx.o [1]
 APBAHBPrescTable        0x200002d0     0x10  Data  Lc  stm32f4xx_rcc.o [1]
 BusFault_Handler        0x08010a17      0x2  Code  Gb  stm32f4xx_it.o [1]
@@ -947,7 +945,7 @@ NMI_Handler             0x08010a11      0x2  Code  Gb  stm32f4xx_it.o [1]
 NVIC_Init               0x080132ab     0x60  Code  Gb  misc.o [1]
 NVIC_PriorityGroupConfig
                         0x080132a1      0xa  Code  Gb  misc.o [1]
-PWR_BackupAccessCmd     0x08013cc9      0x8  Code  Gb  stm32f4xx_pwr.o [1]
+PWR_BackupAccessCmd     0x08013d31      0x8  Code  Gb  stm32f4xx_pwr.o [1]
 PendSV_Handler          0x080068a1           Code  Gb  portasm.o [1]
 RCC_AHB1PeriphClockCmd  0x08007121     0x20  Code  Gb  stm32f4xx_rcc.o [1]
 RCC_APB1PeriphClockCmd  0x08007141     0x20  Code  Gb  stm32f4xx_rcc.o [1]
@@ -957,8 +955,8 @@ RCC_BackupResetCmd      0x08007119      0x8  Code  Gb  stm32f4xx_rcc.o [1]
 RCC_Clocks              0x20018514     0x10  Data  Gb  pwm.o [1]
 RCC_GetClocksFreq       0x08007041     0xd8  Code  Gb  stm32f4xx_rcc.o [1]
 RETRY_IN_MLSEC          0x200006b4      0x2  Data  Lc  i2c.o [1]
-Region$$Table$$Base     0x08013f04            --   Gb  - Linker created -
-Region$$Table$$Limit    0x08013f24            --   Gb  - Linker created -
+Region$$Table$$Base     0x08013f6c            --   Gb  - Linker created -
+Region$$Table$$Limit    0x08013f8c            --   Gb  - Linker created -
 ST_Sensors_I2C1_ReadRegister
                         0x080064a5    0x3d6  Code  Gb  i2c_1.o [1]
 ST_Sensors_I2C1_Write   0x08006387    0x11e  Code  Gb  i2c_1.o [1]
@@ -971,7 +969,7 @@ ST_Sensors_I2C_ReadRegister
 ST_Sensors_I2C_WriteRegister
                         0x080076cf    0x16e  Code  Gb  i2c.o [1]
 SVC_Handler             0x080068f9           Code  Gb  portasm.o [1]
-SYSCFG_EXTILineConfig   0x08013d55     0x4e  Code  Gb  stm32f4xx_syscfg.o [1]
+SYSCFG_EXTILineConfig   0x08013dbd     0x4e  Code  Gb  stm32f4xx_syscfg.o [1]
 Sensors_I2C1_ReadRegister
                         0x0800606f     0x58  Code  Gb  i2c_1.o [1]
 Sensors_I2C1_Write      0x08005f87     0x40  Code  Gb  i2c_1.o [1]
@@ -982,12 +980,12 @@ Sensors_I2C_ReadRegister
                         0x08007677     0x58  Code  Gb  i2c.o [1]
 Sensors_I2C_WriteRegister
                         0x0800761f     0x58  Code  Gb  i2c.o [1]
-SetSysClock             0x08013bb9     0xce  Code  Lc  system_stm32f4xx.o [1]
+SetSysClock             0x08013c21     0xce  Code  Lc  system_stm32f4xx.o [1]
 Status                  0x20018601      0x1  Data  Gb  vl53l0x.o [1]
 SysTick_Handler         0x0800599b     0x28  Code  Gb  port.o [1]
 SystemCoreClock         0x200002e0      0x4  Data  Gb  system_stm32f4xx.o [1]
-SystemCoreClockUpdate   0x08013b1f     0x9a  Code  Gb  system_stm32f4xx.o [1]
-SystemInit              0x08013acd     0x52  Code  Gb  system_stm32f4xx.o [1]
+SystemCoreClockUpdate   0x08013b87     0x9a  Code  Gb  system_stm32f4xx.o [1]
+SystemInit              0x08013b35     0x52  Code  Gb  system_stm32f4xx.o [1]
 TI1_Config              0x08010889     0x34  Code  Lc  stm32f4xx_tim.o [1]
 TI2_Config              0x080108bd     0x3a  Code  Lc  stm32f4xx_tim.o [1]
 TI3_Config              0x080108f7     0x38  Code  Lc  stm32f4xx_tim.o [1]
@@ -1227,7 +1225,7 @@ __aeabi_memset          0x08005745           Code  Gb  ABImemset.o [6]
 __aeabi_ui2d            0x0800a625           Code  Gb  I32ToDbl.o [5]
 __aeabi_ul2f            0x0800ed59           Code  Gb  I64ToFlt.o [5]
 __aeabi_uldivmod        0x0800a05d           Code  Gb  I64DivMod.o [6]
-__cmain                 0x08013fd9           Code  Gb  cmain.o [6]
+__cmain                 0x08014041           Code  Gb  cmain.o [6]
 __data_GetMemChunk      0x080016f5     0x2c  Code  Gb  xgetmemchunk.o [3]
 __exit                  0x08001721     0x14  Code  Gb  exit.o [7]
 __iar_Dint              0x0800f721     0x7a  Code  Gb  xdint.o [5]
@@ -1253,7 +1251,7 @@ __iar_Sin               0x08011b9d    0x3b2  Code  Gb  xsin.o [5]
 __iar_Strchr            0x08009f4d           Code  Gb  strchr.o [6]
 __iar_d2uiz             0x0800a5f1           Code  Gb  DblToI32.o [5]
 __iar_dadd              0x0800a8c9           Code  Gb  DblAdd.o [5]
-__iar_data_init3        0x08013e95     0x28  Code  Gb  data_init.o [6]
+__iar_data_init3        0x08013efd     0x28  Code  Gb  data_init.o [6]
 __iar_dlfree            0x0800115f    0x510  Code  Gb  dlmalloc.o [3]
 __iar_dlib_perthread_access
                         0x0800a99d      0x2  Code  Gb  xtls.o [3]
@@ -1263,10 +1261,10 @@ __iar_dsubStart         0x0800a667           Code  Gb  DblSub.o [5]
 __iar_edom              0x0800dd7d           Code  Gb  iarEdom.o [6]
 __iar_fmod              0x08012155           Code  Gb  fmod.o [5]
 __iar_fmodl             0x08012155           Code  Gb  fmod.o [5]
-__iar_init_vfp          0x08013ee1           Code  Gb  fpinit_M.o [5]
+__iar_init_vfp          0x08013f49           Code  Gb  fpinit_M.o [5]
 __iar_lz77_init_single3
                         0x0800167f     0x76  Code  Gb  lz77_init_single.o [6]
-__iar_program_start     0x08014255           Code  Gb  cstartup_M.o [6]
+__iar_program_start     0x080142bd           Code  Gb  cstartup_M.o [6]
 __iar_softfp_cosf       0x0800da55     0x12  Code  Gb  cosf.o [5]
 __iar_softfp_sinf       0x0800da67     0x12  Code  Gb  sinf.o [5]
 __iar_softfp_sqrtf      0x0800ca5d           Code  Gb  sqrtf.o [5]
@@ -1293,17 +1291,17 @@ __iar_vfp_sin           0x08012a75     0x12  Code  Gb  sin.o [5]
 __iar_vfp_sqrt          0x08012a89           Code  Gb  sqrt.o [5]
 __iar_vfp_sqrtl         0x08012a89           Code  Gb  sqrt.o [5]
 __iar_xatanf            0x0800e031           Code  Gb  xatanf.o [5]
-__iar_zero_init3        0x08013e2d     0x40  Code  Gb  zero_init3.o [6]
-__low_level_init        0x08013ff3      0x4  Code  Gb  low_level_init.o [3]
+__iar_zero_init3        0x08013e95     0x40  Code  Gb  zero_init3.o [6]
+__low_level_init        0x0801405b      0x4  Code  Gb  low_level_init.o [3]
 __print_result_location
                         0x0801165d      0x2  Code  Lc  mpl.o [1]
 __print_result_location
                         0x0800e2f9      0x2  Code  Lc  fast_no_motion.o [4]
 __vector_table          0x08000000           Data  Gb  startup_stm32f4xx.o [1]
-_call_main              0x08013fe5           Code  Gb  cmain.o [6]
-_exit                   0x08013ffd           Code  Gb  cexit.o [6]
+_call_main              0x0801404d           Code  Gb  cmain.o [6]
+_exit                   0x08014065           Code  Gb  cexit.o [6]
 _gm_                    0x20017518    0x1d8  Data  Lc  dlmalloc.o [3]
-_main                   0x08013fef           Code  Gb  cmain.o [6]
+_main                   0x08014057           Code  Gb  cmain.o [6]
 abort                   0x08001679      0x6  Code  Gb  abort.o [3]
 abs                     0x08003e59      0x8  Code  Gb  abs.o [3]
 accel_fusion            0x0800bfe1    0x1f2  Code  Lc  quaternion_supervisor.o [4]
@@ -1353,9 +1351,9 @@ esc1                    0x20000060     0x18  Data  Gb  main.o [1]
 esc2                    0x20000078     0x18  Data  Gb  main.o [1]
 esc3                    0x20000090     0x18  Data  Gb  main.o [1]
 esc4                    0x200000a8     0x18  Data  Gb  main.o [1]
-esc_init                0x080138b9     0xac  Code  Gb  esc.o [1]
-esc_set_speed           0x08013859     0x60  Code  Gb  esc.o [1]
-exit                    0x08013ff7      0x4  Code  Gb  exit.o [3]
+esc_init                0x08013921     0xac  Code  Gb  esc.o [1]
+esc_set_speed           0x080138c1     0x60  Code  Gb  esc.o [1]
+exit                    0x0801405f      0x4  Code  Gb  exit.o [3]
 filter_transition       0x08012d39     0x16  Code  Gb  filter.o [1]
 fmod                    0x08012155           Code  Gb  fmod.o [5]
 fmodf                   0x0800e215           Code  Gb  fmodf.o [5]
@@ -1367,13 +1365,13 @@ get_next_good_spad      0x08004c01     0x6a  Code  Gb  vl53l0x_api_calibration.o
 get_ref_spad_map        0x08004cc5     0x10  Code  Gb  vl53l0x_api_calibration.o [1]
 get_sequence_step_timeout
                         0x08001e8f    0x14e  Code  Gb  vl53l0x_api_core.o [1]
-gpio_init               0x08013cd5     0x7a  Code  Gb  gpio.o [1]
+gpio_init               0x08013d3d     0x7a  Code  Gb  gpio.o [1]
 gyro_data_ready_cb      0x08010ebb      0x8  Code  Gb  imu.o [1]
 gyro_pdata              0x20000028      0xc  Data  Lc  imu.o [1]
 hal                     0x200182c4     0x24  Data  Lc  imu.o [1]
-hardware_init           0x08013a21     0xac  Code  Gb  hardware.o [1]
+hardware_init           0x08013a89     0xac  Code  Gb  hardware.o [1]
 heapSTRUCT_SIZE         0x08003e12      0x2  Data  Lc  heap_2.o [1]
-hw                      0x080141ac      0xc  Data  Gb  inv_mpu.o [1]
+hw                      0x08014214      0xc  Data  Gb  inv_mpu.o [1]
 i2c1_init               0x08005e6d     0xac  Code  Gb  i2c_1.o [1]
 i2c2_init               0x08007501     0xb0  Code  Gb  i2c.o [1]
 imu                     0x20018328     0x30  Data  Lc  altitude.o [1]
@@ -1579,12 +1577,12 @@ inv_store_gaming_quaternion
 is_aperture             0x08004c6b     0x16  Code  Gb  vl53l0x_api_calibration.o [1]
 isr_read_duty           0x080109bd     0x54  Code  Gb  stm32f4xx_it.o [1]
 isr_read_freq           0x08010969     0x54  Code  Gb  stm32f4xx_it.o [1]
-joystick_accuracy       0x0801370f     0x38  Code  Lc  joystick.o [1]
-joystick_filter         0x08013675     0x9a  Code  Lc  joystick.o [1]
+joystick_accuracy       0x080136cf     0x38  Code  Lc  joystick.o [1]
+joystick_filter         0x08013635     0x9a  Code  Lc  joystick.o [1]
 joystick_pitch          0x2000019c     0x4c  Data  Gb  main.o [1]
-joystick_read_setpoint  0x08013747     0x24  Code  Gb  joystick.o [1]
-joystick_read_thrust    0x0801376d     0x86  Code  Gb  joystick.o [1]
-joystick_read_toggle    0x080137f5     0x5a  Code  Gb  joystick.o [1]
+joystick_read_setpoint  0x08013709     0xca  Code  Gb  joystick.o [1]
+joystick_read_thrust    0x080137d5     0x86  Code  Gb  joystick.o [1]
+joystick_read_toggle    0x0801385d     0x5a  Code  Gb  joystick.o [1]
 joystick_roll           0x20000150     0x4c  Data  Gb  main.o [1]
 joystick_thrust         0x20000234     0x4c  Data  Gb  main.o [1]
 joystick_toggle         0x20000280     0x4c  Data  Gb  main.o [1]
@@ -1598,8 +1596,8 @@ lidar_read              0x08012d2d      0x6  Code  Gb  lidar.o [1]
 lnbias                  0x0800f300    0x420  Data  Lc  pow.o [5]
 localeconv              0x0800a7fb     0x16  Code  Gb  localeconv.o [3]
 mag_disturb             0x20017fbc     0xb8  Data  Gb  mag_disturb.o [4]
-main                    0x0801358b     0x64  Code  Gb  main.o [1]
-main_task               0x0801334d    0x20e  Code  Lc  main.o [1]
+main                    0x08013557     0x64  Code  Gb  main.o [1]
+main_task               0x0801334d    0x1de  Code  Lc  main.o [1]
 memchr                  0x08009f9d           Code  Gb  memchr.o [6]
 memcpy                  0x0800d21f      0xc  Code  Gb  memcpy.o [3]
 memmove                 0x08010325      0xc  Code  Gb  memmove.o [6]
@@ -1629,11 +1627,11 @@ mpu_set_sensors         0x080085ef     0xe8  Code  Gb  inv_mpu.o [1]
 mpu_write_mem           0x080089e9     0x92  Code  Gb  inv_mpu.o [1]
 pMyDevice               0x200002f4      0x4  Data  Gb  vl53l0x.o [1]
 pcInterruptPriorityRegisters
-                        0x080142a0      0x4  Data  Lc  port.o [1]
+                        0x080142f8      0x4  Data  Lc  port.o [1]
 perform_ref_signal_measurement
                         0x08004d83     0x80  Code  Gb  vl53l0x_api_calibration.o [1]
 pid_altitude            0x2000012c     0x24  Data  Gb  main.o [1]
-pid_calc                0x08013975     0xac  Code  Gb  pid.o [1]
+pid_calc                0x080139dd     0xac  Code  Gb  pid.o [1]
 pid_pitch               0x200000e4     0x24  Data  Gb  main.o [1]
 pid_roll                0x200000c0     0x24  Data  Gb  main.o [1]
 pid_yaw                 0x20000108     0x24  Data  Gb  main.o [1]
@@ -1698,7 +1696,7 @@ pxReadyTasksLists       0x20018168     0x64  Data  Lc  tasks.o [1]
 rangingTest             0x08012ef7      0xa  Code  Gb  vl53l0x.o [1]
 read_from_mpl_float     0x08010df1     0xca  Code  Lc  imu.o [1]
 refArrayQuadrants       0x200005a4     0x10  Data  Gb  vl53l0x_api_calibration.o [1]
-reg                     0x08013f64     0x20  Data  Gb  inv_mpu.o [1]
+reg                     0x08013fcc     0x20  Data  Gb  inv_mpu.o [1]
 rh                      0x20018074     0x88  Data  Lc  results_holder.o [1]
 s9axis                  0x20017e84    0x138  Data  Gb  fusion_9axis.o [4]
 sStartAddress           0x080054d2      0x2  Data  Lc  inv_mpu_dmp_motion_driver.o [1]
@@ -1720,8 +1718,8 @@ stack_size_main         0x20018550      0x4  Data  Gb  main.o [1]
 strchr                  0x08009f4d           Code  Gb  strchr.o [6]
 strlen                  0x08009f65           Code  Gb  strlen.o [6]
 sys_alloc               0x08000575    0x386  Code  Lc  dlmalloc.o [3]
-telemetry_task          0x08013565     0x26  Code  Lc  main.o [1]
-test                    0x08013e6c     0x28  Data  Gb  inv_mpu.o [1]
+telemetry_task          0x08013531     0x26  Code  Lc  main.o [1]
+test                    0x08013ed4     0x28  Data  Gb  inv_mpu.o [1]
 tim12_duty              0x20018590      0x4  Data  Gb  stm32f4xx_it.o [1]
 tim12_freq              0x200185a4      0x4  Data  Gb  stm32f4xx_it.o [1]
 tim12_val               0x2001857c      0x4  Data  Gb  stm32f4xx_it.o [1]
@@ -1848,8 +1846,8 @@ xYieldPending           0x200185cc      0x4  Data  Lc  tasks.o [1]
 [6] = rt7M_tl.a
 [7] = shb_l.a
 
-  78 826 bytes of readonly  code memory
-   5 043 bytes of readonly  data memory
+  78 930 bytes of readonly  code memory
+   5 028 bytes of readonly  data memory
   99 840 bytes of readwrite data memory
 
 Errors: none
