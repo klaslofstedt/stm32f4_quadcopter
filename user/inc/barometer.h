@@ -42,6 +42,9 @@ typedef struct{
     float altitude_cm;
     float altitude_ground_m;
     float altitude_ground_cm;
+    float rate_cm_s;
+    float altitude_max;
+    float altitude_min;
     float offset;
 } barometer_data_t;
 

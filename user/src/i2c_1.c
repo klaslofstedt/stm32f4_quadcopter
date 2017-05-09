@@ -53,6 +53,7 @@ unsigned long ST_Sensors_I2C1_WriteRegister(unsigned char Address, unsigned char
 unsigned long ST_Sensors_I2C1_WriteReg(unsigned char Address, unsigned char RegisterAddr, const unsigned char RegisterValue);
 unsigned long ST_Sensors_I2C1_ReadRegister(unsigned char Address, unsigned char RegisterAddr, unsigned short RegisterLen, unsigned char *RegisterValue);
 unsigned long ST_Sensors_I2C1_Write(unsigned char Address, const unsigned char RegisterValue);
+unsigned long ST_Sensors_I2C1_Read(unsigned char Address, unsigned short RegisterLen, unsigned char *RegisterValue);
 /*******************************  Function ************************************/
 
 
@@ -201,6 +202,31 @@ tryWriteAgain:
   }
   return ret;  
 }
+
+
+int Sensors_I2C1_Read(unsigned char slave_addr,
+                                       unsigned short len, 
+                                       unsigned char *data_ptr)
+{
+  char retries=0;
+  int ret = 0;
+  unsigned short retry_in_mlsec = Get_I2C_Retry();
+  
+tryReadAgain:  
+  ret = 0;
+  ret = ST_Sensors_I2C1_Read(slave_addr, len, data_ptr);
+
+  if(ret && retry_in_mlsec)
+  {
+    if( retries++ > 4 )
+        return ret;
+    
+    delay_ms(retry_in_mlsec);
+    goto tryReadAgain;
+  } 
+  return ret;
+}
+
 
 int Sensors_I2C1_ReadRegister(unsigned char slave_addr,
                                        unsigned char reg_addr,
@@ -560,6 +586,135 @@ endReadLoop:
   /* Return the byte read from sensor */
   return result;
 }
+
+unsigned long ST_Sensors_I2C1_Read(unsigned char Address, unsigned short RegisterLen, unsigned char *RegisterValue)
+{
+  uint32_t i=0, result = 0;
+  __IO uint32_t  I2CTimeout = I2Cx_LONG_TIMEOUT;
+     
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 11);  
+
+  /*!< Send START condition a second time */  
+  I2C_GenerateSTART(SENSORS_I2C, ENABLE);
+  
+  /* Wait for the start bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_SB, SET, I2Cx_FLAG_TIMEOUT, 12);
+  
+  /*!< Send address for read */
+  I2C_Send7bitAddress(SENSORS_I2C, (Address<<1), I2C_Direction_Receiver);  
+  
+  /* Wait for the start bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_ADDR, SET, I2Cx_FLAG_TIMEOUT, 13);
+  
+  if (RegisterLen == 1) 
+  {
+    /*!< Disable Acknowledgment */
+    I2C_AcknowledgeConfig(SENSORS_I2C, DISABLE);
+    
+    /* clear the ADDR interrupt bit  - this is done by reading SR1 and SR2*/
+    CLEAR_ADDR_BIT;
+    
+    /*!< Send STOP Condition */
+    I2C_GenerateSTOP(SENSORS_I2C, ENABLE);
+    
+    /* Wait for the RXNE bit to be set */
+    WAIT_FOR_FLAG (I2C_FLAG_RXNE, SET, I2Cx_FLAG_TIMEOUT, 14);
+    
+    RegisterValue[0] = I2C_ReceiveData(SENSORS_I2C);
+  } 
+  else if( RegisterLen == 2) 
+  {
+     /*!< Disable Acknowledgment */
+    I2C_AcknowledgeConfig(SENSORS_I2C, DISABLE);
+    
+   /* Set POS bit */ 
+   SENSORS_I2C->CR1 |= I2C_CR1_POS;
+   
+   /* clear the ADDR interrupt bit  - this is done by reading SR1 and SR2*/
+   CLEAR_ADDR_BIT; 
+   
+   /* Wait for the buffer full bit to be set */
+   WAIT_FOR_FLAG (I2C_FLAG_BTF, SET, I2Cx_FLAG_TIMEOUT, 15);
+   
+   /*!< Send STOP Condition */
+   I2C_GenerateSTOP(SENSORS_I2C, ENABLE);
+
+   /* Read 2 bytes */
+   RegisterValue[0] = I2C_ReceiveData(SENSORS_I2C);
+   RegisterValue[1] = I2C_ReceiveData(SENSORS_I2C);
+  } 
+  else if( RegisterLen == 3)
+  {
+    CLEAR_ADDR_BIT;
+    
+    /* Wait for the buffer full bit to be set */
+    WAIT_FOR_FLAG (I2C_FLAG_BTF, SET, I2Cx_FLAG_TIMEOUT, 16);
+    /*!< Disable Acknowledgment */
+    I2C_AcknowledgeConfig(SENSORS_I2C, DISABLE);
+    /* Read 1 bytes */
+    RegisterValue[0] = I2C_ReceiveData(SENSORS_I2C);
+    /*!< Send STOP Condition */
+    I2C_GenerateSTOP(SENSORS_I2C, ENABLE);        
+    /* Read 1 bytes */
+    RegisterValue[1] = I2C_ReceiveData(SENSORS_I2C);
+    /* Wait for the buffer full bit to be set */
+    WAIT_FOR_FLAG (I2C_FLAG_RXNE, SET, I2Cx_FLAG_TIMEOUT, 17);
+    /* Read 1 bytes */
+    RegisterValue[2] = I2C_ReceiveData(SENSORS_I2C);  
+  }  
+  else /* more than 2 bytes */
+  { 
+    /* clear the ADDR interrupt bit  - this is done by reading SR1 and SR2*/
+    CLEAR_ADDR_BIT;
+    
+    for(i=0; i<(RegisterLen); i++)
+    {
+      if(i==(RegisterLen-3))
+      {
+        /* Wait for the buffer full bit to be set */
+        WAIT_FOR_FLAG (I2C_FLAG_BTF, SET, I2Cx_FLAG_TIMEOUT, 16);
+        
+        /*!< Disable Acknowledgment */
+        I2C_AcknowledgeConfig(SENSORS_I2C, DISABLE);
+        
+        /* Read 1 bytes */
+        RegisterValue[i++] = I2C_ReceiveData(SENSORS_I2C);
+        
+        /*!< Send STOP Condition */
+        I2C_GenerateSTOP(SENSORS_I2C, ENABLE);        
+        
+        /* Read 1 bytes */
+        RegisterValue[i++] = I2C_ReceiveData(SENSORS_I2C);
+        
+        /* Wait for the buffer full bit to be set */
+        WAIT_FOR_FLAG (I2C_FLAG_RXNE, SET, I2Cx_FLAG_TIMEOUT, 17);
+        
+        /* Read 1 bytes */
+        RegisterValue[i++] = I2C_ReceiveData(SENSORS_I2C);  
+        goto endReadLoop;
+      }
+            
+      /* Wait for the RXNE bit to be set */
+      WAIT_FOR_FLAG (I2C_FLAG_RXNE, SET, I2Cx_FLAG_TIMEOUT, 18);
+      RegisterValue[i] = I2C_ReceiveData(SENSORS_I2C); 
+    }   
+  } 
+  
+endReadLoop:  
+  /* Clear BTF flag */
+  I2C_ClearFlag(SENSORS_I2C, I2C_FLAG_BTF);
+  /* Wait for the busy flag to be cleared */
+  WAIT_FOR_FLAG (I2C_FLAG_BUSY, RESET, I2Cx_LONG_TIMEOUT, 19);  
+  /*!< Re-Enable Acknowledgment to be ready for another reception */
+  I2C_AcknowledgeConfig(SENSORS_I2C, ENABLE);
+  //Disable POS -- TODO
+  SENSORS_I2C->CR1 &= ~I2C_CR1_POS;  
+     
+  /* Return the byte read from sensor */
+  return result;
+}
+
 
 static unsigned short RETRY_IN_MLSEC  = 5;
 

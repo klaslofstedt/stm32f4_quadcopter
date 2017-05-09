@@ -49,11 +49,29 @@ uint8_t armed(void)
 
 void main_task(void *pvParameters)
 {    
+    uint16_t i;
+    for(i = 0; i < 3; i++){
+        pwm_buzzer_set(1000);
+        //pwm_buzzer_set(i);
+        delay_ms(100);
+        pwm_buzzer_set(0);
+        delay_ms(100);
+    }
+    delay_ms(300);
+    for(i = 0; i < 2; i++){
+        pwm_buzzer_set(1000);
+        //pwm_buzzer_set(i);
+        delay_ms(400);
+        pwm_buzzer_set(0);
+        delay_ms(250);
+    }
+    pwm_buzzer_set(0);
+    
     esc_init(&esc1);
     esc_init(&esc2);
     esc_init(&esc3);
     esc_init(&esc4);
-
+    
     // Not needed?
     stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     
@@ -64,7 +82,7 @@ void main_task(void *pvParameters)
             if(!xQueueReceive(imu_attitude_queue, &imu, 1000)){ // 1000 ms?
                 printf2("No IMU data in queue\n\r");
             }
-         
+            
             // Build pitch pid object ------------------------------------------
             pid_pitch.setpoint = joystick_read_setpoint(&joystick_pitch);
             pid_pitch.input = imu.dmp_pitch;
@@ -76,7 +94,7 @@ void main_task(void *pvParameters)
             pid_roll.input = imu.dmp_roll;
             pid_roll.rate = imu.gyro_roll;
             pid_calc(&pid_roll, imu.dt);
-
+            
             // Build yaw pid object --------------------------------------------
             pid_yaw.setpoint = joystick_read_setpoint(&joystick_yaw);
             
@@ -86,7 +104,7 @@ void main_task(void *pvParameters)
             
             pid_yaw.input = imu.gyro_yaw;
             pid_calc(&pid_yaw, imu.dt);
-
+            
             // Build altitude pid object ---------------------------------------
             // Poll queue for altitude data (~25 ms = 40 Hz interval)
             if(xQueueReceive(altitude_queue, &altitude, 0)){
@@ -99,7 +117,7 @@ void main_task(void *pvParameters)
                 // Fake line!
                 pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             }
-
+            
             // Set outputs ----------------------------------------------------- 
             if(armed()) { // picture below is wrong
 #if X_CONFIG
@@ -179,7 +197,7 @@ void telemetry_task(void *pvParameters)
         //printf2(" roll dmp: %.3f", imu.dmp_roll);
         //printf2(" pitch dmp: %.3f", imu.dmp_pitch);
         //printf2(" yaw dmp ori: %.3f", imu.dmp_yaw);
-
+        
         //printf2(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
         //printf2(" yaw set_point: %.3f", pid_yaw.setpoint);
         //printf2(" yaw speed: %.3f", 

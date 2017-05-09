@@ -55,8 +55,11 @@ typedef struct {
     float acc_offset;
     float laser_offset;
     float altitude_cm;
+    float altitude_cm_last;
     float rate_cm_s;
+    float rate_cm_s_last;
     unsigned long dt;
+    uint8_t sensor_index;
     UBaseType_t stack_size;
 } altitude_data_t;
 

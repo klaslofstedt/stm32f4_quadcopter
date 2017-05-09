@@ -34,6 +34,8 @@ void hardware_init(void)
     // Configure Interrupts
     gpio_init();
     pwm_output_init();
+    pwm_buzzer_init();
+
     i2c2_init(); // imu
     i2c1_init(); // baro & ultrasonic
     //uart_init();

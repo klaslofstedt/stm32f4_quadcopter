@@ -5,6 +5,8 @@
 
 void pwm_input_init(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 void pwm_output_init(void);
+void pwm_buzzer_init(void);
+void pwm_buzzer_set(uint16_t duty);
 
 void pwm_set_duty_cycle(uint8_t PinNum, uint16_t DutyCycle);
 uint16_t pwm_get_prescaler(void);

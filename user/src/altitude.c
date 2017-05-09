@@ -1,3 +1,4 @@
+// inspo: https://github.com/Lauszus/LaunchPadFlightController/blob/master/src/AltitudeHold.c
 #include "altitude.h"
 #include "barometer.h"
 #include "ultrasonic.h"
@@ -16,7 +17,7 @@
 #define M_PI 3.14159265358979323846
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
-static float altitude_remove_angle_contribution(float measured, float x, float y);
+static float altitude_remove_angle_contribution(float estimate, float x, float y);
 
 
 //xSemaphoreHandle altitude_sem = NULL;
@@ -25,17 +26,13 @@ xQueueHandle altitude_queue = 0;
 static imu_data_t imu;
 static altitude_data_t altitude;
 
-
-
 //static void altitude_update(ekf_t* ekf, altitude_data_t* alt);
 //static void altitude_set(ekf_t* ekf);
 //static void altitude_read_offset(void);
 
-
-
-
-
 barometer_data_t barometer = {
+    .altitude_max = 50000, // 500 m above ground
+    .altitude_min = 3000,   // 30 m above ground? what if i want to land lower than initial height?
     .offset = 0
 };
 
@@ -69,7 +66,7 @@ ekf->hx[2] = ekf->fx[0] + ekf->fx[3];
 
 alt->altitude_cm = (float)ekf->fx[0];
 alt->rate_cm_s = (float)ekf->fx[1];
-}
+        }
 
 static void altitude_set(ekf_t* ekf)
 {
@@ -104,7 +101,7 @@ ekf->H[0][2] = 1;
 ekf->H[1][0] = 1;
 ekf->H[2][0] = 1;
 ekf->H[2][3] = 1;
-}
+        }
 
 static void altitude_read_offset(void)
 {
@@ -115,40 +112,28 @@ altitude.acc_offset += (imu_read_acc_z() / SAMPLES);
 delay_ms(1);
 
 //printf2("Acc offset: %.5f\n\r", altitude.acc_offset);
-    } 
-}*/
-static float altitude_remove_angle_contribution(float measured, float x, float y)
+            } 
+        }*/
+static float altitude_remove_angle_contribution(float estimate, float x, float y)
 {
-    double x_temp = (double)(measured * sin((double)(x * M_PI / 180)));
-    double y_temp = (double)(measured * sin((double)(y * M_PI / 180)));
-    double tot_temp = sqrt(pow((double)measured, 2) - pow(x_temp, 2) - pow(y_temp, 2));
+    double x_temp = (double)(estimate * sin((double)(x * M_PI / 180)));
+    double y_temp = (double)(estimate * sin((double)(y * M_PI / 180)));
+    double tot_temp = sqrt(pow((double)estimate, 2) - pow(x_temp, 2) - pow(y_temp, 2));
     
     return (float)tot_temp;
 }
 
-float altitude_read_cm(void)
-{
-    return altitude.altitude_cm;
-}
-
-float altitude_read_speed(void)
-{
-    return altitude.rate_cm_s;
-}
 
 void altitude_task(void *pvParameters)
 {
     printf2("Altitude task\n\r");
     UBaseType_t stack_size;
-    //printf2("init ultrasonic\n\r");
-    //ultrasonic_init();
-    barometer_init(&barometer);
     
+    //barometer_init(&barometer);
+    //lidar_init(&lidar);
     laser_init(&laser);
     laser_read_average(&laser, 50);
-    float range = laser.range_avg;
     barometer.offset = laser.range_avg;
-    
     
     altitude_queue = xQueueCreate(1, sizeof(altitude_data_t));
     
@@ -165,61 +150,79 @@ void altitude_task(void *pvParameters)
                 printf2("No altitude IMU data in queue\n\r");
             }
             
-            //barometer_read(&barometer);
             laser_read(&laser);
-            lidar_read(&lidar);
+            //lidar_read(&lidar);
+            //barometer_read(&barometer, imu.acc_z);
             
-            //printf2(" z acc: %.3f", imu.acc_z);
-            //printf2("\n\r");
+            // If range is too low for lidar, use only laser
+            if(laser.range_cm >= laser.range_min && laser.range_cm <= lidar.range_min){
+                altitude.altitude_cm = altitude_remove_angle_contribution(laser.range_cm, imu_read_dmp_roll(), imu_read_dmp_pitch());
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                
+                altitude.sensor_index = 1;
+            }
+            // If range is between range and lidar, use both sensors
+            else if(laser.range_cm > lidar.range_min && lidar.range_cm < laser.range_max){
+                // Constrain in case distance was not previously set and then calculate value in the range [0,1]
+                float damping = (float)(constrain(altitude.altitude_cm, lidar.range_min, laser.range_max) - lidar.range_min) / (laser.range_max - lidar.range_min); 
+                float range = filter_transition(laser.range_cm, lidar.range_cm, damping);
+                
+                altitude.altitude_cm = altitude_remove_angle_contribution(range, imu_read_dmp_roll(), imu_read_dmp_pitch());
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                
+                altitude.sensor_index = 2;
+            }
+            // If range is too high for laser and too low for barometer, use only lidar
+            else if(lidar.range_cm > lidar.range_min && lidar.range_cm < barometer.altitude_min){
+                altitude.altitude_cm = altitude_remove_angle_contribution(lidar.range_cm, imu_read_dmp_roll(), imu_read_dmp_pitch());
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                
+                altitude.sensor_index = 3;
+            }
+            // If range is between lidar and barometer, use both sensors
+            else if(lidar.range_cm < lidar.range_max && lidar.range_cm > barometer.altitude_min){
+                float lidar_height = altitude_remove_angle_contribution(lidar.range_cm, imu_read_dmp_roll(), imu_read_dmp_pitch());
+                
+                float damping = (float)(constrain(altitude.altitude_cm, barometer.altitude_min, lidar.range_max) - barometer.altitude_min / (lidar.range_max - barometer.altitude_min)); 
+                altitude.altitude_cm = filter_transition(lidar.range_cm, barometer.altitude_cm, damping);
+                
+                altitude.sensor_index = 4;
+            }
+            // If only barometer is present, use it nevertheless the lower height limit
+            else if(barometer.altitude_cm > barometer.altitude_min && barometer.altitude_cm < barometer.altitude_max){
+                altitude.altitude_cm = barometer.altitude_cm;
+                altitude.rate_cm_s = barometer.rate_cm_s;
+                altitude.sensor_index = 5;
+            }
             
-            // If both lidar and laser are working well
-            if(laser.range_cm != -1 && lidar.range_cm != -1){
-                // If range is too low for lidar, use only laser
-                if(laser.range_cm >= laser.range_min && laser.range_cm < lidar.range_min){
-                    range = laser.range_cm;
-                }
-                // If range is too high for laser, use only lidar
-                else if(lidar.range_cm > laser.range_max && lidar.range_cm <= lidar.range_max){
-                    range = lidar.range_cm;
-                }
-                // Else use both sensors
-                else{
-                    // Constrain in case distance was not previously set and then calculate value in the range [0,1]
-                    float damping = (float)(constrain(range, lidar.range_min, laser.range_max) - lidar.range_min) / (laser.range_max - lidar.range_min); 
-                    filter_transition(&range, laser.range_cm, lidar.range_cm, damping);
-                }
-            }
-            // If only laser is active
-            else if(laser.range_cm != -1){
-                if(laser.range_cm >= laser.range_min && laser.range_cm <= laser.range_max){
-                    range = laser.range_cm;
-                }
-            }
-            // If only lidar is active
-            else if(lidar.range_cm != -1){
-                if(lidar.range_cm >= lidar.range_min && lidar.range_cm <= lidar.range_max){
-                    range = lidar.range_cm;
-                }
-            }
             else{
-                // range = ????
-                printf2("Laser & Lidar measurements failed\n\r");
+                // TODO: use accelerometer?
+                printf2("Laser & Lidar & Barometer measurements failed\n\r");
+                altitude.sensor_index = 0;
             }
-            //printf2(" range: %.4f", range);
-            float range_true = altitude_remove_angle_contribution(range, imu_read_dmp_roll(), imu_read_dmp_pitch());
+            //float temp_altitude = altitude.altitude_cm;
+            //float temp_rate = altitude.rate_cm_s;
+            
+            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.995f);
+            altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.995f);
+            altitude.altitude_cm_last = altitude.altitude_cm;
+            altitude.rate_cm_s_last = altitude.rate_cm_s;
+            
+            
+            
             //printf2(" range_true : %.4f", range_true);
-            altitude.acc_z = imu.acc_z;
-            altitude.altitude_cm = range_true;
+            //altitude.acc_z = imu.acc_z;
+            //altitude.altitude_cm = range_true;
             
             altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
             last_wake_time = wake_time;
-
+            
             xQueueOverwrite(altitude_queue, &altitude);
         }
         
         
         // Remove additional contribution due to roll & pitch angles
-        // h_measured = sqrt(h_true^2 + roll^2 + pitch^2) gives:
+        // h_estimate = sqrt(h_true^2 + roll^2 + pitch^2) gives:
         
         
         
@@ -259,4 +262,3 @@ void altitude_task(void *pvParameters)
         altitude.stack_size = stack_size;*/
     }
 }
-
