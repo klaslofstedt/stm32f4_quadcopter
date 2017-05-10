@@ -6,8 +6,9 @@
 #include "pwm.h"
 #include "uart.h"
 #include "gpio.h"
-#include "printf2.h"
+#include "uart.h"
 #include "freertos_time.h"
+#include "buzzer.h"
 
 // 168000000=168Mhz
 extern uint32_t SystemCoreClock;
@@ -16,10 +17,10 @@ void hardware_init(void)
 {
     // Setup STM32 system (clock, PLL and Flash configuration)
     SystemInit();
-    printf2_init();
+    uart_init();
     // Update the system clock variable (might not have been set before)
     SystemCoreClockUpdate();
-    printf2("CoreClock: %d\n\r", SystemCoreClock);
+    uart_printf("CoreClock: %d\n\r", SystemCoreClock);
     
     // VADFAN GÖR DENNA????????
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
@@ -34,7 +35,7 @@ void hardware_init(void)
     // Configure Interrupts
     gpio_init();
     pwm_output_init();
-    pwm_buzzer_init();
+    buzzer_init();
 
     i2c2_init(); // imu
     i2c1_init(); // baro & ultrasonic

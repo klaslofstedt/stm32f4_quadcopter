@@ -3,10 +3,10 @@
 #include "stm32f4xx_it.h"
 
 static int8_t joystick_accuracy(float val, float ref, float step);
-static float joystick_filter(joystick_data_t* in);
+static void joystick_filter(joystick_data_t* in);
 
 
-static float joystick_filter(joystick_data_t* in)
+static void joystick_filter(joystick_data_t* in)
 {
     in->avg[0] = in->duty_input;
     // Calculate a moving average. Every term must add up to (2520*in->avg[n] / 2520), hence the odd last term.
@@ -85,7 +85,6 @@ float joystick_read_setpoint(joystick_data_t* in)
         output = -in->output_limit;
     }
     return output;
-    //return in->duty_input;
 }
 
 float joystick_read_thrust(joystick_data_t* in)

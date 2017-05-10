@@ -1,6 +1,6 @@
 #include "freertos_time.h"
 #include <stdio.h>
-#include "printf2.h"
+#include "uart.h"
 #include "i2c_1.h"
 #include "barometer.h"
 #include <math.h>
@@ -26,15 +26,15 @@ uint16_t prom_coefficient[8];
 
 void barometer_init()
 {
-    printf2("Initializing barometer...\n\r");
+    uart_printf("Initializing barometer...\n\r");
     barometer_reset(MS5803_CMD_RESET);
     barometer_read_prom();
     if(barometer_validate_crc()){
-        printf2("Barometer initialized\n\r");
+        uart_printf("Barometer initialized\n\r");
     }
     else{
         while(1){
-            printf2("err: bad CRC");
+            uart_printf("err: bad CRC");
             delay_ms(1000);
         }
     }
@@ -214,8 +214,8 @@ static uint8_t barometer_validate_crc()
         //printf2(" barometer:");
         //printf2(" mbar: %.4f", barometer.mbar);
         //printf2(" temp: %.4f", barometer.temp_c);
-        printf2(" altitude: %.4f", barometer.altitude_m);
-        printf2("\n\r");
+        uart_printf(" altitude: %.4f", barometer.altitude_m);
+        uart_printf("\n\r");
         stack_size = uxTaskGetStackHighWaterMark(NULL);
         barometer.stack_size = stack_size;
     }

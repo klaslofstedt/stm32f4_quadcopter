@@ -14,23 +14,23 @@
 
 
 //////////////////  USART2
-#define USARTx                           USART2
-#define USARTx_CLK                       RCC_APB1Periph_USART2
+#define USARTx                           USART3
+#define USARTx_CLK                       RCC_APB1Periph_USART3
 #define USARTx_CLK_INIT                  RCC_APB1PeriphClockCmd
 #define USARTx_IRQn                      USART2_IRQn
 #define USARTx_IRQHandler                USART2_IRQHandler
 
-#define USARTx_TX_PIN                    GPIO_Pin_2
-#define USARTx_TX_GPIO_PORT              GPIOA
-#define USARTx_TX_GPIO_CLK               RCC_AHB1Periph_GPIOA
-#define USARTx_TX_SOURCE                 GPIO_PinSource2
-#define USARTx_TX_AF                     GPIO_AF_USART2
+#define USARTx_TX_PIN                    GPIO_Pin_8
+#define USARTx_TX_GPIO_PORT              GPIOD
+#define USARTx_TX_GPIO_CLK               RCC_AHB1Periph_GPIOD
+#define USARTx_TX_SOURCE                 GPIO_PinSource8
+#define USARTx_TX_AF                     GPIO_AF_USART3
 
-#define USARTx_RX_PIN                    GPIO_Pin_3
-#define USARTx_RX_GPIO_PORT              GPIOA
-#define USARTx_RX_GPIO_CLK               RCC_AHB1Periph_GPIOA
-#define USARTx_RX_SOURCE                 GPIO_PinSource3
-#define USARTx_RX_AF                     GPIO_AF_USART2
+#define USARTx_RX_PIN                    GPIO_Pin_9
+#define USARTx_RX_GPIO_PORT              GPIOD
+#define USARTx_RX_GPIO_CLK               RCC_AHB1Periph_GPIOD
+#define USARTx_RX_SOURCE                 GPIO_PinSource9
+#define USARTx_RX_AF                     GPIO_AF_USART3
 
 #define USARTx_DMAx_CLK                  RCC_AHBPeriph_DMA1
 
@@ -62,14 +62,14 @@ void uart_init(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   
   GPIO_InitStructure.GPIO_Pin = USARTx_TX_PIN | USARTx_RX_PIN;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_Init(GPIOD, &GPIO_InitStructure);
   
   //GPIO_InitStructure.GPIO_Pin = USARTx_TX_PIN;
   //GPIO_Init(USARTx_TX_GPIO_PORT, &GPIO_InitStructure);
   //GPIO_InitStructure.GPIO_Pin = USARTx_RX_PIN;
   //GPIO_Init(USARTx_RX_GPIO_PORT, &GPIO_InitStructure);
  
-  USART_InitStructure.USART_BaudRate =  115200;
+  USART_InitStructure.USART_BaudRate = 115200;//115200
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
   /* When using Parity the word length must be configured to 9 bits */
@@ -82,3 +82,34 @@ void uart_init(void)
   /* Enable USART */
   USART_Cmd(USARTx, ENABLE);
 }
+
+/******************************************************************************/
+
+void USART_putc(char c)
+{
+  while(!(USARTx->SR & 0x00000040)); //?????????????
+  USART_SendData(USART3,c);
+}
+
+void USART_puts(const char *s)
+{
+  int i;
+  for(i=0;s[i]!=0;i++) USART_putc(s[i]);
+}
+
+void uart_printf(const char *format, ...) 
+{
+  va_list list;
+  va_start(list, format);
+  int len = vsnprintf(0, 0, format, list);
+  char *s;
+  s = (char *)malloc(len + 1);
+  vsprintf(s, format, list);
+  USART_puts(s);
+  free(s);
+  va_end(list);
+  return;
+}
+
+/******************************************************************************/
+

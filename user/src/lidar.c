@@ -1,6 +1,6 @@
 #include "lidar.h"
 #include "i2c_1.h"
-#include "printf2.h"
+#include "uart.h"
 #include "freertos_time.h"
 
 /*#define LIDAR_LITE_ADDRESS              0x62
@@ -99,7 +99,7 @@ void lidar_init(lidar_data_t *in)
         write(0x02,0x80,lidarliteAddress); // Default
         write(0x04,0x08,lidarliteAddress); // Default
         write(0x1c,0x00,lidarliteAddress); // Default
-        printf2("Lidar initialized?");
+        uart_printf("Lidar initialized?");
         break;
         
     case 1: // Short range, high speed
@@ -153,13 +153,13 @@ void lidar_read(lidar_data_t *in)
     }
     // Array to store high and low bytes of distance
     unsigned char distanceArray[2];
-    unsigned char distanceArray2 = 0;
+    //unsigned char distanceArray2 = 0;
     // Read two bytes from register 0x8f (autoincrement for reading 0x0f and 0x10)
     read2(0x8f, 2, distanceArray, 1, lidarliteAddress);
     // Shift high byte and add to low byte
     int distance = (distanceArray[0] << 8) + distanceArray[1];
     in->range_cm = (float)distance;
-    printf2("lidar :%d\n\r", distance);
+    uart_printf("lidar :%d\n\r", distance);
     //return(distance);
 }
 
@@ -188,25 +188,25 @@ static void read2(char myAddress, int numOfBytes, unsigned char* arrayToSave, ui
         Sensors_I2C1_ReadRegister(lidarliteAddress, 0x01, 0x01, &busy_byte);
         
         busyFlag = bitRead(busy_byte, 0); // Assign the LSB of the status register to busyFlag
-        printf2("busyFlag%d\n\r", busyFlag);
+        uart_printf("busyFlag%d\n\r", busyFlag);
         busyCounter++; // Increment busyCounter for timeout
         
         // Handle timeout condition, exit while loop and goto bailout
         if(busyCounter > 9999)
         {
             goto bailout; //------------------------------------------------------?
-            printf2("Lidar bailout\n\r");
+            uart_printf("Lidar bailout\n\r");
         }
     }
-    printf2("Lidar finished busyflag!\n\r");
+    uart_printf("Lidar finished busyflag!\n\r");
     
     // Device is not busy, begin read
     if(busyFlag == 0)
     {
         //uint8_t busy_byte;
         Sensors_I2C1_ReadRegister((unsigned char)lidarliteAddress, (unsigned char)myAddress, (unsigned short)numOfBytes, arrayToSave);
-        printf2("arraytToSave: %d", arrayToSave[0]);
-        printf2("%d\n\r", arrayToSave[1]);
+        uart_printf("arraytToSave: %d", arrayToSave[0]);
+        uart_printf("%d\n\r", arrayToSave[1]);
     }
     
     // bailout reports error over serial
@@ -214,7 +214,7 @@ static void read2(char myAddress, int numOfBytes, unsigned char* arrayToSave, ui
     {
     bailout:
         busyCounter = 0;
-        printf2("> read failed");
+        uart_printf("> read failed");
     }
 }
 

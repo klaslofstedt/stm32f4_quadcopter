@@ -8,7 +8,7 @@
 #include "queue.h"
 
 /* Demo program include files. */
-#include "printf2.h"
+#include "uart.h"
 #include "freertos_time.h"
 #include "imu.h"
 
@@ -223,7 +223,7 @@ static void read_from_mpl_float(void)
         //taskYIELD();
     }
     else{
-        printf2("dmp failed\n\r");
+        uart_printf("dmp failed\n\r");
     }
 }
 
@@ -233,9 +233,9 @@ void send_status_compass() {
     int8_t accuracy = { 0 };
     unsigned long timestamp;
     inv_get_compass_set(data, &accuracy, (inv_time_t*) &timestamp);
-    printf2("Compass: %7.4f %7.4f %7.4f \n\r",
+    uart_printf("Compass: %7.4f %7.4f %7.4f \n\r",
             data[0]/65536.f, data[1]/65536.f, data[2]/65536.f);
-    printf2("Accuracy= %d\r\n", accuracy);
+    uart_printf("Accuracy= %d\r\n", accuracy);
     
 }
 #endif
@@ -284,7 +284,7 @@ static inline void run_self_test(void)
     result = mpu_run_self_test(gyro, accel);
 #endif
     if (result == 0x7) {
-        printf2("Self test passed2\n\r");
+        uart_printf("Self test passed2\n\r");
         /*printf2("accel: %7.4f %7.4f %7.4f\n\r",
                 accel[0]/65536.f,
                 accel[1]/65536.f,
@@ -339,13 +339,13 @@ static inline void run_self_test(void)
     }
     else {
         if (!(result & 0x1)){
-            printf2("Gyro failed\n\r");
+            uart_printf("Gyro failed\n\r");
         } 
         if (!(result & 0x2)){
-            printf2("Accel failed\n\r");
+            uart_printf("Accel failed\n\r");
         }
         if (!(result & 0x4)){
-            printf2("Compass failed\n\r");
+            uart_printf("Compass failed\n\r");
         }
     }
 }
@@ -369,7 +369,7 @@ void imu_task(void *pvParameters)
 {
     UBaseType_t stack_size;
     stack_size = uxTaskGetStackHighWaterMark(NULL);
-    printf2("imu task\n\r");
+    uart_printf("imu task\n\r");
     
     imu_attitude_queue = xQueueCreate(1, sizeof(imu_data_t));
     imu_altitude_queue = xQueueCreate(1, sizeof(imu_data_t));
@@ -393,11 +393,11 @@ void imu_task(void *pvParameters)
     
     result = mpu_init(&int_param);
     if (result) {
-        printf2("Could not initialize gyro.\n\r");
+        uart_printf("Could not initialize gyro.\n\r");
     }
     result = inv_init_mpl();
     if (result) {
-        printf2("Could not initialize MPL.\n\r");
+        uart_printf("Could not initialize MPL.\n\r");
     }
     /* Compute 6-axis and 9-axis quaternions. */
     inv_enable_quaternion();
@@ -448,11 +448,11 @@ void imu_task(void *pvParameters)
     result = inv_start_mpl();
     if (result == INV_ERROR_NOT_AUTHORIZED) {
         while (1) {
-            printf2("Not authorized.\n\r");
+            uart_printf("Not authorized.\n\r");
         }
     }
     if (result) {
-        printf2("Could not start the MPL.\n\r");
+        uart_printf("Could not start the MPL.\n\r");
     }
     
     /* Get/set hardware configuration. Start gyro. */
@@ -482,7 +482,7 @@ void imu_task(void *pvParameters)
     /* Sample rate expected in microseconds. */
     inv_set_gyro_sample_rate(1000000L / gyro_rate);
     inv_set_accel_sample_rate(1000000L / gyro_rate);
-    printf2("gyracc_rate: %d\n\r", 1000000L / gyro_rate);
+    uart_printf("gyracc_rate: %d\n\r", 1000000L / gyro_rate);
 #ifdef COMPASS_ENABLED
     /* The compass rate is independent of the gyro and accel rates. As long as
     * inv_set_compass_sample_rate is called with the correct value, the 9-axis

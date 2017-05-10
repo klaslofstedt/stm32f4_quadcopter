@@ -5,13 +5,13 @@
 #include "laser.h"
 #include "lidar.h"
 #include "imu.h"
-#include "printf2.h"
+#include "uart.h"
 #include "filter.h"
 
 #include "task.h"
 
 #include <math.h>
-#include "tiny_ekf.h"
+//#include "tiny_ekf.h"
 
 #define LOOP_TIME_MS 25
 #define M_PI 3.14159265358979323846
@@ -111,7 +111,7 @@ for(i = 0; i < SAMPLES; i++){
 altitude.acc_offset += (imu_read_acc_z() / SAMPLES);
 delay_ms(1);
 
-//printf2("Acc offset: %.5f\n\r", altitude.acc_offset);
+//uart_printf("Acc offset: %.5f\n\r", altitude.acc_offset);
             } 
         }*/
 static float altitude_remove_angle_contribution(float estimate, float x, float y)
@@ -126,7 +126,7 @@ static float altitude_remove_angle_contribution(float estimate, float x, float y
 
 void altitude_task(void *pvParameters)
 {
-    printf2("Altitude task\n\r");
+    uart_printf("Altitude task\n\r");
     UBaseType_t stack_size;
     
     //barometer_init(&barometer);
@@ -147,7 +147,7 @@ void altitude_task(void *pvParameters)
         vTaskDelayUntil(&wake_time, delay / portTICK_PERIOD_MS); // 40Hz
         if(xSemaphoreTake(imu_altitude_sem, 0) == pdTRUE){
             if(!xQueueReceive(imu_altitude_queue, &imu, 0)){
-                printf2("No altitude IMU data in queue\n\r");
+                uart_printf("No altitude IMU data in queue\n\r");
             }
             
             laser_read(&laser);
@@ -197,20 +197,24 @@ void altitude_task(void *pvParameters)
             
             else{
                 // TODO: use accelerometer?
-                printf2("Laser & Lidar & Barometer measurements failed\n\r");
+                uart_printf("Altitude measurement failed\n\r");
                 altitude.sensor_index = 0;
             }
             //float temp_altitude = altitude.altitude_cm;
             //float temp_rate = altitude.rate_cm_s;
             
-            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.995f);
-            altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.995f);
+            // These damping values are just stolen
+            float temp1 = altitude.altitude_cm; // remove
+            
+            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.90f); //0.995f
+            uart_printf("$ %d %d %d;", (int16_t)(10*altitude.altitude_cm), (int16_t)(10*temp1), 100);
+            altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.9f); // 0.995f
             altitude.altitude_cm_last = altitude.altitude_cm;
             altitude.rate_cm_s_last = altitude.rate_cm_s;
             
             
             
-            //printf2(" range_true : %.4f", range_true);
+            //uart_printf(" range_true : %.4f", range_true);
             //altitude.acc_z = imu.acc_z;
             //altitude.altitude_cm = range_true;
             
@@ -227,16 +231,16 @@ void altitude_task(void *pvParameters)
         
         
         // plot
-        //printf2(" $ %d %d;", (int16_t)(10*laser.range_cm), (int16_t)(-1000*altitude.acc_z - altitude.laser_offset));
+        //uart_printf(" $ %d %d;", (int16_t)(10*laser.range_cm), (int16_t)(-1000*altitude.acc_z - altitude.laser_offset));
         
         
         
         
-        //printf2(" laser: %.2f ", laser.range_cm - altitude.laser_offset);
-        //printf2(" mbar: %.4f", barometer.mbar);
-        //printf2(" temp: %.4f", barometer.temp_c);
-        //printf2(" altitude: %.4f", barometer.altitude_m);
-        //printf2(" acc_z: %.4f", altitude.acc_z);
+        //uart_printf(" laser: %.2f ", laser.range_cm - altitude.laser_offset);
+        //uart_printf(" mbar: %.4f", barometer.mbar);
+        //uart_printf(" temp: %.4f", barometer.temp_c);
+        //uart_printf(" altitude: %.4f", barometer.altitude_m);
+        //uart_printf(" acc_z: %.4f", altitude.acc_z);
         //ultrasonic_read(&ultrasonic);
         //gps_read(&gps);
         
@@ -249,8 +253,8 @@ void altitude_task(void *pvParameters)
         //altitude_update(&ekf_altitude, &altitude); 
         //ekf_step(&ekf_altitude, z); // baro, ultrasonic, GPS?
         
-        //printf2(" altitude: %.3f ", altitude.altitude_cm);
-        //printf2(" speed: %.4f ", altitude.rate_cm_s);
+        //uart_printf(" altitude: %.3f ", altitude.altitude_cm);
+        //uart_printf(" speed: %.4f ", altitude.rate_cm_s);
         
         
         

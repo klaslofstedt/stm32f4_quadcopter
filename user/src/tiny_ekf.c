@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "tiny_ekf.h"
-#include "printf2.h"
+#include "uart.h"
 
 /* Cholesky-decomposition matrix-inversion code, adapated from
    http://jean-pierre.moreau.pagesperso-orange.fr/Cplus/choles_cpp.txt */

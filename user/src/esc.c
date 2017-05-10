@@ -5,7 +5,7 @@
 #include "esc.h"
 #include "pwm.h"
 #include "freertos_time.h"
-#include "printf2.h"
+#include "uart.h"
 
 #define ESC_INIT_LOW 0
 #define ESC_INIT_HIGH 850
@@ -32,7 +32,7 @@ void esc_init(esc_t *esc)
 	// devided by 1000000 because ESC data is in the base of us instead of s
     // This line is shitty since it's not actually init run_min but init the esc
 	esc->run_min = (((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_INIT_HIGH));
-    printf2("%d %d\n\r ", esc->pin_number, ((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_INIT_HIGH));
+    uart_printf("pin: %d pwm: %d\n\r", esc->pin_number, ((SystemCoreClock/1000000) / (2 * prescaler)) * (ESC_INIT_HIGH));
 	delay_ms(500);
 	esc_set_speed(esc, speed);
 	delay_ms(2500);

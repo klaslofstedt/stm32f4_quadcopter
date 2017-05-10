@@ -2,7 +2,7 @@
 #include "vl53l0x.h"
 #include "vl53l0x_api.h"
 #include "vl53l0x_platform.h"
-#include "printf2.h"
+#include "uart.h"
 
 VL53L0X_RangingMeasurementData_t vl53l0x_measurement;
 

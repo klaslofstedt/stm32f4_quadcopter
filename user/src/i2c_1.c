@@ -731,7 +731,7 @@ unsigned short Get_I2C1_Retry()
 
 
 /*#include "i2c_1.h"
-#include "printf2.h"
+#include "uart.h"
 #include "freertos_time.h"
 
 static void I2C_write(I2C_TypeDef* I2Cx, uint8_t data);
