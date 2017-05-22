@@ -1,5 +1,5 @@
 #include "vl53l0x.h"
-#include "printf2.h"
+#include "uart.h"
 
 #define VERSION_REQUIRED_MAJOR  1
 #define VERSION_REQUIRED_MINOR  0
@@ -18,7 +18,7 @@ VL53L0X_DeviceInfo_t DeviceInfo;
 
 void VL53L0X_init(void) 
 {
-    printf2("Init VL53L0X\n\r");
+    uart_printf("Init VL53L0X\n\r");
     //int32_t   status_int;
     //int32_t   init_done = 0;
     
@@ -75,10 +75,10 @@ void VL53L0X_init(void)
     }
     
     if( Status == VL53L0X_ERROR_NONE ) {
-        printf2("Init VL53L0X succeded\n\r");
+        uart_printf("Init VL53L0X succeded\n\r");
     } 
     else{
-        printf2("Init VL53L0X failed\n\r");
+        uart_printf("Init VL53L0X failed\n\r");
     }
 }
 
@@ -95,7 +95,7 @@ VL53L0X_Error VL53L0X_getSingleRangingMeasurement(VL53L0X_RangingMeasurementData
     
     if( Status == VL53L0X_ERROR_NONE ) {
         
-        //printf2( F( "sVL53L0X: PerformSingleRangingMeasurement" ) );
+        //uart_printf( F( "sVL53L0X: PerformSingleRangingMeasurement" ) );
         
         Status = VL53L0X_PerformSingleRangingMeasurement( pMyDevice, RangingMeasurementData );
         
@@ -104,11 +104,11 @@ VL53L0X_Error VL53L0X_getSingleRangingMeasurement(VL53L0X_RangingMeasurementData
         
         VL53L0X_GetLimitCheckCurrent( pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent );
         
-        /*printf2( F( "RANGE IGNORE THRESHOLD: " ) );
-        printf2( (float)LimitCheckCurrent / 65536.0 );
+        /*uart_printf( F( "RANGE IGNORE THRESHOLD: " ) );
+        uart_printf( (float)LimitCheckCurrent / 65536.0 );
         
-        printf2( F( "Measured distance: " ) );
-        printf2( RangingMeasurementData->RangeMilliMeter );*/
+        uart_printf( F( "Measured distance: " ) );
+        uart_printf( RangingMeasurementData->RangeMilliMeter );*/
         
     }
     
@@ -131,10 +131,10 @@ void VL53L0X_printRangeStatus( VL53L0X_RangingMeasurementData_t* pRangingMeasure
     
     VL53L0X_GetRangeStatusString( RangeStatus, buf );
     
-    /*printf2( F("Range Status: " ) );
-    printf2( RangeStatus );
-    printf2( F( " : " ) );
-    printf2( buf );*/
+    /*uart_printf( F("Range Status: " ) );
+    uart_printf( RangeStatus );
+    uart_printf( F( " : " ) );
+    uart_printf( buf );*/
 }
 
 VL53L0X_Error rangingTest(VL53L0X_RangingMeasurementData_t* pRangingMeasurementData) 

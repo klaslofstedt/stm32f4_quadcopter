@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "vl53l0x_platform.h"
 #include "vl53l0x_i2c_platform.h"
 #include "vl53l0x_api.h"
-#include "printf2.h"
 
 #define LOG_FUNCTION_START(fmt, ... )           _LOG_FUNCTION_START(TRACE_MODULE_PLATFORM, fmt, ##__VA_ARGS__)
 #define LOG_FUNCTION_END(status, ... )          _LOG_FUNCTION_END(TRACE_MODULE_PLATFORM, status, ##__VA_ARGS__)
@@ -169,7 +168,6 @@ VL53L0X_Error VL53L0X_WrWord(VL53L0X_DEV Dev, uint8_t index, uint16_t data){
 	status_int = VL53L0X_write_word(deviceAddress, index, data);
 
 	if (status_int != 0){
-        //printf2("VL53L0X_ERROR_CONTROL_INTERFACE");
 		Status = VL53L0X_ERROR_CONTROL_INTERFACE;
     }
     return Status;
@@ -193,7 +191,6 @@ VL53L0X_Error VL53L0X_WrDWord(VL53L0X_DEV Dev, uint8_t index, uint32_t data)
 
 VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData, uint8_t OrData)
 {
-    //printf2("UpdateByte");
     VL53L0X_Error Status = VL53L0X_ERROR_NONE;
     int32_t status_int;
     uint8_t deviceAddress;
@@ -212,7 +209,6 @@ VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData
         if (status_int != 0)
             Status = VL53L0X_ERROR_CONTROL_INTERFACE;
     }
-    //printf2("o");
     return Status;
 }
 

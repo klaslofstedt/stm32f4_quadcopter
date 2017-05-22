@@ -59,11 +59,8 @@ uint8_t arm(void)
         counter = 0;
     }
     
-    if(toggle == 0){
-        return 0;
-    }
     if(toggle == 1){
         return 1;
     }
-    return 0; // should not be reached, just to avoid compilation error/warning
+    return 0;
 }

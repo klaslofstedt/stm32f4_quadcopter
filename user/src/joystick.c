@@ -36,29 +36,6 @@ static int8_t joystick_accuracy(float val, float ref, float step)
     }
 }
 
-/*static void set_pid()
-{
-    if(joystick_accuracy(ic1_freq, 55, 1) == 0){
-        if(ic1_duty < 7){
-            pitch.k_d = pitch.k_d - 0.0005;
-            roll.k_d = roll.k_d - 0.0005;
-        }
-        else if(ic1_duty > 10){
-            pitch.k_d = pitch.k_d + 0.0005;
-            roll.k_d = roll.k_d + 0.0005;
-        }
-    }
-    if(joystick_accuracy(ic2_freq, 55, 1) == 0){
-        if(ic2_duty < 7){
-            pitch.k_p = pitch.k_p - 0.000002;
-            roll.k_p = roll.k_p - 0.000002;
-        }
-        else if(ic2_duty > 10){
-            pitch.k_p = pitch.k_p + 0.000002;
-            roll.k_p = roll.k_p + 0.000002;
-        }
-    }
-}*/
 
 float joystick_read_setpoint(joystick_data_t* in)
 {

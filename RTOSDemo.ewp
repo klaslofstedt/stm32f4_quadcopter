@@ -1438,7 +1438,13 @@
         <name>$PROJ_DIR$\user\inc\altitude.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\inc\arm.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\barometer.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\inc\buzzer.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\inc\discover_board.h</name>
@@ -1486,9 +1492,6 @@
         <name>$PROJ_DIR$\user\inc\pid.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\user\inc\printf2.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\user\inc\pwm.h</name>
       </file>
       <file>
@@ -1510,7 +1513,13 @@
         <name>$PROJ_DIR$\user\src\application_hooks.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\src\arm.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\src\barometer.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\user\src\buzzer.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\esc.c</name>
@@ -1553,9 +1562,6 @@
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\pid.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\user\src\printf2.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\user\src\pwm.c</name>

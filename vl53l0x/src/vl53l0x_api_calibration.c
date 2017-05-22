@@ -29,7 +29,6 @@
 #include "vl53l0x_api.h"
 #include "vl53l0x_api_core.h"
 #include "vl53l0x_api_calibration.h"
-#include "printf2.h"
 
 #ifndef __KERNEL__
 #include <stdlib.h>

@@ -26,7 +26,7 @@
 #include "stm32f4xx_tim.h"  
 #include "stm32f4xx_gpio.h" 
 #include "imu.h"
-#include "printf2.h"
+#include "uart.h"
 #include <stdint.h>
 
 /** @addtogroup Template_Project
@@ -283,8 +283,6 @@ void TIM2_IRQHandler(void)
             tim2_duty = (float)(TIM_GetCapture2(TIM2) * 100) / tim2_val;
             //Frequency computation
             tim2_freq = (float)SystemCoreClock / (float)(2 * 1000 * tim2_val);
-            //printf2("duty: %d", ic2_duty);
-            //printf2("freq: %d\n\r", ic2_freq);
         }
         else
         {
@@ -338,7 +336,6 @@ void TIM5_IRQHandler(void)
 
 void TIM8_BRK_TIM12_IRQHandler(void)
 {
-    //printf2("isr ");
     if (TIM_GetITStatus(TIM12, TIM_IT_Update) != RESET) {
         TIM_ClearITPendingBit(TIM12, TIM_IT_Update);
         // Get the Input Capture value

@@ -29,7 +29,6 @@
 #include "vl53l0x_api.h"
 #include "vl53l0x_api_core.h"
 #include "vl53l0x_api_calibration.h"
-#include "printf2.h"
 #include "freertos_time.h"
 
 
@@ -70,29 +69,22 @@ VL53L0X_Error VL53L0X_measurement_poll_for_completion(VL53L0X_DEV Dev)
 
 	do {
 		Status = VL53L0X_GetMeasurementDataReady(Dev, &NewDataReady);
-        //printf2("9.6.2.3.0: %d\n\r", Status);
 		if (Status != 0){
-            //printf2("9.6.2.3.1: %d\n\r", Status);
 			break; /* the error is set */
         }
 
 		if (NewDataReady == 1){
-            //printf2("9.6.2.3.2: %d\n\r", Status);
 			break; /* done note that status == 0 */
         }
 
 		LoopNb++;
 		if (LoopNb >= VL53L0X_DEFAULT_MAX_LOOP) {
 			Status = VL53L0X_ERROR_TIME_OUT;
-            //printf2("9.6.2.3.3: %d\n\r", Status);
 			break;
 		}
         delay_ms(1);
 		//VL53L0X_PollingDelay(Dev);
 	} while (1);
-
-	//LOG_FUNCTION_END(Status);
-    //printf2("9.6.2.3.4: %d\n\r", Status);
 	return Status;
 }
 

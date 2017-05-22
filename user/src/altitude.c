@@ -149,6 +149,9 @@ void altitude_task(void *pvParameters)
             if(!xQueueReceive(imu_altitude_queue, &imu, 0)){
                 uart_printf("No altitude IMU data in queue\n\r");
             }
+            // Calc dt
+            altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
+            last_wake_time = wake_time;
             
             laser_read(&laser);
             //lidar_read(&lidar);
@@ -157,7 +160,7 @@ void altitude_task(void *pvParameters)
             // If range is too low for lidar, use only laser
             if(laser.range_cm >= laser.range_min && laser.range_cm <= lidar.range_min){
                 altitude.altitude_cm = altitude_remove_angle_contribution(laser.range_cm, imu_read_dmp_roll(), imu_read_dmp_pitch());
-                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / (float)altitude.dt;
                 
                 altitude.sensor_index = 1;
             }
@@ -168,14 +171,14 @@ void altitude_task(void *pvParameters)
                 float range = filter_transition(laser.range_cm, lidar.range_cm, damping);
                 
                 altitude.altitude_cm = altitude_remove_angle_contribution(range, imu_read_dmp_roll(), imu_read_dmp_pitch());
-                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / (float)altitude.dt;
                 
                 altitude.sensor_index = 2;
             }
             // If range is too high for laser and too low for barometer, use only lidar
             else if(lidar.range_cm > lidar.range_min && lidar.range_cm < barometer.altitude_min){
                 altitude.altitude_cm = altitude_remove_angle_contribution(lidar.range_cm, imu_read_dmp_roll(), imu_read_dmp_pitch());
-                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / altitude.dt;
+                altitude.rate_cm_s = (altitude.altitude_cm - altitude.altitude_cm_last) / (float)altitude.dt;
                 
                 altitude.sensor_index = 3;
             }
@@ -197,7 +200,7 @@ void altitude_task(void *pvParameters)
             
             else{
                 // TODO: use accelerometer?
-                uart_printf("Altitude measurement failed\n\r");
+                //uart_printf("Altitude measurement failed\n\r");
                 altitude.sensor_index = 0;
             }
             //float temp_altitude = altitude.altitude_cm;
@@ -206,8 +209,8 @@ void altitude_task(void *pvParameters)
             // These damping values are just stolen
             float temp1 = altitude.altitude_cm; // remove
             
-            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.90f); //0.995f
-            uart_printf("$ %d %d %d;", (int16_t)(10*altitude.altitude_cm), (int16_t)(10*temp1), 100);
+            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.9f); //0.995f
+            //uart_printf("$ %d %d %d;", (int16_t)(10*altitude.altitude_cm), (int16_t)(10*temp1), 100);
             altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.9f); // 0.995f
             altitude.altitude_cm_last = altitude.altitude_cm;
             altitude.rate_cm_s_last = altitude.rate_cm_s;
@@ -218,8 +221,7 @@ void altitude_task(void *pvParameters)
             //altitude.acc_z = imu.acc_z;
             //altitude.altitude_cm = range_true;
             
-            altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
-            last_wake_time = wake_time;
+            
             
             xQueueOverwrite(altitude_queue, &altitude);
         }
