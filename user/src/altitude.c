@@ -211,7 +211,10 @@ void altitude_task(void *pvParameters)
             
             altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.9f); //0.995f
             //uart_printf("$ %d %d %d;", (int16_t)(10*altitude.altitude_cm), (int16_t)(10*temp1), 100);
+            //uart_printf("raw: %.4f ", altitude.rate_cm_s);
             altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.9f); // 0.995f
+            //uart_printf(" filter: %.4f\n\r", altitude.rate_cm_s);
+            uart_printf("$ %d %d %d;", 100, (int16_t)(10), (int16_t)1000*altitude.rate_cm_s);
             altitude.altitude_cm_last = altitude.altitude_cm;
             altitude.rate_cm_s_last = altitude.rate_cm_s;
             

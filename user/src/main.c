@@ -63,7 +63,7 @@ void main_task(void *pvParameters)
                 pid_altitude.k_p = pid_altitude.k_p + 0.0001;
             }
             */
-            pid_pitch.setpoint = joystick_read_setpoint(&joystick_pitch);
+            pid_pitch.setpoint = 0;//joystick_read_setpoint(&joystick_pitch);
             pid_pitch.input = imu.dmp_pitch;
             pid_pitch.rate = imu.gyro_pitch;
             pid_calc(&pid_pitch, imu.dt);
@@ -78,7 +78,7 @@ void main_task(void *pvParameters)
                 pid_altitude.k_d = pid_altitude.k_d + 0.001;
             }
             pid_roll.setpoint = 0; // fake*/
-            pid_roll.setpoint = joystick_read_setpoint(&joystick_roll);
+            pid_roll.setpoint = 0;//joystick_read_setpoint(&joystick_roll);
             pid_roll.input = imu.dmp_roll;
             pid_roll.rate = imu.gyro_roll;
             pid_calc(&pid_roll, imu.dt);
@@ -92,7 +92,7 @@ void main_task(void *pvParameters)
             
             // Build altitude pid object ---------------------------------------
             // Poll queue for altitude data (~25 ms = 40 Hz interval)
-            if(xQueueReceive(altitude_queue, &altitude, 0)){
+            /*if(xQueueReceive(altitude_queue, &altitude, 0)){
                 //uart_print("Found altitude data in queue\n\r"); // expected
                 pid_altitude.setpoint = 70;//joystick_read_thrust(&joystick_thrust);
                 pid_altitude.input = altitude.altitude_cm;
@@ -100,7 +100,8 @@ void main_task(void *pvParameters)
                 pid_calc(&pid_altitude, altitude.dt);
                 // Fake line!
                 //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
-            }
+            }*/
+            pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
             // Set outputs ----------------------------------------------------- 
             if(arm() && joystick_read_thrust(&joystick_thrust) > 0.001f){ // if arm and thrust joystick
@@ -142,7 +143,7 @@ void main_task(void *pvParameters)
 void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
-    const TickType_t frequency = 500; // every 200ms = 2Hz
+    const TickType_t frequency = 200; // every 200ms = 2Hz
     UBaseType_t stack_size_tele;
     stack_size_tele = uxTaskGetStackHighWaterMark( NULL );
     while(1)
@@ -243,7 +244,7 @@ int main(void)
     // Prints debug data
     xTaskCreate(telemetry_task, (const char *)"telemetry_task", 300, NULL, 2, NULL);
     // Read several height sensors and pass altitude hold data to main_task
-    xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
+    //xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
     // Reads joystick and process all data before setting new output to ESCs
     xTaskCreate(main_task, (const char *)"main_task", 250, NULL, 2, NULL);
     
