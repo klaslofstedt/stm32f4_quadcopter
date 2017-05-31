@@ -39,7 +39,7 @@ void buzzer_init(void)
 
     TIM_BaseStruct.TIM_Prescaler = prescaler - 1;
     TIM_BaseStruct.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_BaseStruct.TIM_Period = (((SystemCoreClock / 2) / BUZZER_FREQUENCY_4) / prescaler) -1;
+    TIM_BaseStruct.TIM_Period = (((SystemCoreClock / 2) / BUZZER_FREQUENCY_3) / prescaler) -1;
 
     TIM_BaseStruct.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_BaseStruct.TIM_RepetitionCounter = 0x0000;

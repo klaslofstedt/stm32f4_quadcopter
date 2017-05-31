@@ -36,12 +36,12 @@ pid_data_t pid_roll = {
     .last_input = 0,
     .rate = 0,
 	.setpoint = 0,
-	.i_term = 0,
+	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
 	.output = 0,
     .k_p = 0.006,
-    .k_i = 0.0,
+    .k_i = 0.0f,
     .k_d = 0.0009 // 0.9
 };
 
@@ -50,12 +50,12 @@ pid_data_t pid_pitch = {
 	.last_input = 0,
     .rate = 0,
 	.setpoint = 0,
-	.i_term = 0,
+	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
 	.output = 0,
     .k_p = 0.006,
-    .k_i = 0.0,
+    .k_i = 0.0f,
     .k_d = 0.0009 // 0.9
 };
 
@@ -64,12 +64,12 @@ pid_data_t pid_yaw = {
 	.last_input = 0,
     .rate = 0,
 	.setpoint = 0,
-	.i_term = 0,
+	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
 	.output = 0,
     .k_p = -0.002,
-    .k_i = 0.0,
+    .k_i = 0.0f,
     .k_d = 0.0
 };
 
@@ -78,12 +78,12 @@ pid_data_t pid_altitude = {
 	.last_input = 0,
     .rate = 0,
 	.setpoint = 0,
-	.i_term = 0,
+	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = 0,
 	.output = 0,
     .k_p = 0.0227,
-    .k_i = 0.0,
+    .k_i = 0.0f,
     .k_d = 2.885
 };
 
