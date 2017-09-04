@@ -29,6 +29,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
+     
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -42,7 +45,9 @@ volatile uint32_t Frequency = 0;*/
      
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
+extern xSemaphoreHandle gyro_new;
+     
+     
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);

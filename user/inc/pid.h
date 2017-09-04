@@ -9,10 +9,12 @@ typedef struct{
 	float input;
     float last_input;
     float rate;
+    float rate_calc;
 	float setpoint;
     float boundary_max;
     float boundary_min;
 	float i_term;
+    float last_error;
 	float output;
     float k_p;
     float k_i;

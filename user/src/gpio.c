@@ -9,6 +9,7 @@ Purpose :
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_syscfg.h"
 
+
 #include "gpio.h"
 
 /********************************* Defines ************************************/
@@ -63,8 +64,9 @@ void gpio_init(void)
     NVIC_InitStructure.NVIC_IRQChannel = INVEN_INT_EXTI_IRQ;
     // http://www.freertos.org/RTOS-Cortex-M3-M4.html
     // configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY in FreeRTOSConfig.h
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // set 5 or higher
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // prob dont need to be changed
+    // Should be lower (higher value) than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 10; 
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 10; // prob dont need to be changed
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 }
@@ -95,4 +97,17 @@ void InvIntHandler(void)
 {
     /* Clear the EXTI line 1 pending bit */
     EXTI_ClearITPendingBit(INVEN_INT_EXTI_LINE);
+}
+
+void debug_init(void)
+{
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+    
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(GPIOE, &GPIO_InitStructure);
 }

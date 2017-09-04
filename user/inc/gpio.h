@@ -17,5 +17,6 @@ Purpose :
 void gpio_init(void);
 void EnableInvInterrupt(void);
 void DisableInvInterrupt(void);
+void debug_init(void);
 #endif
 

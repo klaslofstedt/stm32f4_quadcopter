@@ -39,10 +39,11 @@ pid_data_t pid_roll = {
 	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
+    .last_error = 0,
 	.output = 0,
-    .k_p = 0.006,
-    .k_i = 0.0f,
-    .k_d = 0.0009 // 0.9
+    .k_p = 0.00676f, // 0.006 // 0.0062
+    .k_i = 0.00008f, // 0.0005
+    .k_d = 0.00045f // 0.0009 // 0.00152
 };
 
 pid_data_t pid_pitch = {
@@ -53,10 +54,11 @@ pid_data_t pid_pitch = {
 	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
+    .last_error = 0,
 	.output = 0,
-    .k_p = 0.006,
-    .k_i = 0.0f,
-    .k_d = 0.0009 // 0.9
+    .k_p = 0.00676f,
+    .k_i = 0.00008f,
+    .k_d = 0.00045f 
 };
 
 pid_data_t pid_yaw = {
@@ -67,8 +69,9 @@ pid_data_t pid_yaw = {
 	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = -1.0f,
+    .last_error = 0,
 	.output = 0,
-    .k_p = -0.002,
+    .k_p = -0.001, //-0.002
     .k_i = 0.0f,
     .k_d = 0.0
 };
@@ -81,10 +84,11 @@ pid_data_t pid_altitude = {
 	.i_term = 0.0f,
     .boundary_max = 1.0f,
     .boundary_min = 0,
+    .last_error = 0,
 	.output = 0,
-    .k_p = 0.0227,
+    .k_p = 0.0f,//0.0227,
     .k_i = 0.0f,
-    .k_d = 2.885
+    .k_d = 0.0f//2.885
 };
 
 joystick_data_t joystick_roll = {

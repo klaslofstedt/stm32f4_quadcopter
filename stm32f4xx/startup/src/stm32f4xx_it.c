@@ -24,7 +24,10 @@
 #include "stm32f4xx_it.h"
 #include "stm32f4xx_rcc.h"  
 #include "stm32f4xx_tim.h"  
-#include "stm32f4xx_gpio.h" 
+#include "stm32f4xx_gpio.h"
+#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
+
 #include "imu.h"
 #include "uart.h"
 #include <stdint.h>
@@ -224,12 +227,26 @@ __weak void EXTI15_10_IRQHandler(void)
 * @param  None
 * @retval None
 */
+xSemaphoreHandle gyro_new = NULL;
+
 
 void EXTI4_IRQHandler(void)
 {
     /* Handle new gyro*/
+    GPIO_SetBits(GPIOE, GPIO_Pin_10);
     gyro_data_ready_cb();
+    
+    /***** semaphore stuff */
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     EXTI_ClearITPendingBit(EXTI_Line4);
+    
+    GPIO_ResetBits(GPIOE, GPIO_Pin_10);
+    xSemaphoreGiveFromISR(gyro_new, &xHigherPriorityTaskWoken);
+    
+    if (xHigherPriorityTaskWoken != pdFALSE) {
+        portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+    }
+    /*******/
 }
 
 
@@ -270,6 +287,7 @@ void TIM4_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET){
+        GPIO_SetBits(GPIOE, GPIO_Pin_11);
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
         // Get the Input Capture value
         tim2_val = TIM_GetCapture1(TIM2);
@@ -285,12 +303,14 @@ void TIM2_IRQHandler(void)
             tim2_duty = 0;
             tim2_freq = 0;
         }
+        GPIO_ResetBits(GPIOE, GPIO_Pin_11);
     }
 }
 
 void TIM3_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET){
+        GPIO_SetBits(GPIOE, GPIO_Pin_12);
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
         // Get the Input Capture value
         tim3_val = TIM_GetCapture1(TIM3);
@@ -306,12 +326,14 @@ void TIM3_IRQHandler(void)
             tim3_duty = 0;
             tim3_freq = 0;
         }
+        GPIO_ResetBits(GPIOE, GPIO_Pin_12);
     }
 }
 
 void TIM5_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET){
+        GPIO_SetBits(GPIOE, GPIO_Pin_13);
         TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
         // Get the Input Capture value
         tim5_val = TIM_GetCapture1(TIM5);
@@ -327,6 +349,7 @@ void TIM5_IRQHandler(void)
             tim5_duty = 0;
             tim5_freq = 0;
         }
+        GPIO_ResetBits(GPIOE, GPIO_Pin_13);
     }
 }
 
@@ -355,6 +378,7 @@ void TIM8_BRK_TIM12_IRQHandler(void)
 void TIM1_BRK_TIM9_IRQHandler() {
 	// makes sure the interrupt status is not reset (and therefore SET?)
     if (TIM_GetITStatus(TIM9, TIM_IT_Update) != RESET) {
+        
     	// ensure that the timer doesn't get triggered again
         TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
 

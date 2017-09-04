@@ -18,8 +18,7 @@ int get_ms_count(unsigned long *count)
 	return 0;
 }
 
-int get_tick_count(unsigned long *count) // Same as ms in my case?
+unsigned long get_tick_count() // Same as ms in my case?
 {
-    count[0] = xTaskGetTickCount();
-	return 0;
+    return xTaskGetTickCount();
 }

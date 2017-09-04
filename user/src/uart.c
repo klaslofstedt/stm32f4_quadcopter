@@ -10,6 +10,9 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 /********************************* Defines ************************************/
 
 
@@ -35,11 +38,16 @@
 #define USARTx_DMAx_CLK                  RCC_AHBPeriph_DMA1
 
 /********************************* Globals ************************************/
+SemaphoreHandle_t g_mutex;
 /********************************* Prototypes *********************************/
 /*******************************  Function ************************************/
 
+
+
 void uart_init(void)
 {
+  g_mutex = xSemaphoreCreateMutex();
+  
   USART_InitTypeDef USART_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -99,6 +107,8 @@ void USART_puts(const char *s)
 
 void uart_printf(const char *format, ...) 
 {
+  xSemaphoreTake(g_mutex, portMAX_DELAY);
+  
   va_list list;
   va_start(list, format);
   int len = vsnprintf(0, 0, format, list);
@@ -108,6 +118,8 @@ void uart_printf(const char *format, ...)
   USART_puts(s);
   free(s);
   va_end(list);
+  
+  xSemaphoreGive(g_mutex);
   return;
 }
 

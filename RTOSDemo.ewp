@@ -195,6 +195,7 @@
           <state>xDEBUG</state>
           <state>ARM_MATH_CM4</state>
           <state>USE_I2C_2V8</state>
+          <state>configASSERT_DEFINED</state>
         </option>
         <option>
           <name>CCPreprocFile</name>

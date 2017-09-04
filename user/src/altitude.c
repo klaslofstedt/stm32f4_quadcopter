@@ -7,6 +7,10 @@
 #include "imu.h"
 #include "uart.h"
 #include "filter.h"
+#include "gpio.h"
+
+#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 
 #include "task.h"
 
@@ -143,12 +147,11 @@ void altitude_task(void *pvParameters)
     TickType_t last_wake_time = 0;
     const TickType_t delay = LOOP_TIME_MS; // 25 ms = 40 hz
     while(1)
-    {
+    { 
         vTaskDelayUntil(&wake_time, delay / portTICK_PERIOD_MS); // 40Hz
-        if(xSemaphoreTake(imu_altitude_sem, 0) == pdTRUE){
-            if(!xQueueReceive(imu_altitude_queue, &imu, 0)){
-                uart_printf("No altitude IMU data in queue\n\r");
-            }
+        //if(xSemaphoreTake(imu_altitude_sem, 0) == pdTRUE){
+        if(xQueueReceive(imu_altitude_queue, &imu, 0)){
+            GPIO_ResetBits(GPIOE, GPIO_Pin_9);
             // Calc dt
             altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
             last_wake_time = wake_time;
@@ -225,49 +228,53 @@ void altitude_task(void *pvParameters)
             //altitude.altitude_cm = range_true;
             
             
-            
+            GPIO_SetBits(GPIOE, GPIO_Pin_9);
             xQueueOverwrite(altitude_queue, &altitude);
+            //}
+            
+            
+            // Remove additional contribution due to roll & pitch angles
+            // h_estimate = sqrt(h_true^2 + roll^2 + pitch^2) gives:
+            
+            
+            
+            // plot
+            //uart_printf(" $ %d %d;", (int16_t)(10*laser.range_cm), (int16_t)(-1000*altitude.acc_z - altitude.laser_offset));
+            
+            
+            
+            
+            //uart_printf(" laser: %.2f ", laser.range_cm - altitude.laser_offset);
+            //uart_printf(" mbar: %.4f", barometer.mbar);
+            //uart_printf(" temp: %.4f", barometer.temp_c);
+            //uart_printf(" altitude: %.4f", barometer.altitude_m);
+            //uart_printf(" acc_z: %.4f", altitude.acc_z);
+            //ultrasonic_read(&ultrasonic);
+            //gps_read(&gps);
+            
+            //double z[3];
+            //z[0] = 0;//barometer.altitude_cm;
+            //z[1] = (double)laser.range_cm - altitude.laser_offset; // or lidar //ultrasonic.distance_cm;
+            //z[2] = 0; // gps?
+            
+            
+            //altitude_update(&ekf_altitude, &altitude); 
+            //ekf_step(&ekf_altitude, z); // baro, ultrasonic, GPS?
+            
+            //uart_printf(" altitude: %.3f ", altitude.altitude_cm);
+            //uart_printf(" speed: %.4f ", altitude.rate_cm_s);
+            
+            
+            
+            /*
+            xQueueOverwrite(altitude_data, &altitude);
+            xSemaphoreGive(altitude_sem);
+            
+            stack_size = uxTaskGetStackHighWaterMark(NULL);
+            altitude.stack_size = stack_size;*/
         }
-        
-        
-        // Remove additional contribution due to roll & pitch angles
-        // h_estimate = sqrt(h_true^2 + roll^2 + pitch^2) gives:
-        
-        
-        
-        // plot
-        //uart_printf(" $ %d %d;", (int16_t)(10*laser.range_cm), (int16_t)(-1000*altitude.acc_z - altitude.laser_offset));
-        
-        
-        
-        
-        //uart_printf(" laser: %.2f ", laser.range_cm - altitude.laser_offset);
-        //uart_printf(" mbar: %.4f", barometer.mbar);
-        //uart_printf(" temp: %.4f", barometer.temp_c);
-        //uart_printf(" altitude: %.4f", barometer.altitude_m);
-        //uart_printf(" acc_z: %.4f", altitude.acc_z);
-        //ultrasonic_read(&ultrasonic);
-        //gps_read(&gps);
-        
-        //double z[3];
-        //z[0] = 0;//barometer.altitude_cm;
-        //z[1] = (double)laser.range_cm - altitude.laser_offset; // or lidar //ultrasonic.distance_cm;
-        //z[2] = 0; // gps?
-        
-        
-        //altitude_update(&ekf_altitude, &altitude); 
-        //ekf_step(&ekf_altitude, z); // baro, ultrasonic, GPS?
-        
-        //uart_printf(" altitude: %.3f ", altitude.altitude_cm);
-        //uart_printf(" speed: %.4f ", altitude.rate_cm_s);
-        
-        
-        
-        /*
-        xQueueOverwrite(altitude_data, &altitude);
-        xSemaphoreGive(altitude_sem);
-        
-        stack_size = uxTaskGetStackHighWaterMark(NULL);
-        altitude.stack_size = stack_size;*/
+        else{
+            uart_printf("No altitude IMU data in queue\n\r");
+        }
     }
 }
