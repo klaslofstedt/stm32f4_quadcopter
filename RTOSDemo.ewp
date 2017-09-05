@@ -1445,6 +1445,9 @@
         <name>$PROJ_DIR$\user\inc\barometer.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\user\inc\board.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\user\inc\buzzer.h</name>
       </file>
       <file>

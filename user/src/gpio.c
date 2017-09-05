@@ -11,23 +11,10 @@ Purpose :
 
 
 #include "gpio.h"
+#include "board.h"
 
-/********************************* Defines ************************************/
 
-//changed PIN A0 to PIN A1 back, to match low power modes 
 
-#define INVEN_INT_PIN                         GPIO_Pin_4
-#define INVEN_INT_GPIO_PORT                   GPIOA
-#define INVEN_INT_GPIO_CLK                    RCC_AHB1Periph_GPIOA
-#define INVEN_INT_EXTI_PORT                   EXTI_PortSourceGPIOA
-#define INVEN_INT_EXTI_PIN                    EXTI_PinSource4
-#define INVEN_INT_EXTI_LINE                   EXTI_Line4
-#define INVEN_INT_EXTI_IRQ                    EXTI4_IRQn
-
-/**********************************Globals ************************************/
-/********************************* Prototypes *********************************/
-
-/***********************************Functions *********************************/
 void gpio_init(void)
 {
     
@@ -102,12 +89,12 @@ void InvIntHandler(void)
 void debug_init(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+    RCC_AHB1PeriphClockCmd(DEBUG_GPIO_CLK, ENABLE);
     
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Pin = DEBUG_MAIN_TASK_PIN | DEBUG_IMU_TASK_PIN | DEBUG_ALT_TASK_PIN | DEBUG_IMU_INT_PIN | DEBUG_TEL_TASK_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(GPIOE, &GPIO_InitStructure);
+    GPIO_Init(DEBUG_GPIO_PORT, &GPIO_InitStructure);
 }

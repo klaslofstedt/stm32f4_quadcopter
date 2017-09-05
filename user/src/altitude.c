@@ -8,6 +8,7 @@
 #include "uart.h"
 #include "filter.h"
 #include "gpio.h"
+#include "board.h"
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
@@ -131,7 +132,9 @@ static float altitude_remove_angle_contribution(float estimate, float x, float y
 void altitude_task(void *pvParameters)
 {
     uart_printf("Altitude task\n\r");
-    UBaseType_t stack_size;
+    
+    UBaseType_t stack_size_alt;
+    stack_size_alt = uxTaskGetStackHighWaterMark(NULL);
     
     //barometer_init(&barometer);
     //lidar_init(&lidar);
@@ -149,9 +152,8 @@ void altitude_task(void *pvParameters)
     while(1)
     { 
         vTaskDelayUntil(&wake_time, delay / portTICK_PERIOD_MS); // 40Hz
-        //if(xSemaphoreTake(imu_altitude_sem, 0) == pdTRUE){
         if(xQueueReceive(imu_altitude_queue, &imu, 0)){
-            GPIO_ResetBits(GPIOE, GPIO_Pin_9);
+            GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_ALT_TASK_PIN);
             // Calc dt
             altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
             last_wake_time = wake_time;
@@ -228,7 +230,7 @@ void altitude_task(void *pvParameters)
             //altitude.altitude_cm = range_true;
             
             
-            GPIO_SetBits(GPIOE, GPIO_Pin_9);
+            GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_ALT_TASK_PIN);
             xQueueOverwrite(altitude_queue, &altitude);
             //}
             
@@ -265,13 +267,8 @@ void altitude_task(void *pvParameters)
             //uart_printf(" speed: %.4f ", altitude.rate_cm_s);
             
             
-            
-            /*
-            xQueueOverwrite(altitude_data, &altitude);
-            xSemaphoreGive(altitude_sem);
-            
-            stack_size = uxTaskGetStackHighWaterMark(NULL);
-            altitude.stack_size = stack_size;*/
+            stack_size_alt = uxTaskGetStackHighWaterMark(NULL);
+            altitude.stack_size = stack_size_alt;
         }
         else{
             uart_printf("No altitude IMU data in queue\n\r");

@@ -20,6 +20,7 @@
 #include "joystick.h"
 #include "altitude.h"
 #include "arm.h"
+#include "board.h"
 
 #define X_CONFIG 1
 
@@ -41,18 +42,14 @@ void main_task(void *pvParameters)
     esc_init(&esc2);
     esc_init(&esc3);
     esc_init(&esc4);
-    
-    
-    
+        
     // Not needed?
     stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     
     while(1){
-        // This sem sets the frequency of the main loop (~5 ms = 200 Hz interval)
-        
-        if(xQueueReceive(imu_attitude_queue, &imu, 15)){ // 6 ms?
-            GPIO_SetBits(GPIOE, GPIO_Pin_7);
-            tick1 = get_tick_count();
+        // This queue sets the frequency of the main loop (~5 ms = 200 Hz interval)
+        if(xQueueReceive(imu_attitude_queue, &imu, 15)){
+            GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
             
             // Build pitch pid object ------------------------------------------
             
@@ -60,16 +57,16 @@ void main_task(void *pvParameters)
             if(temp1 < -14){
                 //pid_roll.k_i = pid_roll.k_i - 0.00001;
                 //pid_pitch.k_i = pid_pitch.k_i - 0.00001;
-                //pid_roll.k_p = pid_roll.k_p - 0.00001;
-                //pid_pitch.k_p = pid_pitch.k_p - 0.00001;
-                pid_altitude.k_p = pid_altitude.k_p - 0.0001;
+                pid_roll.k_p = pid_roll.k_p - 0.00001;
+                pid_pitch.k_p = pid_pitch.k_p - 0.00001;
+                //pid_altitude.k_p = pid_altitude.k_p - 0.0001;
             }
             else if(temp1 > 14){
                 //pid_roll.k_i = pid_roll.k_i + 0.00001;
                 //pid_pitch.k_i = pid_pitch.k_i + 0.00001;
-                //pid_roll.k_p = pid_roll.k_p + 0.00001;
-                //pid_pitch.k_p = pid_pitch.k_p + 0.00001;
-                pid_altitude.k_p = pid_altitude.k_p + 0.0001;
+                pid_roll.k_p = pid_roll.k_p + 0.00001;
+                pid_pitch.k_p = pid_pitch.k_p + 0.00001;
+                //pid_altitude.k_p = pid_altitude.k_p + 0.0001;
             }
             
             pid_pitch.setpoint = 0;//joystick_read_setpoint(&joystick_pitch);
@@ -81,14 +78,14 @@ void main_task(void *pvParameters)
             
             temp2 = joystick_read_setpoint(&joystick_roll);
             if(temp2 < -14){
-                //pid_roll.k_d = pid_roll.k_d - 0.000001;
-                //pid_pitch.k_d = pid_pitch.k_d - 0.000001;
-                pid_altitude.k_d = pid_altitude.k_d - 0.01;
+                pid_roll.k_d = pid_roll.k_d - 0.000001;
+                pid_pitch.k_d = pid_pitch.k_d - 0.000001;
+                //pid_altitude.k_d = pid_altitude.k_d - 0.01;
             }
             else if(temp2 > 14){
-                //pid_roll.k_d = pid_roll.k_d + 0.000001;
-                //pid_pitch.k_d = pid_pitch.k_d + 0.000001;
-                pid_altitude.k_d = pid_altitude.k_d + 0.01;
+                pid_roll.k_d = pid_roll.k_d + 0.000001;
+                pid_pitch.k_d = pid_pitch.k_d + 0.000001;
+                //pid_altitude.k_d = pid_altitude.k_d + 0.01;
             }
             pid_roll.setpoint = 0;//joystick_read_setpoint(&joystick_roll);
             pid_roll.input = imu.dmp_roll;
@@ -124,7 +121,7 @@ void main_task(void *pvParameters)
                 // Fake line!
                 //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             }
-            //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
+            pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
             
             
@@ -136,7 +133,7 @@ void main_task(void *pvParameters)
                 pid_calc(&pid_pitch, imu.dt);
                 pid_calc(&pid_roll, imu.dt);
                 pid_calc(&pid_yaw, imu.dt);
-                pid_calc(&pid_altitude, altitude.dt);
+                //pid_calc(&pid_altitude, altitude.dt);
                 
                 //  1  front  2
                 //  left    right
@@ -160,13 +157,10 @@ void main_task(void *pvParameters)
             
             // Read the size of this task in order to refine assigned stack size
             stack_size_main = uxTaskGetStackHighWaterMark(NULL);
-            tick2 = get_tick_count() - tick1;
-            GPIO_ResetBits(GPIOE, GPIO_Pin_7);
+            GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
         }
         else{
-            //GPIO_SetBits(GPIOE, GPIO_Pin_11);
             uart_printf("No IMU data in queue\n\r");
-            //GPIO_ResetBits(GPIOE, GPIO_Pin_11);
         }
     } 
 }
@@ -175,13 +169,13 @@ void main_task(void *pvParameters)
 void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
-    const TickType_t frequency = 100; // every 200ms = 5Hz
+    const TickType_t frequency = 400; // every 200ms = 5Hz
     UBaseType_t stack_size_tele;
-    stack_size_tele = uxTaskGetStackHighWaterMark( NULL );
+    stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     while(1)
     {
-        vTaskDelayUntil(&last_wake_time, frequency / portTICK_PERIOD_MS); // good shit!
-        //GPIO_SetBits(GPIOE, GPIO_Pin_11);
+        vTaskDelayUntil(&last_wake_time, frequency / portTICK_PERIOD_MS);
+        GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_TEL_TASK_PIN);
         //uart_printf("armed: %d", arm());
         //uart_printf(" pitch: %.3f", joystick_pitch_g.duty_input);
         //uart_printf(" %.3f", joystick_pitch_g.freq_input);
@@ -194,23 +188,27 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" toggle: %.3f", joystick_toggle_g.duty_input);
         //uart_printf(" %.3f", joystick_toggle_g.freq_input);
         
-        //uart_printf(" pitch k_p: %.5f", pid_pitch.k_p);
-        //uart_printf(" pitch k_i: %.7f", pid_pitch.k_i);
+        uart_printf(" pit k_p: %.5f", pid_pitch.k_p);
+        //uart_printf(" pit k_i: %.7f", pid_pitch.k_i);
+        uart_printf(" pit k_d: %.5f", pid_pitch.k_d);
         //uart_printf(" i_term: %.4f", pid_pitch.i_term);
-        //uart_printf(" pitch k_d: %.5f", pid_pitch.k_d);
+        //uart_printf(" rol k_p: %.5f", pid_roll.k_p);
+        //uart_printf(" rol k_i: %.7f", pid_roll.k_i);
+        //uart_printf(" rol k_d: %.5f", pid_roll.k_d);
+        //uart_printf(" i_term: %.4f", pid_pitch.i_term);
+        
         //uart_printf(" yaw k_d: %.4f", yaw.k_d);
         //uart_printf(" temp1: %.4f", temp1);
         //uart_printf(" temp2: %.4f", temp2);
-        uart_printf(" k_p: %.4f", pid_altitude.k_p);
-        uart_printf(" k_d: %.4f", pid_altitude.k_d);
+        //uart_printf(" k_p: %.4f", pid_altitude.k_p);
+        //uart_printf(" k_d: %.4f", pid_altitude.k_d);
         
         //uart_printf("dt: %d", (imu.dt));
-        //uart_printf("dt2: %d", tick2);
         
         //uart_printf(" roll_set_point: %.3f", roll.setpoint);
         //uart_printf(" pitch_set_point: %.3f", pitch.setpoint);
         //uart_printf(" yaw_set_point: %.3f", yaw.setpoint);
-        uart_printf(" altitude_setpoint: %.3f", pid_altitude.setpoint);
+        //uart_printf(" altitude_setpoint: %.3f", pid_altitude.setpoint);
         //uart_printf(" thrust: %.3f", thrust);
         //uart_printf(" toggle: %.3f", toggle);
         
@@ -235,7 +233,7 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" yaw speed: %.3f", 
         //uart_printf(" yaw: %7.4f", imu.yaw);
         
-        uart_printf(" altitude_cm: %.3f", altitude.altitude_cm);
+        //uart_printf(" altitude_cm: %.3f", altitude.altitude_cm);
         //uart_printf(" altitude_acc: %.3f", altitude.acc_z);
         //uart_printf(" altitude_dt: %d", altitude.dt);
         //uart_printf(" altitude_index: %d", altitude.sensor_index);
@@ -255,10 +253,10 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" pwm4: %d", pwm_get_duty_cycle(15));
         
         // stack sizes
-        uart_printf(" main size: %d", stack_size_main);
-        uart_printf(" tele size: %d", stack_size_tele);
-        uart_printf(" imu size: %d", imu.stack_size);
-        uart_printf(" alti size: %d", altitude.stack_size);
+        //uart_printf(" main size: %d", stack_size_main);
+        //uart_printf(" tele size: %d", stack_size_tele);
+        //uart_printf(" imu size: %d", imu.stack_size);
+        //uart_printf(" alti size: %d", altitude.stack_size);
         
         // Print to plotter with format ("$%d %d;", data1, data2);
         //uart_printf(" $%d;", 10*(int16_t)imu.acc_x);
@@ -266,7 +264,7 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" $ %d %d %d;", 100, (int16_t)((1000 * imu.gyro_roll) + 1000), 500);
         uart_printf("\n\r"); 
         
-        //GPIO_ResetBits(GPIOE, GPIO_Pin_11);
+        GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_TEL_TASK_PIN);
         stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     }
 }
@@ -281,7 +279,7 @@ int main(void)
     // Reads the imu and pass data on interrupt to main_task
     xTaskCreate(imu_task, (const char *)"imu_task", 350, NULL, 4, NULL);
     // Prints debug data
-    //xTaskCreate(telemetry_task, (const char *)"telemetry_task", 300, NULL, 2, NULL);
+    xTaskCreate(telemetry_task, (const char *)"telemetry_task", 300, NULL, 1, NULL);
     // Read several height sensors and pass altitude hold data to main_task
     xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
     // Init ESC, reads joystick and process all data before setting new output to ESCs

@@ -13,6 +13,7 @@ Author  :
 //#include "board-st_discovery.h"
 //freertos
 #include "FreeRTOS.h"
+#include "semphr.h"
 #include "task.h"
 #include "freertos_time.h"
 /********************************* Defines ************************************/
@@ -47,7 +48,7 @@ Author  :
                             I2C_ReadRegister(SENSORS_I2C, I2C_Register_SR2);\
                                
 /********************************* Globals ************************************/
-
+SemaphoreHandle_t g_i2c_mutex;
 /********************************* Prototypes *********************************/
 unsigned long ST_Sensors_I2C_WriteRegister(unsigned char Address, unsigned char RegisterAddr, unsigned short RegisterLen, const unsigned char *RegisterValue);
 unsigned long ST_Sensors_I2C_ReadRegister(unsigned char Address, unsigned char RegisterAddr, unsigned short RegisterLen, unsigned char *RegisterValue);
@@ -56,6 +57,8 @@ unsigned long ST_Sensors_I2C_ReadRegister(unsigned char Address, unsigned char R
 
 void i2c2_init(void)
 {
+  g_i2c_mutex = xSemaphoreCreateMutex();
+    
   GPIO_InitTypeDef GPIO_InitStructure;
   I2C_InitTypeDef I2C_InitStructure;
 
@@ -139,6 +142,8 @@ int Sensors_I2C_WriteRegister(unsigned char slave_addr,
                                         unsigned short len, 
                                         const unsigned char *data_ptr)
 {
+  xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
+  
   char retries=0;
   int ret = 0;
   unsigned short retry_in_mlsec = Get_I2C_Retry();
@@ -155,6 +160,7 @@ tryWriteAgain:
     delay_ms(retry_in_mlsec);
     goto tryWriteAgain;
   }
+  xSemaphoreGive(g_i2c_mutex);
   return ret;  
 }
 
@@ -163,6 +169,7 @@ int Sensors_I2C_ReadRegister(unsigned char slave_addr,
                                        unsigned short len, 
                                        unsigned char *data_ptr)
 {
+    xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
   char retries=0;
   int ret = 0;
   unsigned short retry_in_mlsec = Get_I2C_Retry();
@@ -179,6 +186,7 @@ tryReadAgain:
     delay_ms(retry_in_mlsec);
     goto tryReadAgain;
   } 
+  xSemaphoreGive(g_i2c_mutex);
   return ret;
 }
 

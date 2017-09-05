@@ -12,6 +12,7 @@
 #include "freertos_time.h"
 #include "imu.h"
 #include "gpio.h"
+#include "board.h"
 
 // dmp
 #include "inv_mpu.h"
@@ -588,7 +589,7 @@ void imu_task(void *pvParameters)
     
     while(1){
         if(xSemaphoreTake(gyro_new, portMAX_DELAY)){ // set in the interrupt
-            GPIO_SetBits(GPIOE, GPIO_Pin_8);
+            GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
             if(hal.new_gyro == 1){ // set in "callback" called from interrupt
                 
                 unsigned long sensor_timestamp;
@@ -691,7 +692,7 @@ void imu_task(void *pvParameters)
         }
         stack_size = uxTaskGetStackHighWaterMark(NULL);
         imu.stack_size = stack_size;
-        GPIO_ResetBits(GPIOE, GPIO_Pin_8);
+        GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
     }
 }
 

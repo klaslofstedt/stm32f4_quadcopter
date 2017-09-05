@@ -38,7 +38,7 @@
 #define USARTx_DMAx_CLK                  RCC_AHBPeriph_DMA1
 
 /********************************* Globals ************************************/
-SemaphoreHandle_t g_mutex;
+SemaphoreHandle_t g_uart_mutex;
 /********************************* Prototypes *********************************/
 /*******************************  Function ************************************/
 
@@ -46,7 +46,7 @@ SemaphoreHandle_t g_mutex;
 
 void uart_init(void)
 {
-  g_mutex = xSemaphoreCreateMutex();
+  g_uart_mutex = xSemaphoreCreateMutex();
   
   USART_InitTypeDef USART_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -107,7 +107,7 @@ void USART_puts(const char *s)
 
 void uart_printf(const char *format, ...) 
 {
-  xSemaphoreTake(g_mutex, portMAX_DELAY);
+  xSemaphoreTake(g_uart_mutex, portMAX_DELAY);
   
   va_list list;
   va_start(list, format);
@@ -118,8 +118,8 @@ void uart_printf(const char *format, ...)
   USART_puts(s);
   free(s);
   va_end(list);
-  
-  xSemaphoreGive(g_mutex);
+
+  xSemaphoreGive(g_uart_mutex);
   return;
 }
 
