@@ -162,7 +162,7 @@ void telemetry_task(void *pvParameters)
         //printf2(" esc3: %.3f", esc3.speed);
         //printf2(" esc4: %.3f", esc4.speed);
         
-        printf2(" pwm1: %d", pwm_get_duty_cycle(12));
+        //printf2(" pwm1: %d", pwm_get_duty_cycle(12));
         printf2(" pwm2: %d", pwm_get_duty_cycle(13));
         printf2(" pwm3: %d", pwm_get_duty_cycle(14));
         printf2(" pwm4: %d", pwm_get_duty_cycle(15));

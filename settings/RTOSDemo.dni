@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1040424488
+Checksum=1708803927
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -29,11 +29,11 @@ LimitSize=0
 ByteLimit=50
 [SWOTraceHWSettings]
 OverrideDefaultClocks=0
-CpuClock=120000000
-ClockAutoDetect=1
+CpuClock=72000000
+ClockAutoDetect=0
 ClockWanted=2000000
 JtagSpeed=2000000
-Prescaler=60
+Prescaler=36
 TimeStampPrescIndex=0
 TimeStampPrescData=0
 PcSampCYCTAP=1
@@ -107,6 +107,13 @@ ShowTimeLog=1
 SumEnabled=0
 ShowTimeSum=1
 SumSortOrder=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [DriverProfiling]
 Enabled=0
 Mode=3
@@ -121,13 +128,6 @@ ShowTiming=1
 mode=0
 [Breakpoints2]
 Count=0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [Aliases]
 Count=0
 SuppressDialog=0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
