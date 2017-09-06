@@ -47,7 +47,7 @@ void main_task(void *pvParameters)
     stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     
     while(1){
-        // This queue sets the frequency of the main loop (~5 ms = 200 Hz interval)
+        // This queue sets the frequency of the main loop (5 ms = 200 Hz interval)
         if(xQueueReceive(imu_attitude_queue, &imu, 15)){
             GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
             
@@ -123,16 +123,15 @@ void main_task(void *pvParameters)
             }
             pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
-            
-            
-            
+            pid_calc(&pid_pitch, imu.dt);
+            pid_calc(&pid_roll, imu.dt);
+            pid_calc(&pid_yaw, imu.dt);
+                    
             
             // Set outputs ----------------------------------------------------- 
             if(arm() && joystick_read_thrust(&joystick_thrust) > 0.001f){ // if arm and thrust joystick
                 // Calculate PID
-                pid_calc(&pid_pitch, imu.dt);
-                pid_calc(&pid_roll, imu.dt);
-                pid_calc(&pid_yaw, imu.dt);
+
                 //pid_calc(&pid_altitude, altitude.dt);
                 
                 //  1  front  2
