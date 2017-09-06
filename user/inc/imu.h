@@ -24,7 +24,7 @@ typedef struct{
     UBaseType_t stack_size;
 } imu_data_t;
 
-//extern xSemaphoreHandle gyro_new;
+extern xSemaphoreHandle gyro_new;
 extern xSemaphoreHandle imu_attitude_sem;
 extern xSemaphoreHandle imu_altitude_sem;
 extern xQueueHandle imu_attitude_queue;

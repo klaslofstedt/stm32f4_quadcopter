@@ -142,7 +142,7 @@ int Sensors_I2C_WriteRegister(unsigned char slave_addr,
                                         unsigned short len, 
                                         const unsigned char *data_ptr)
 {
-  xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
+  //xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
   
   char retries=0;
   int ret = 0;
@@ -160,7 +160,7 @@ tryWriteAgain:
     delay_ms(retry_in_mlsec);
     goto tryWriteAgain;
   }
-  xSemaphoreGive(g_i2c_mutex);
+  //xSemaphoreGive(g_i2c_mutex);
   return ret;  
 }
 
@@ -169,7 +169,7 @@ int Sensors_I2C_ReadRegister(unsigned char slave_addr,
                                        unsigned short len, 
                                        unsigned char *data_ptr)
 {
-    xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
+    //xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
   char retries=0;
   int ret = 0;
   unsigned short retry_in_mlsec = Get_I2C_Retry();
@@ -186,7 +186,7 @@ tryReadAgain:
     delay_ms(retry_in_mlsec);
     goto tryReadAgain;
   } 
-  xSemaphoreGive(g_i2c_mutex);
+  //xSemaphoreGive(g_i2c_mutex);
   return ret;
 }
 

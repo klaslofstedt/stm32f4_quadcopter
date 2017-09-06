@@ -48,7 +48,11 @@ void main_task(void *pvParameters)
     
     while(1){
         // This queue sets the frequency of the main loop (5 ms = 200 Hz interval)
-        if(xQueueReceive(imu_attitude_queue, &imu, 15)){
+        if(xSemaphoreTake(imu_attitude_sem, portMAX_DELAY) == pdTRUE){
+            if(!xQueueReceive(imu_attitude_queue, &imu, 1000)){ // 1000 ms?
+                uart_printf("No IMU data in queue\n\r");
+            }
+        //if(xQueueReceive(imu_attitude_queue, &imu, 15)){
             GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
             
             // Build pitch pid object ------------------------------------------
@@ -159,7 +163,7 @@ void main_task(void *pvParameters)
             GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
         }
         else{
-            uart_printf("No IMU data in queue\n\r");
+            uart_printf("No IMU sem\n\r");
         }
     } 
 }

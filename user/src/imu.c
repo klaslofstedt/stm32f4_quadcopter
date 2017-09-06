@@ -210,6 +210,12 @@ static void read_from_mpl_float(void)
         imu.dt = ts1 - ts2;
         ts2 = ts1;
         
+        
+        if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
+            uart_printf("xQueueSend failed\n\r");
+        }
+        xSemaphoreGive(imu_attitude_sem);
+        //xQueueOverwrite(imu_altitude_queue, &imu);
         //printf2(" roll: %7.4f", imu.gyro_roll);
         //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
         // Send same data to altitude for futher calculations
@@ -229,8 +235,7 @@ static void read_from_mpl_float(void)
     else{
         uart_printf("dmp failed\n\r");
     }
-    xQueueOverwrite(imu_attitude_queue, &imu);
-    xQueueOverwrite(imu_altitude_queue, &imu);
+
 }
 
 #ifdef COMPASS_ENABLED
