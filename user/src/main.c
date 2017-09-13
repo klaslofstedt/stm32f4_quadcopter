@@ -20,6 +20,7 @@
 #include "joystick.h"
 #include "altitude.h"
 #include "arm.h"
+#include "board.h"
 
 #define X_CONFIG 1
 
@@ -52,6 +53,7 @@ void main_task(void *pvParameters)
             if(!xQueueReceive(imu_attitude_queue, &imu, 1000)){ // 1000 ms?
                 uart_printf("No IMU data in queue\n\r");
             }
+            GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
             
             // Build pitch pid object ------------------------------------------
             /*pid_pitch.setpoint = 0; // fake
@@ -113,6 +115,7 @@ void main_task(void *pvParameters)
                 esc_set_speed(&esc2, pid_altitude.output + pid_pitch.output - pid_roll.output + pid_yaw.output);
                 esc_set_speed(&esc3, pid_altitude.output + pid_pitch.output + pid_roll.output - pid_yaw.output);
                 esc_set_speed(&esc4, pid_altitude.output - pid_pitch.output + pid_roll.output + pid_yaw.output);*/
+                pid_yaw.output = 0;
                 esc_set_speed(&esc4, pid_altitude.output - pid_roll.output + pid_pitch.output - pid_yaw.output);
                 esc_set_speed(&esc1, pid_altitude.output + pid_pitch.output + pid_roll.output + pid_yaw.output);
                 esc_set_speed(&esc2, pid_altitude.output + pid_roll.output - pid_pitch.output - pid_yaw.output);
@@ -133,6 +136,7 @@ void main_task(void *pvParameters)
                 esc_set_speed(&esc3, 0);
                 esc_set_speed(&esc4, 0);
             }
+            GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
         }
         // Read the size of this task in order to refine assigned stack size
         stack_size_main = uxTaskGetStackHighWaterMark(NULL);
@@ -182,17 +186,17 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" thrust: %.3f", thrust);
         //uart_printf(" toggle: %.3f", toggle);
         
-        //uart_printf(" x acc: %.3f", imu.acc_x);
-        //uart_printf(" y acc: %.3f", imu.acc_y);
-        //uart_printf(" z acc: %.3f", imu.acc_z);
+        uart_printf(" x acc: %.3f", imu.acc_x);
+        uart_printf(" y acc: %.3f", imu.acc_y);
+        uart_printf(" z acc: %.3f", imu.acc_z);
         
-        //uart_printf(" roll gyro: %.3f", imu.gyro_roll);
-        //uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
-        //uart_printf(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
+        uart_printf(" roll gyro: %.3f", imu.gyro_roll);
+        uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
+        uart_printf(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
         
         uart_printf(" roll dmp: %.3f", imu.dmp_roll);
         uart_printf(" pitch dmp: %.3f", imu.dmp_pitch);
-        //uart_printf(" yaw dmp ori: %.3f", imu.dmp_yaw);
+        uart_printf(" yaw dmp ori: %.3f", imu.dmp_yaw);
         
         //uart_printf(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
         //uart_printf(" yaw set_point: %.3f", pid_yaw.setpoint);

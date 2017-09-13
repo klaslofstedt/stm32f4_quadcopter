@@ -15,6 +15,7 @@ Purpose :
 /***************************Globals *******************************************/
 /***************************** Prototypes *****************************/
 void gpio_init(void);
+void debug_init(void);
 void EnableInvInterrupt(void);
 void DisableInvInterrupt(void);
 #endif

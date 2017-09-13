@@ -17,6 +17,10 @@ void hardware_init(void)
 {
     // Setup STM32 system (clock, PLL and Flash configuration)
     SystemInit();
+    
+    // Ensure all priority bits are assigned as preemption priority bits (FREERTOS)
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+    
     uart_init();
     // Update the system clock variable (might not have been set before)
     SystemCoreClockUpdate();
@@ -34,6 +38,7 @@ void hardware_init(void)
     
     // Configure Interrupts
     gpio_init();
+    debug_init();
     pwm_output_init();
     buzzer_init();
 
@@ -47,6 +52,5 @@ void hardware_init(void)
     pwm_input_init(TIM9, GPIOE, GPIO_Pin_5);    // joystick CH4 = 16-bit yaw
     pwm_input_init(TIM12, GPIOB, GPIO_Pin_14);  // joystick CH3 = 16-bit thrust
     
-    // Ensure all priority bits are assigned as preemption priority bits (FREERTOS)
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+
 }

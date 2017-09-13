@@ -9,24 +9,12 @@ Purpose :
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_syscfg.h"
 
+
 #include "gpio.h"
+#include "board.h"
 
-/********************************* Defines ************************************/
 
-//changed PIN A0 to PIN A1 back, to match low power modes 
 
-#define INVEN_INT_PIN                         GPIO_Pin_4
-#define INVEN_INT_GPIO_PORT                   GPIOA
-#define INVEN_INT_GPIO_CLK                    RCC_AHB1Periph_GPIOA
-#define INVEN_INT_EXTI_PORT                   EXTI_PortSourceGPIOA
-#define INVEN_INT_EXTI_PIN                    EXTI_PinSource4
-#define INVEN_INT_EXTI_LINE                   EXTI_Line4
-#define INVEN_INT_EXTI_IRQ                    EXTI4_IRQn
-
-/**********************************Globals ************************************/
-/********************************* Prototypes *********************************/
-
-/***********************************Functions *********************************/
 void gpio_init(void)
 {
     
@@ -63,8 +51,9 @@ void gpio_init(void)
     NVIC_InitStructure.NVIC_IRQChannel = INVEN_INT_EXTI_IRQ;
     // http://www.freertos.org/RTOS-Cortex-M3-M4.html
     // configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY in FreeRTOSConfig.h
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // set 5 or higher
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // prob dont need to be changed
+    // Should be lower (higher value) than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 10; 
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 10; // prob dont need to be changed
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 }
@@ -95,4 +84,17 @@ void InvIntHandler(void)
 {
     /* Clear the EXTI line 1 pending bit */
     EXTI_ClearITPendingBit(INVEN_INT_EXTI_LINE);
+}
+
+void debug_init(void)
+{
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    RCC_AHB1PeriphClockCmd(DEBUG_GPIO_CLK, ENABLE);
+    
+    GPIO_InitStructure.GPIO_Pin = DEBUG_MAIN_TASK_PIN | DEBUG_IMU_TASK_PIN | DEBUG_ALT_TASK_PIN | DEBUG_IMU_INT_PIN | DEBUG_TEL_TASK_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(DEBUG_GPIO_PORT, &GPIO_InitStructure);
 }
