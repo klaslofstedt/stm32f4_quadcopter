@@ -4,7 +4,7 @@
 #include "ultrasonic.h"
 #include "laser.h"
 #include "lidar.h"
-#include "imu.h"
+#include "imu2.h"
 #include "uart.h"
 #include "filter.h"
 #include "gpio.h"

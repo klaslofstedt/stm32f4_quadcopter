@@ -51,7 +51,11 @@ Author  :
 SemaphoreHandle_t g_i2c_mutex;
 /********************************* Prototypes *********************************/
 unsigned long ST_Sensors_I2C_WriteRegister(unsigned char Address, unsigned char RegisterAddr, unsigned short RegisterLen, const unsigned char *RegisterValue);
+unsigned long ST_Sensors_I2C_WriteReg(unsigned char Address, unsigned char RegisterAddr, const unsigned char RegisterValue);
 unsigned long ST_Sensors_I2C_ReadRegister(unsigned char Address, unsigned char RegisterAddr, unsigned short RegisterLen, unsigned char *RegisterValue);
+unsigned long ST_Sensors_I2C_Write(unsigned char Address, const unsigned char RegisterValue);
+unsigned long ST_Sensors_I2C_Read(unsigned char Address, unsigned short RegisterLen, unsigned char *RegisterValue);
+
 /*******************************  Function ************************************/
 
 
@@ -134,6 +138,167 @@ static uint32_t I2Cx_TIMEOUT_UserCallback(char value)
   I2C_Init(SENSORS_I2C, &I2C_InitStructure);
 
   return 1;
+}
+
+int Sensors_I2C_Write(unsigned char slave_addr, const unsigned char data_ptr)
+{
+  //xSemaphoreTake(g_i2c1_mutex, portMAX_DELAY);
+  char retries=0;
+  int ret = 0;
+  unsigned short retry_in_mlsec = Get_I2C_Retry();
+                              
+tryWriteAgain:  
+  ret = 0;
+  ret = ST_Sensors_I2C_Write( slave_addr, data_ptr); 
+
+  if(ret && retry_in_mlsec)
+  {
+    if( retries++ > 4 )
+        return ret;
+    
+    delay_ms(retry_in_mlsec);
+    goto tryWriteAgain;
+  }
+  //xSemaphoreGive(g_i2c1_mutex);
+  return ret;  
+}
+int Sensors_I2C_WriteReg(unsigned char slave_addr,
+                                        unsigned char reg_addr, 
+                                        const unsigned char data_ptr)
+{
+  //xSemaphoreTake(g_i2c1_mutex, portMAX_DELAY);
+  char retries=0;
+  int ret = 0;
+  unsigned short retry_in_mlsec = Get_I2C_Retry();
+                              
+tryWriteAgain:  
+  ret = 0;
+  ret = ST_Sensors_I2C_WriteReg( slave_addr, reg_addr, data_ptr); 
+
+  if(ret && retry_in_mlsec)
+  {
+    if( retries++ > 4 )
+        return ret;
+    
+    delay_ms(retry_in_mlsec);
+    goto tryWriteAgain;
+  }
+  //xSemaphoreGive(g_i2c1_mutex);
+  return ret;  
+}
+
+unsigned long ST_Sensors_I2C_WriteReg(unsigned char Address, unsigned char RegisterAddr, const unsigned char RegisterValue)
+{
+  uint32_t  result = 0;
+
+  __IO uint32_t  I2CTimeout = I2Cx_LONG_TIMEOUT;
+  
+//  RegisterValue = RegisterValue + (RegisterLen - 1);
+
+  /* Wait for the busy flag to be cleared */
+  WAIT_FOR_FLAG (I2C_FLAG_BUSY, RESET, I2Cx_LONG_TIMEOUT, 1);
+  
+  /* Start the config sequence */
+  I2C_GenerateSTART(SENSORS_I2C, ENABLE);
+
+  /* Wait for the start bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_SB, SET, I2Cx_FLAG_TIMEOUT, 2);
+
+  /* Transmit the slave address and enable writing operation */
+  I2C_Send7bitAddress(SENSORS_I2C, (Address<<1), I2C_Direction_Transmitter);
+  
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_ADDR, SET, I2Cx_FLAG_TIMEOUT, 3);
+  
+  /* clear the ADDR interrupt bit  - this is done by reading SR1 and SR2*/
+  CLEAR_ADDR_BIT
+  
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 4);
+
+  /* Transmit the first address for write operation */
+  I2C_SendData(SENSORS_I2C, RegisterAddr);
+
+//  while (i--)
+//  {
+//    /* Wait for address bit to be set */
+//    WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 5);
+//  
+//    /* Prepare the register value to be sent */
+//    I2C_SendData(SENSORS_I2C, *RegisterValue--);
+//  }
+
+    /* Wait for address bit to be set */
+    WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 5);
+  
+    /* Prepare the register value to be sent */
+    I2C_SendData(SENSORS_I2C, RegisterValue);
+   
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_BTF, SET, I2Cx_FLAG_TIMEOUT, 6);
+  
+  /* End the configuration sequence */
+  I2C_GenerateSTOP(SENSORS_I2C, ENABLE);  
+  
+  /* Return the verifying value: 0 (Passed) or 1 (Failed) */
+  return result;  
+}
+
+unsigned long ST_Sensors_I2C_Write(unsigned char Address, const unsigned char RegisterValue)
+{
+  uint32_t  result = 0;
+
+  __IO uint32_t  I2CTimeout = I2Cx_LONG_TIMEOUT;
+  
+//  RegisterValue = RegisterValue + (RegisterLen - 1);
+
+  /* Wait for the busy flag to be cleared */
+  WAIT_FOR_FLAG (I2C_FLAG_BUSY, RESET, I2Cx_LONG_TIMEOUT, 1);
+  
+  /* Start the config sequence */
+  I2C_GenerateSTART(SENSORS_I2C, ENABLE);
+
+  /* Wait for the start bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_SB, SET, I2Cx_FLAG_TIMEOUT, 2);
+
+  /* Transmit the slave address and enable writing operation */
+  I2C_Send7bitAddress(SENSORS_I2C, (Address<<1), I2C_Direction_Transmitter);
+  
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_ADDR, SET, I2Cx_FLAG_TIMEOUT, 3);
+  
+  /* clear the ADDR interrupt bit  - this is done by reading SR1 and SR2*/
+  CLEAR_ADDR_BIT
+  
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 4);
+
+  /* Transmit the first address for write operation */
+  //I2C_SendData(SENSORS_I2C, RegisterAddr);
+
+//  while (i--)
+//  {
+//    /* Wait for address bit to be set */
+//    WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 5);
+//  
+//    /* Prepare the register value to be sent */
+//    I2C_SendData(SENSORS_I2C, *RegisterValue--);
+//  }
+
+    /* Wait for address bit to be set */
+    //WAIT_FOR_FLAG (I2C_FLAG_TXE, SET, I2Cx_FLAG_TIMEOUT, 5);
+  
+    /* Prepare the register value to be sent */
+    I2C_SendData(SENSORS_I2C, RegisterValue);
+   
+  /* Wait for address bit to be set */
+  WAIT_FOR_FLAG (I2C_FLAG_BTF, SET, I2Cx_FLAG_TIMEOUT, 6);
+  
+  /* End the configuration sequence */
+  I2C_GenerateSTOP(SENSORS_I2C, ENABLE);  
+  
+  /* Return the verifying value: 0 (Passed) or 1 (Failed) */
+  return result;  
 }
 
 

@@ -34,7 +34,7 @@ void hardware_init(void)
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     
-    gpio_init();
+    //gpio_init();
     debug_init();
     pwm_output_init();
     buzzer_init();
