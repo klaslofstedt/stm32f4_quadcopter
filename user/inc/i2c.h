@@ -16,6 +16,9 @@ int Sensors_I2C_ReadRegister(unsigned char Address, unsigned char RegisterAddr,
                                           unsigned short RegisterLen, unsigned char *RegisterValue);
 int Sensors_I2C_WriteRegister(unsigned char Address, unsigned char RegisterAddr, 
                                            unsigned short RegisterLen, const unsigned char *RegisterValue);
+int Sensors_I2C_WriteReg(unsigned char Address, unsigned char RegisterAddr, // single register
+                                           const unsigned char RegisterValue);
+int Sensors_I2C_Write(unsigned char slave_addr, const unsigned char data_ptr);
  
 #endif // __I2C_H__
 

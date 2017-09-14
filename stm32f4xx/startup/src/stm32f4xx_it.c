@@ -28,7 +28,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 
-#include "imu.h"
+#include "imu2.h"
 #include "uart.h"
 #include "board.h"
 #include <stdint.h>
@@ -235,11 +235,12 @@ xSemaphoreHandle gyro_new = NULL;
 
 void EXTI4_IRQHandler(void)
 {
-    /* Handle new gyro*/
+    /*
+    // Handle new gyro
     GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_INT_PIN);
     gyro_data_ready_cb();
     
-    /***** semaphore stuff */
+    // semaphore stuff
     portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     EXTI_ClearITPendingBit(EXTI_Line4);
     
@@ -249,7 +250,8 @@ void EXTI4_IRQHandler(void)
     if (xHigherPriorityTaskWoken != pdFALSE) {
         portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
     }
-    /*******/
+    //
+    */
 }
 
 
