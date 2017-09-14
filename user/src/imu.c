@@ -211,9 +211,10 @@ static void read_from_mpl_float(void)
         ts2 = ts1;
         
         
-        if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
+        /*if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
             uart_printf("xQueueSend failed\n\r");
-        }
+        }*/
+        xQueueOverwrite(imu_attitude_queue, &imu);
         xSemaphoreGive(imu_attitude_sem);
         //xQueueOverwrite(imu_altitude_queue, &imu);
         //printf2(" roll: %7.4f", imu.gyro_roll);

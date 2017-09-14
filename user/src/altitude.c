@@ -271,7 +271,7 @@ void altitude_task(void *pvParameters)
             altitude.stack_size = stack_size_alt;
         }
         else{
-            uart_printf("No altitude IMU data in queue\n\r");
+            //uart_printf("No altitude IMU data in queue\n\r");
         }
     }
 }

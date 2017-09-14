@@ -116,7 +116,7 @@ void main_task(void *pvParameters)
             
             // Build altitude pid object ---------------------------------------
             // Poll queue for altitude data (~25 ms = 40 Hz interval)
-            if(xQueueReceive(altitude_queue, &altitude, 0)){
+            /*if(xQueueReceive(altitude_queue, &altitude, 0)){
                 //uart_print("Found altitude data in queue\n\r"); // expected
                 pid_altitude.setpoint = (float)(100*joystick_read_thrust(&joystick_thrust));
                 pid_altitude.input = altitude.altitude_cm;
@@ -124,7 +124,7 @@ void main_task(void *pvParameters)
                 //pid_calc(&pid_altitude, altitude.dt);
                 // Fake line!
                 //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
-            }
+            }*/
             pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
             pid_calc(&pid_pitch, imu.dt);
@@ -191,9 +191,9 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" toggle: %.3f", joystick_toggle_g.duty_input);
         //uart_printf(" %.3f", joystick_toggle_g.freq_input);
         
-        uart_printf(" pit k_p: %.5f", pid_pitch.k_p);
+        //uart_printf(" pit k_p: %.5f", pid_pitch.k_p);
         //uart_printf(" pit k_i: %.7f", pid_pitch.k_i);
-        uart_printf(" pit k_d: %.5f", pid_pitch.k_d);
+        //uart_printf(" pit k_d: %.5f", pid_pitch.k_d);
         //uart_printf(" i_term: %.4f", pid_pitch.i_term);
         //uart_printf(" rol k_p: %.5f", pid_roll.k_p);
         //uart_printf(" rol k_i: %.7f", pid_roll.k_i);
@@ -215,20 +215,20 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" thrust: %.3f", thrust);
         //uart_printf(" toggle: %.3f", toggle);
         
-        //uart_printf(" x acc: %.3f", imu.acc_x);
-        //uart_printf(" y acc: %.3f", imu.acc_y);
+        uart_printf(" x acc: %.3f", imu.acc_x);
+        uart_printf(" y acc: %.3f", imu.acc_y);
         //uart_printf(" z acc: %.3f", imu.acc_z);
         
-        //uart_printf(" roll gyro: %.3f", imu.gyro_roll);
-        //uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
+        uart_printf(" roll gyro: %.3f", imu.gyro_roll);
+        uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
         //uart_printf(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
         
         //uart_printf(" roll gyro: %.6f", imu.gyro_roll);
         //uart_printf(" pid rate: %.6f", pid_roll.rate);
         //uart_printf(" pid calc: %.6f", pid_roll.rate_calc);
         
-        //uart_printf(" roll dmp: %.3f", imu.dmp_roll);
-        //uart_printf(" pitch dmp: %.3f", imu.dmp_pitch);
+        uart_printf(" roll dmp: %.3f", imu.dmp_roll);
+        uart_printf(" pitch dmp: %.3f", imu.dmp_pitch);
         //uart_printf(" yaw dmp ori: %.3f", imu.dmp_yaw);
         
         //uart_printf(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
