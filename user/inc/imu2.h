@@ -10,15 +10,21 @@
 
 
 typedef struct{
-	float dmp_roll;
-	float dmp_pitch;
-	float dmp_yaw;
-    float gyro_roll;
-    float gyro_pitch;
-    float gyro_yaw;
+    // Usable data
+	float angle_x;
+	float angle_y;
+	float angle_z;
+    float rate_x;
+    float rate_y;
+    float rate_z;
+    // Raw data
+    float gyro_x;
+    float gyro_y;
+    float gyro_z;
     float acc_x; // y?
     float acc_y; // x??
     float acc_z;
+    // other
     float acc_z_average;
     unsigned long dt;
     UBaseType_t stack_size;

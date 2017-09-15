@@ -78,9 +78,13 @@ should be something with clock souce PLL */
 
 #define MPU6050_WHO_AM_I        0x75
 
-#define GYRO_X_SCALE 0.00026646248//0.01526717557 (in degrees)
-#define GYRO_Y_SCALE 0.00026646248//0.01526717557
-#define GYRO_Z_SCALE 0.00026646248//0.01526717557
+#define GYRO_X_SCALE_RAD 0.00026646248//0.01526717557 (in degrees)
+#define GYRO_Y_SCALE_RAD 0.00026646248//0.01526717557
+#define GYRO_Z_SCALE_RAD 0.00026646248//0.01526717557
+#define GYRO_X_SCALE_DEG 0.01526717557 //(in degrees)
+#define GYRO_Y_SCALE_DEG 0.01526717557
+#define GYRO_Z_SCALE_DEG 0.01526717557
+
 #define GYRO_AVERAGE_OFFSET_X 0
 #define GYRO_AVERAGE_OFFSET_Y 0
 #define GYRO_AVERAGE_OFFSET_Z 0
@@ -92,7 +96,9 @@ should be something with clock souce PLL */
 #define ACCEL_Y_OFFSET 0
 #define ACCEL_Z_OFFSET 0
 
-#define LOOP_TIME_MS 4
+#define M_PI   3.14159265358979323846264338327950288
+
+#define LOOP_TIME_MS 3
 
 xSemaphoreHandle imu_attitude_sem = NULL;
 xSemaphoreHandle imu_altitude_sem = NULL;
@@ -102,12 +108,14 @@ xQueueHandle imu_altitude_queue = 0;
 
 
 imu_data_t imu = {
-    .dmp_roll = 0,
-    .dmp_pitch = 0,
-    .dmp_yaw = 0,
-    .gyro_roll = 0,
-    .gyro_pitch = 0,
-    .gyro_yaw = 0,
+    .angle_x = 0,
+    .angle_y = 0,
+    .angle_z = 0,
+    .rate_x = 0,
+    .rate_y = 0,
+    .rate_z = 0,
+    .gyro_y = 0,
+    .gyro_z = 0,
     .acc_x = 0,
     .acc_y = 0,
     .acc_z = 0,
@@ -117,34 +125,34 @@ imu_data_t imu = {
 
 ekf2_data_t ekf2_roll = {
     /* We will set the variables like so, these can also be tuned by the user */
-    .Q_angle = 0.001f,
-    .Q_bias = 0.003f,
-    .R_measure = 0.03f,
+    .Q_angle = 0.0000009386,
+    .Q_bias = 0.0f,
+    .R_measure = 3.89f,
 
     .angle = 0.0f, // Reset the angle
     .rate = 0.0f,
     .bias = 0.0f, // Reset bias
 
-    .P[0][0] = 0.0f, // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
+    .P[0][0] = 1.0f, // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
     .P[0][1] = 0.0f,
     .P[1][0] = 0.0f,
-    .P[1][1] = 0.0f
+    .P[1][1] = 1.0f
 };
 
 ekf2_data_t ekf2_pitch = {
     /* We will set the variables like so, these can also be tuned by the user */
-    .Q_angle = 0.001f,
-    .Q_bias = 0.003f,
-    .R_measure = 0.03f,
+    .Q_angle = 0.0000009386f,
+    .Q_bias = 0.0f,
+    .R_measure = 3.89f,
 
     .angle = 0.0f, // Reset the angle
     .rate = 0.0f,
     .bias = 0.0f, // Reset bias
-
-    .P[0][0] = 0.0f, // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
+    // Change these to "don't know starting angle"
+    .P[0][0] = 1.0f, // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
     .P[0][1] = 0.0f,
     .P[1][0] = 0.0f,
-    .P[1][1] = 0.0f
+    .P[1][1] = 1.0f
 };
 
 static void imu2_init(void);
@@ -158,7 +166,7 @@ static void imu2_init(void)
     MPU6050_WriteRegiser(PWR_MGMT_1, PLL_Z_GYRO);
     MPU6050_WriteRegiser(USER_CTRL, MASTER_AND_FIFO_DISABLED);
     MPU6050_WriteRegiser(BYPASS_MODE, BYPASS_ON);
-    MPU6050_WriteRegiser(SMPRT_DIV, RATE250Hz);
+    MPU6050_WriteRegiser(SMPRT_DIV, RATE333Hz);
     MPU6050_WriteRegiser(CONFIG, BW20HZ);
     MPU6050_WriteRegiser(GYRO_CONFIG, GYRO_RANGE_500);
     MPU6050_WriteRegiser(ACCEL_CONFIG, ACCEL_RAGE_2G);
@@ -221,9 +229,9 @@ static void imu2_read_gyr(void)
     gyr->Yaw = GYRO_Z_SCALE*rgyr[2];
     gyr->Yaw -= GYRO_AVERAGE_OFFSET_Z;*/
     
-    imu.gyro_roll = GYRO_X_SCALE*rgyr[0] - GYRO_AVERAGE_OFFSET_X;
-    imu.gyro_pitch = GYRO_Y_SCALE*rgyr[1] - GYRO_AVERAGE_OFFSET_Y;
-    imu.gyro_yaw = GYRO_Z_SCALE*rgyr[2] - GYRO_AVERAGE_OFFSET_Z;
+    imu.gyro_x = GYRO_X_SCALE_RAD*rgyr[0] - GYRO_AVERAGE_OFFSET_X;
+    imu.gyro_y = GYRO_Y_SCALE_RAD*rgyr[1] - GYRO_AVERAGE_OFFSET_Y;
+    imu.gyro_z = GYRO_Z_SCALE_RAD*rgyr[2] - GYRO_AVERAGE_OFFSET_Z;
 }
 
 
@@ -256,19 +264,19 @@ void imu2_task(void *pvParameters)
         imu2_read_gyr();
         // calc angle and rate for roll
         ekf2_roll.newAngle = imu.acc_x;
-        ekf2_roll.newRate = imu.gyro_roll;
-        ekf2_roll.dt = LOOP_TIME_MS;
+        ekf2_roll.newRate = imu.gyro_y; // not x for reasons
+        ekf2_roll.dt = 0.00333333333;
         ekf2_calc(&ekf2_roll);
-        imu.dmp_roll = ekf2_roll.angle;
-        imu.gyro_roll = ekf2_roll.rate;
+        imu.angle_x = ekf2_roll.angle * (180 / M_PI);
+        imu.rate_x = ekf2_roll.rate * (180 / M_PI);
         
         // calc angle and rate for pitch
         ekf2_pitch.newAngle = imu.acc_y;
-        ekf2_pitch.newRate = imu.gyro_pitch;
-        ekf2_pitch.dt = LOOP_TIME_MS;
+        ekf2_pitch.newRate = imu.gyro_x;
+        ekf2_pitch.dt = 0.00333333333;
         ekf2_calc(&ekf2_pitch);
-        imu.dmp_pitch = ekf2_pitch.angle;
-        imu.gyro_pitch = ekf2_pitch.rate;
+        imu.angle_y = ekf2_pitch.angle * (180 / M_PI);
+        imu.rate_y = ekf2_pitch.rate * (180 / M_PI);
         
         
         GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);

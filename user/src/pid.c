@@ -34,7 +34,7 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     i_term = pid->i_term;
     
     // Calculate the D contribution
-    pid->rate = (pid->input - pid->last_input) / (float)5; // Don't use this!!!
+    pid->rate = (pid->input - pid->last_input) / dt; // Don't use this!!!
     d_term = pid->k_d * pid->rate;
 
     //Calculate output

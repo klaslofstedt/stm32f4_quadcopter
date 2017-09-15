@@ -73,8 +73,8 @@ void main_task(void *pvParameters)
             }
             
             pid_pitch.setpoint = 0;//joystick_read_setpoint(&joystick_pitch);
-            pid_pitch.input = imu.dmp_pitch;
-            pid_pitch.rate = imu.gyro_pitch;
+            //pid_pitch.input = imu.dmp_pitch;
+            //pid_pitch.rate = imu.gyro_pitch;
             
             
             // Build roll pid object -------------------------------------------
@@ -91,8 +91,8 @@ void main_task(void *pvParameters)
                 //pid_altitude.k_d = pid_altitude.k_d + 0.01;
             }
             pid_roll.setpoint = 0;//joystick_read_setpoint(&joystick_roll);
-            pid_roll.input = imu.dmp_roll;
-            pid_roll.rate = imu.gyro_roll;
+            //pid_roll.input = imu.dmp_roll;
+            //pid_roll.rate = imu.gyro_roll;
             
             
             // Build yaw pid object --------------------------------------------
@@ -109,7 +109,7 @@ void main_task(void *pvParameters)
                 //pid_pitch.k_i = pid_pitch.k_i + 0.0000001;
                 //pid_altitude.k_d = pid_altitude.k_d + 0.01;
             }
-            pid_yaw.input = imu.gyro_yaw;
+            //pid_yaw.input = imu.gyro_yaw;
             
             
             
@@ -171,7 +171,7 @@ void main_task(void *pvParameters)
 void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
-    const TickType_t frequency = 400; // every 200ms = 5Hz
+    const TickType_t frequency = 50; // every 200ms = 5Hz
     UBaseType_t stack_size_tele;
     stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     while(1)
@@ -218,16 +218,16 @@ void telemetry_task(void *pvParameters)
         uart_printf(" y acc: %.3f", imu.acc_y);
         //uart_printf(" z acc: %.3f", imu.acc_z);
         
-        uart_printf(" roll gyro: %.3f", imu.gyro_roll);
-        uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
+        uart_printf(" roll gyro: %.3f", imu.rate_x);
+        uart_printf(" pitch gyro: %.3f", imu.rate_y);
         //uart_printf(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
         
         //uart_printf(" roll gyro: %.6f", imu.gyro_roll);
         //uart_printf(" pid rate: %.6f", pid_roll.rate);
         //uart_printf(" pid calc: %.6f", pid_roll.rate_calc);
         
-        uart_printf(" roll dmp: %.3f", imu.dmp_roll);
-        uart_printf(" pitch dmp: %.3f", imu.dmp_pitch);
+        uart_printf(" roll dmp: %.3f", imu.angle_x);
+        uart_printf(" pitch dmp: %.3f", imu.angle_y);
         //uart_printf(" yaw dmp ori: %.3f", imu.dmp_yaw);
         
         //uart_printf(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002

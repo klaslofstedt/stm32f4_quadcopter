@@ -17,10 +17,10 @@ void ekf2_calc(ekf2_data_t *ekf2)
 
     // Update estimation error covariance - Project the error covariance ahead
     /* Step 2 */
-    ekf2->P[0][0] += ekf2->dt * (ekf2->dt*ekf2->P[1][1] - ekf2->P[0][1] - ekf2->P[1][0] + ekf2->Q_angle);
+    ekf2->P[0][0] += ekf2->dt * (ekf2->dt*ekf2->P[1][1] - ekf2->P[0][1] - ekf2->P[1][0]) + ekf2->Q_angle;
     ekf2->P[0][1] -= ekf2->dt * ekf2->P[1][1];
     ekf2->P[1][0] -= ekf2->dt * ekf2->P[1][1];
-    ekf2->P[1][1] += ekf2->Q_bias * ekf2->dt;
+    ekf2->P[1][1] += ekf2->Q_bias;// * ekf2->dt;
 
     // Discrete Kalman filter measurement update equations - Measurement Update ("Correct")
     // Calculate Kalman gain - Compute the Kalman gain
