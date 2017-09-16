@@ -10,7 +10,7 @@
 #include "semphr.h"
 #include "queue.h"
 // User includes
-#include "main.h"
+//#include "main.h"
 #include "pwm.h"
 #include "imu.h"
 #include "hardware.h"
@@ -26,16 +26,16 @@
 
 
 static void main_task(void *pvParameters);
-static void telemetry_task(void *pvParameters); 
+//static void telemetry_task(void *pvParameters); 
 
 UBaseType_t stack_size_main;
 
 static imu_data_t imu;
 static altitude_data_t altitude;
-float temp1 = 0, temp2 = 0, temp3 = 0;
-unsigned long tick1 = 0, tick2 = 0;
+//float temp1 = 0, temp2 = 0, temp3 = 0;
+//unsigned long tick1 = 0, tick2 = 0;
 
-void main_task(void *pvParameters)
+/*void main_task(void *pvParameters)
 {
     delay_ms(1000);
     esc_init(&esc1);
@@ -97,7 +97,7 @@ void main_task(void *pvParameters)
             
             // Build yaw pid object --------------------------------------------
             pid_yaw.setpoint = 0;            
-            /*printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));*/
+            //printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));
             temp3 = joystick_read_setpoint(&joystick_yaw);
             if(temp3 < -14){
                 //pid_roll.k_i = pid_roll.k_i - 0.0000001;
@@ -115,7 +115,7 @@ void main_task(void *pvParameters)
             
             // Build altitude pid object ---------------------------------------
             // Poll queue for altitude data (~25 ms = 40 Hz interval)
-            /*if(xQueueReceive(altitude_queue, &altitude, 0)){
+            if(xQueueReceive(altitude_queue, &altitude, 0)){
             //uart_print("Found altitude data in queue\n\r"); // expected
             pid_altitude.setpoint = (float)(100*joystick_read_thrust(&joystick_thrust));
             pid_altitude.input = altitude.altitude_cm;
@@ -123,7 +123,7 @@ void main_task(void *pvParameters)
             //pid_calc(&pid_altitude, altitude.dt);
             // Fake line!
             //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
-        }*/
+        }
             pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
             pid_calc(&pid_pitch, imu.dt);
@@ -140,14 +140,14 @@ void main_task(void *pvParameters)
                 //  1  front  2
                 //  left    right
                 //  4   back  3 
-                /*esc_set_speed(&esc1, pid_altitude.output - pid_pitch.output - pid_roll.output - pid_yaw.output);
-                esc_set_speed(&esc2, pid_altitude.output + pid_pitch.output - pid_roll.output + pid_yaw.output);
-                esc_set_speed(&esc3, pid_altitude.output + pid_pitch.output + pid_roll.output - pid_yaw.output);
-                esc_set_speed(&esc4, pid_altitude.output - pid_pitch.output + pid_roll.output + pid_yaw.output);*/
-                esc_set_speed(&esc1, pid_altitude.output + pid_roll.output + pid_pitch.output/* + pid_yaw.output*/);
-                esc_set_speed(&esc2, pid_altitude.output + pid_roll.output - pid_pitch.output/* - pid_yaw.output*/);
-                esc_set_speed(&esc3, pid_altitude.output - pid_roll.output - pid_pitch.output/* + pid_yaw.output*/);
-                esc_set_speed(&esc4, pid_altitude.output - pid_roll.output + pid_pitch.output/* - pid_yaw.output*/);
+                //esc_set_speed(&esc1, pid_altitude.output - pid_pitch.output - pid_roll.output - pid_yaw.output);
+                //esc_set_speed(&esc2, pid_altitude.output + pid_pitch.output - pid_roll.output + pid_yaw.output);
+                //esc_set_speed(&esc3, pid_altitude.output + pid_pitch.output + pid_roll.output - pid_yaw.output);
+                //esc_set_speed(&esc4, pid_altitude.output - pid_pitch.output + pid_roll.output + pid_yaw.output);
+                esc_set_speed(&esc1, pid_altitude.output + pid_roll.output + pid_pitch.output);
+                esc_set_speed(&esc2, pid_altitude.output + pid_roll.output - pid_pitch.output);
+                esc_set_speed(&esc3, pid_altitude.output - pid_roll.output - pid_pitch.output);
+                esc_set_speed(&esc4, pid_altitude.output - pid_roll.output + pid_pitch.output);
                 
             }
             else{
@@ -165,10 +165,10 @@ void main_task(void *pvParameters)
             uart_printf("No IMU queue\n\r");
         }
     } 
-}
+}*/
 
 
-void telemetry_task(void *pvParameters)
+/*void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
     const TickType_t frequency = 100; // every 200ms = 5Hz
@@ -269,7 +269,7 @@ void telemetry_task(void *pvParameters)
         GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_TEL_TASK_PIN);
         stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     }
-}
+}*/
 
 
 
@@ -278,6 +278,7 @@ int main(void)
     // systick is 100000Hz = 100kHz = 0.1MHz It's not though? 1000Hz i think
     hardware_init();
     
+    
     // Reads the imu and pass data on interrupt to main_task
     xTaskCreate(imu_task, (const char *)"imu_task", 350, NULL, 4, NULL);
     // Prints debug data
@@ -285,7 +286,7 @@ int main(void)
     // Read several height sensors and pass altitude hold data to main_task
     //xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
     // Init ESC, reads joystick and process all data before setting new output to ESCs
-    xTaskCreate(main_task, (const char *)"main_task", 300, NULL, 4, NULL);
+    //xTaskCreate(main_task, (const char *)"main_task", 300, NULL, 4, NULL);
     
     vTaskStartScheduler();
     

@@ -10,9 +10,20 @@
 /* Demo program include files. */
 #include "uart.h"
 #include "freertos_time.h"
-#include "imu.h"
 #include "gpio.h"
 #include "board.h"
+#include "esc.h"
+#include "main.h"
+#include "pid.h"
+#include "main.h"
+#include "pwm.h"
+#include "imu.h"
+#include "hardware.h"
+#include "uart.h"
+#include "joystick.h"
+#include "altitude.h"
+#include "arm.h"
+
 
 // dmp
 #include "inv_mpu.h"
@@ -68,7 +79,8 @@ imu_data_t imu = {
 };
 
 volatile uint32_t hal_timestamp = 0;
-
+float temp1 = 0, temp2 = 0, temp3 = 0;
+unsigned long tick1 = 0, tick2 = 0;
 
 struct rx_s {
     unsigned char header[3];
@@ -212,9 +224,9 @@ static void read_from_mpl_float(void)
         
         
         /*if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
-            uart_printf("xQueueSend failed\n\r");
-        }*/
-        xQueueOverwrite(imu_attitude_queue, &imu);
+        uart_printf("xQueueSend failed\n\r");
+    }*/
+        //xQueueOverwrite(imu_attitude_queue, &imu);
         //xSemaphoreGive(imu_attitude_sem);
         //xQueueOverwrite(imu_altitude_queue, &imu);
         //printf2(" roll: %7.4f", imu.gyro_roll);
@@ -232,11 +244,114 @@ static void read_from_mpl_float(void)
         //xSemaphoreGive(imu_altitude_sem);
         
         //taskYIELD();
+        // Build pitch pid object ------------------------------------------
+        
+        temp1 = joystick_read_setpoint(&joystick_pitch);
+        if(temp1 < -14){
+            pid_roll.k_i = pid_roll.k_i - 0.00000001;
+            pid_pitch.k_i = pid_pitch.k_i - 0.00000001;
+            //pid_roll.k_p = pid_roll.k_p - 0.00001;
+            //pid_pitch.k_p = pid_pitch.k_p - 0.00001;
+            //pid_altitude.k_p = pid_altitude.k_p - 0.0001;
+        }
+        else if(temp1 > 14){
+            pid_roll.k_i = pid_roll.k_i + 0.00000001;
+            pid_pitch.k_i = pid_pitch.k_i + 0.00000001;
+            //pid_roll.k_p = pid_roll.k_p + 0.00001;
+            //pid_pitch.k_p = pid_pitch.k_p + 0.00001;
+            //pid_altitude.k_p = pid_altitude.k_p + 0.0001;
+        }
+        
+        pid_pitch.setpoint = 0;//joystick_read_setpoint(&joystick_pitch);
+        pid_pitch.input = imu.dmp_pitch;
+        pid_pitch.rate = imu.gyro_pitch;
+        
+        
+        // Build roll pid object -------------------------------------------
+        
+        temp2 = joystick_read_setpoint(&joystick_roll);
+        if(temp2 < -14){
+            //pid_roll.k_d = pid_roll.k_d - 0.000001;
+            //pid_pitch.k_d = pid_pitch.k_d - 0.000001;
+            //pid_altitude.k_d = pid_altitude.k_d - 0.01;
+        }
+        else if(temp2 > 14){
+            //pid_roll.k_d = pid_roll.k_d + 0.000001;
+            //pid_pitch.k_d = pid_pitch.k_d + 0.000001;
+            //pid_altitude.k_d = pid_altitude.k_d + 0.01;
+        }
+        pid_roll.setpoint = 0;//joystick_read_setpoint(&joystick_roll);
+        pid_roll.input = imu.dmp_roll;
+        pid_roll.rate = imu.gyro_roll;
+        
+        
+        // Build yaw pid object --------------------------------------------
+        pid_yaw.setpoint = 0;            
+        /*printf2("$ %d", (int32_t)(2000*pid_yaw.setpoint));*/
+        temp3 = joystick_read_setpoint(&joystick_yaw);
+        if(temp3 < -14){
+            //pid_roll.k_i = pid_roll.k_i - 0.0000001;
+            //pid_pitch.k_i = pid_pitch.k_i - 0.0000001;
+            //pid_altitude.k_d = pid_altitude.k_d - 0.01;
+        }
+        else if(temp3 > 14){
+            //pid_roll.k_i = pid_roll.k_i + 0.0000001;
+            //pid_pitch.k_i = pid_pitch.k_i + 0.0000001;
+            //pid_altitude.k_d = pid_altitude.k_d + 0.01;
+        }
+        pid_yaw.input = imu.gyro_yaw;
+        
+        
+        
+        // Build altitude pid object ---------------------------------------
+        // Poll queue for altitude data (~25 ms = 40 Hz interval)
+        /*if(xQueueReceive(altitude_queue, &altitude, 0)){
+        //uart_print("Found altitude data in queue\n\r"); // expected
+        pid_altitude.setpoint = (float)(100*joystick_read_thrust(&joystick_thrust));
+        pid_altitude.input = altitude.altitude_cm;
+        pid_altitude.rate = altitude.rate_cm_s;
+        //pid_calc(&pid_altitude, altitude.dt);
+        // Fake line!
+        //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
+    }*/
+        pid_altitude.output = joystick_read_thrust(&joystick_thrust);
+        
+        pid_calc(&pid_pitch, imu.dt);
+        pid_calc(&pid_roll, imu.dt);
+        pid_calc(&pid_yaw, imu.dt);
+        
+        
+        // Set outputs ----------------------------------------------------- 
+        if(arm() && joystick_read_thrust(&joystick_thrust) > 0.001f){ // if arm and thrust joystick
+            // Calculate PID
+            
+            //pid_calc(&pid_altitude, altitude.dt);
+            
+            //  1  front  2
+            //  left    right
+            //  4   back  3 
+            /*esc_set_speed(&esc1, pid_altitude.output - pid_pitch.output - pid_roll.output - pid_yaw.output);
+            esc_set_speed(&esc2, pid_altitude.output + pid_pitch.output - pid_roll.output + pid_yaw.output);
+            esc_set_speed(&esc3, pid_altitude.output + pid_pitch.output + pid_roll.output - pid_yaw.output);
+            esc_set_speed(&esc4, pid_altitude.output - pid_pitch.output + pid_roll.output + pid_yaw.output);*/
+            esc_set_speed(&esc1, pid_altitude.output + pid_roll.output + pid_pitch.output/* + pid_yaw.output*/);
+            esc_set_speed(&esc2, pid_altitude.output + pid_roll.output - pid_pitch.output/* - pid_yaw.output*/);
+            esc_set_speed(&esc3, pid_altitude.output - pid_roll.output - pid_pitch.output/* + pid_yaw.output*/);
+            esc_set_speed(&esc4, pid_altitude.output - pid_roll.output + pid_pitch.output/* - pid_yaw.output*/);
+            
+        }
+        else{
+            esc_set_speed(&esc1, 0);
+            esc_set_speed(&esc2, 0);
+            esc_set_speed(&esc3, 0);
+            esc_set_speed(&esc4, 0);
+        }
+    
     }
     else{
         uart_printf("dmp failed\n\r");
     }
-
+    
 }
 
 #ifdef COMPASS_ENABLED
@@ -387,6 +502,11 @@ void imu_task(void *pvParameters)
     UBaseType_t stack_size;
     stack_size = uxTaskGetStackHighWaterMark(NULL);
     uart_printf("imu task\n\r");
+    
+    esc_init(&esc1);
+    esc_init(&esc2);
+    esc_init(&esc3);
+    esc_init(&esc4);
     
     imu_attitude_queue = xQueueCreate(1, sizeof(imu_data_t));
     imu_altitude_queue = xQueueCreate(1, sizeof(imu_data_t));
@@ -595,110 +715,216 @@ void imu_task(void *pvParameters)
     
     while(1){
         //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){ // set in the interrupt
+        
+        if(hal.new_gyro == 1){ // set in "callback" called from interrupt
             GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
-            if(hal.new_gyro == 1){ // set in "callback" called from interrupt
-                
-                unsigned long sensor_timestamp;
-                int new_data = 0;
-                
-                get_ms_count(&timestamp);
-                
+            unsigned long sensor_timestamp;
+            int new_data = 0;
+            
+            get_ms_count(&timestamp);
+            
 #ifdef COMPASS_ENABLED
-                /* We're not using a data ready interrupt for the compass, so we'll
-                * make our compass reads timer-based instead.
-                */
-                if ((timestamp > hal.next_compass_ms) && !hal.lp_accel_mode &&
-                    hal.new_gyro && (hal.sensors & COMPASS_ON)) {
-                        hal.next_compass_ms = timestamp + COMPASS_READ_MS;
-                        new_compass = 1;
-                    }
-#endif
-                /* Temperature data doesn't need to be read with every gyro sample.
-                * Let's make them timer-based like the compass reads.
-                */
-                if (timestamp > hal.next_temp_ms) {
-                    hal.next_temp_ms = timestamp + TEMP_READ_MS;
-                    new_temp = 1;
+            /* We're not using a data ready interrupt for the compass, so we'll
+            * make our compass reads timer-based instead.
+            */
+            if ((timestamp > hal.next_compass_ms) && !hal.lp_accel_mode &&
+                hal.new_gyro && (hal.sensors & COMPASS_ON)) {
+                    hal.next_compass_ms = timestamp + COMPASS_READ_MS;
+                    new_compass = 1;
                 }
-                
-                else if (hal.new_gyro && hal.dmp_on) {
-                    short gyro[3], accel_short[3], sensors;
-                    unsigned char more;
-                    long accel[3], quat[4], temperature;
-                    /* This function gets new data from the FIFO when the DMP is in
-                    * use. The FIFO can contain any combination of gyro, accel,
-                    * quaternion, and gesture data. The sensors parameter tells the
-                    * caller which data fields were actually populated with new data.
-                    * For example, if sensors == (INV_XYZ_GYRO | INV_WXYZ_QUAT), then
-                    * the FIFO isn't being filled with accel data.
-                    * The driver parses the gesture data to determine if a gesture
-                    * event has occurred; on an event, the application will be notified
-                    * via a callback (assuming that a callback function was properly
-                    * registered). The more parameter is non-zero if there are
-                    * leftover packets in the FIFO.
-                    */
-                    dmp_read_fifo(gyro, accel_short, quat, &sensor_timestamp, &sensors, &more);
-                    if (!more)
-                        hal.new_gyro = 0;
-                    if (sensors & INV_XYZ_GYRO) {
-                        /* Push the new data to the MPL. */
-                        inv_build_gyro(gyro, sensor_timestamp);
-                        new_data = 1;
-                        if (new_temp) {
-                            new_temp = 0;
-                            /* Temperature only used for gyro temp comp. */
-                            mpu_get_temperature(&temperature, &sensor_timestamp);
-                            inv_build_temp(temperature, sensor_timestamp);
-                        }
+#endif
+            /* Temperature data doesn't need to be read with every gyro sample.
+            * Let's make them timer-based like the compass reads.
+            */
+            if (timestamp > hal.next_temp_ms) {
+                hal.next_temp_ms = timestamp + TEMP_READ_MS;
+                new_temp = 1;
+            }
+            
+            else if (hal.new_gyro && hal.dmp_on) {
+                short gyro[3], accel_short[3], sensors;
+                unsigned char more;
+                long accel[3], quat[4], temperature;
+                /* This function gets new data from the FIFO when the DMP is in
+                * use. The FIFO can contain any combination of gyro, accel,
+                * quaternion, and gesture data. The sensors parameter tells the
+                * caller which data fields were actually populated with new data.
+                * For example, if sensors == (INV_XYZ_GYRO | INV_WXYZ_QUAT), then
+                * the FIFO isn't being filled with accel data.
+                * The driver parses the gesture data to determine if a gesture
+                * event has occurred; on an event, the application will be notified
+                * via a callback (assuming that a callback function was properly
+                * registered). The more parameter is non-zero if there are
+                * leftover packets in the FIFO.
+                */
+                dmp_read_fifo(gyro, accel_short, quat, &sensor_timestamp, &sensors, &more);
+                if (!more)
+                    hal.new_gyro = 0;
+                if (sensors & INV_XYZ_GYRO) {
+                    /* Push the new data to the MPL. */
+                    inv_build_gyro(gyro, sensor_timestamp);
+                    new_data = 1;
+                    if (new_temp) {
+                        new_temp = 0;
+                        /* Temperature only used for gyro temp comp. */
+                        mpu_get_temperature(&temperature, &sensor_timestamp);
+                        inv_build_temp(temperature, sensor_timestamp);
                     }
-                    if (sensors & INV_XYZ_ACCEL) {
-                        accel[0] = (long)accel_short[0];
-                        accel[1] = (long)accel_short[1];
-                        accel[2] = (long)accel_short[2];
-                        inv_build_accel(accel, 0, sensor_timestamp);
-                        new_data = 1;
-                    }
-                    if (sensors & INV_WXYZ_QUAT) {
-                        inv_build_quat(quat, 0, sensor_timestamp);
-                        new_data = 1;
-                    }
-                } 
-#ifdef COMPASS_ENABLED
-                if (new_compass) {
-                    short compass_short[3];
-                    long compass[3];
-                    new_compass = 0;
-                    /* For any MPU device with an AKM on the auxiliary I2C bus, the raw
-                    * magnetometer registers are copied to special gyro registers.
-                    */
-                    if (!mpu_get_compass_reg(compass_short, &sensor_timestamp)) {
-                        compass[0] = (long)compass_short[0];
-                        compass[1] = (long)compass_short[1];
-                        compass[2] = (long)compass_short[2];
-                        /* NOTE: If using a third-party compass calibration library,
-                        * pass in the compass data in uT * 2^16 and set the second
-                        * parameter to INV_CALIBRATED | acc, where acc is the
-                        * accuracy from 0 to 3.
-                        */
-                        inv_build_compass(compass, 0, sensor_timestamp);
-                    }
+                }
+                if (sensors & INV_XYZ_ACCEL) {
+                    accel[0] = (long)accel_short[0];
+                    accel[1] = (long)accel_short[1];
+                    accel[2] = (long)accel_short[2];
+                    inv_build_accel(accel, 0, sensor_timestamp);
                     new_data = 1;
                 }
-#endif
-                if (new_data) {
-                    inv_execute_on_data();
-                    /* This function reads bias-compensated sensor data and sensor
-                    * fusion outputs from the MPL. The outputs are formatted as seen
-                    * in eMPL_outputs.c. This function only needs to be called at the
-                    * rate requested by the host.
-                    */
-                    read_from_mpl_float();
+                if (sensors & INV_WXYZ_QUAT) {
+                    inv_build_quat(quat, 0, sensor_timestamp);
+                    new_data = 1;
                 }
+            } 
+#ifdef COMPASS_ENABLED
+            if (new_compass) {
+                short compass_short[3];
+                long compass[3];
+                new_compass = 0;
+                /* For any MPU device with an AKM on the auxiliary I2C bus, the raw
+                * magnetometer registers are copied to special gyro registers.
+                */
+                if (!mpu_get_compass_reg(compass_short, &sensor_timestamp)) {
+                    compass[0] = (long)compass_short[0];
+                    compass[1] = (long)compass_short[1];
+                    compass[2] = (long)compass_short[2];
+                    /* NOTE: If using a third-party compass calibration library,
+                    * pass in the compass data in uT * 2^16 and set the second
+                    * parameter to INV_CALIBRATED | acc, where acc is the
+                    * accuracy from 0 to 3.
+                    */
+                    inv_build_compass(compass, 0, sensor_timestamp);
+                }
+                new_data = 1;
             }
+#endif
+            if (new_data) {
+                inv_execute_on_data();
+                /* This function reads bias-compensated sensor data and sensor
+                * fusion outputs from the MPL. The outputs are formatted as seen
+                * in eMPL_outputs.c. This function only needs to be called at the
+                * rate requested by the host.
+                */
+                read_from_mpl_float();
+            }
+            delay_ms(1);
+            GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
+        }
         //}
         stack_size = uxTaskGetStackHighWaterMark(NULL);
         imu.stack_size = stack_size;
-        GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
+        
+    }
+}
+
+
+void telemetry_task(void *pvParameters)
+{
+    TickType_t last_wake_time = xTaskGetTickCount();
+    const TickType_t frequency = 300; // every 200ms = 5Hz
+    UBaseType_t stack_size_tele;
+    stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
+    while(1)
+    {
+        vTaskDelayUntil(&last_wake_time, frequency / portTICK_PERIOD_MS);
+        GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_TEL_TASK_PIN);
+        //uart_printf("armed: %d", arm());
+        //uart_printf(" pitch: %.3f", joystick_pitch_g.duty_input);
+        //uart_printf(" %.3f", joystick_pitch_g.freq_input);
+        //uart_printf(" roll: %.3f", joystick_roll_g.duty_input);
+        //uart_printf(" %.3f", joystick_roll_g.freq_input);
+        //uart_printf(" yaw: %.3f", joystick_yaw.duty_input);
+        //uart_printf(" %.3f", joystick_yaw.freq_input);
+        //uart_printf(" thrust: %.3f", joystick_thrust.duty_input);
+        //uart_printf(" %.3f", joystick_thrust_g.freq_input);
+        //uart_printf(" toggle: %.3f", joystick_toggle_g.duty_input);
+        //uart_printf(" %.3f", joystick_toggle_g.freq_input);
+        
+        //uart_printf(" pit k_p: %.5f", pid_pitch.k_p);
+        uart_printf(" pit k_i: %.7f", pid_pitch.k_i);
+        //uart_printf(" pit k_d: %.5f", pid_pitch.k_d);
+        //uart_printf(" i_term: %.4f", pid_pitch.i_term);
+        //uart_printf(" rol k_p: %.5f", pid_roll.k_p);
+        //uart_printf(" rol k_i: %.7f", pid_roll.k_i);
+        //uart_printf(" rol k_d: %.5f", pid_roll.k_d);
+        //uart_printf(" i_term: %.4f", pid_pitch.i_term);
+        
+        //uart_printf(" yaw k_d: %.4f", yaw.k_d);
+        //uart_printf(" temp1: %.4f", temp1);
+        //uart_printf(" temp2: %.4f", temp2);
+        //uart_printf(" k_p: %.4f", pid_altitude.k_p);
+        //uart_printf(" k_d: %.4f", pid_altitude.k_d);
+        
+        //uart_printf("dt: %d", (imu.dt));
+        
+        //uart_printf(" roll_set_point: %.3f", roll.setpoint);
+        //uart_printf(" pitch_set_point: %.3f", pitch.setpoint);
+        //uart_printf(" yaw_set_point: %.3f", yaw.setpoint);
+        //uart_printf(" altitude_setpoint: %.3f", pid_altitude.setpoint);
+        //uart_printf(" thrust: %.3f", thrust);
+        //uart_printf(" toggle: %.3f", toggle);
+        
+        //uart_printf(" x acc: %.3f", imu.acc_x);
+        //uart_printf(" y acc: %.3f", imu.acc_y);
+        //uart_printf(" z acc: %.3f", imu.acc_z);
+        
+        //uart_printf(" roll gyro: %.3f", imu.gyro_roll);
+        //uart_printf(" pitch gyro: %.3f", imu.gyro_pitch);
+        //uart_printf(" yaw gyro: %.6f", imu.gyro_yaw); // ideally same thing as yaw.input
+        
+        //uart_printf(" roll gyro: %.6f", imu.gyro_roll);
+        //uart_printf(" pid rate: %.6f", pid_roll.rate);
+        //uart_printf(" pid calc: %.6f", pid_roll.rate_calc);
+        
+        //uart_printf(" roll dmp: %.3f", imu.dmp_roll);
+        //uart_printf(" pitch dmp: %.3f", imu.dmp_pitch);
+        //uart_printf(" yaw dmp ori: %.3f", imu.dmp_yaw);
+        
+        //uart_printf(" yaw dmp rate: %.6f", 1000*yaw.input); // *1000 because dt = 2 and not 0.002
+        //uart_printf(" yaw set_point: %.3f", pid_yaw.setpoint);
+        //uart_printf(" yaw speed: %.3f", 
+        //uart_printf(" yaw: %7.4f", imu.yaw);
+        
+        //uart_printf(" altitude_cm: %.3f", altitude.altitude_cm);
+        //uart_printf(" altitude_acc: %.3f", altitude.acc_z);
+        //uart_printf(" altitude_dt: %d", altitude.dt);
+        //uart_printf(" altitude_index: %d", altitude.sensor_index);
+        
+        
+        //uart_printf(" joystick_thrust: %.3f", joystick_read_thrust(&joystick_thrust));
+        
+        
+        //uart_printf(" esc1: %.4f", esc1.speed);
+        //uart_printf(" esc2: %.4f", esc2.speed);
+        //uart_printf(" esc3: %.4f", esc3.speed);
+        //uart_printf(" esc4: %.4f", esc4.speed);
+        
+        //uart_printf(" pwm1: %d", pwm_get_duty_cycle(12));
+        //uart_printf(" pwm2: %d", pwm_get_duty_cycle(13));
+        //uart_printf(" pwm3: %d", pwm_get_duty_cycle(14));
+        //uart_printf(" pwm4: %d", pwm_get_duty_cycle(15));
+        
+        // stack sizes
+        //uart_printf(" main size: %d", stack_size_main);
+        //uart_printf(" tele size: %d", stack_size_tele);
+        //uart_printf(" imu size: %d", imu.stack_size);
+        //uart_printf(" alti size: %d", altitude.stack_size);
+        
+        // Print to plotter with format ("$%d %d;", data1, data2);
+        //uart_printf(" $%d;", 10*(int16_t)imu.acc_x);
+        //uart_printf(" $%d;", 10*(int16_t)imu.gyro_roll);
+        //uart_printf(" $ %d %d %d;", 100, (int16_t)((1000 * imu.gyro_roll) + 1000), 500);
+        uart_printf("\n\r"); 
+        
+        GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_TEL_TASK_PIN);
+        stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     }
 }
 

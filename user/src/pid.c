@@ -24,7 +24,7 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     p_term = pid->k_p * error;
     //uart_printf(" p_term: %.4f", p_term);
     // Calculate the I contribution
-    pid->i_term += (float)(pid->k_i * (float)(((float)dt)/1000) * ((error + pid->last_error)/2));
+    pid->i_term += (float)(pid->k_i * (float)dt * ((error + pid->last_error) / 2.0f));
     if(pid->i_term > pid->boundary_max){
         pid->i_term = pid->boundary_max;
     }
@@ -34,11 +34,11 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     i_term = pid->i_term;
     
     // Calculate the D contribution
-    pid->rate = (pid->input - pid->last_input) / (float)5; // Don't use this!!!
+    //pid->rate = (pid->input - pid->last_input) / (float)5; // Don't use this!!!
     d_term = pid->k_d * pid->rate;
 
     //Calculate output
-    output = p_term + /*i_term*/ - d_term;
+    output = p_term + i_term - d_term;
 
     // Check boundaries
     if(output > pid->boundary_max){

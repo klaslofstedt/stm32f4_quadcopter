@@ -37,5 +37,7 @@ float imu_read_dmp_roll(void);
 float imu_read_dmp_pitch(void);
 void gyro_data_ready_cb(void);
 
+void telemetry_task(void *pvParameters); 
+
 #endif
 
