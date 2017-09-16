@@ -42,17 +42,16 @@ void main_task(void *pvParameters)
     esc_init(&esc2);
     esc_init(&esc3);
     esc_init(&esc4);
-        
+    
     // Not needed?
     stack_size_main = uxTaskGetStackHighWaterMark(NULL);
     
     while(1){
         // This queue sets the frequency of the main loop (5 ms = 200 Hz interval)
-        if(xSemaphoreTake(imu_attitude_sem, portMAX_DELAY) == pdTRUE){
-            if(!xQueueReceive(imu_attitude_queue, &imu, 1000)){ // 1000 ms?
-                uart_printf("No IMU data in queue\n\r");
-            }
-        //if(xQueueReceive(imu_attitude_queue, &imu, 15)){
+        //if(xSemaphoreTake(imu_attitude_sem, portMAX_DELAY) == pdTRUE){
+        if(xQueueReceive(imu_attitude_queue, &imu, 200)){ // 1000 ms?
+            
+            //if(xQueueReceive(imu_attitude_queue, &imu, 15)){
             GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
             
             // Build pitch pid object ------------------------------------------
@@ -117,25 +116,25 @@ void main_task(void *pvParameters)
             // Build altitude pid object ---------------------------------------
             // Poll queue for altitude data (~25 ms = 40 Hz interval)
             /*if(xQueueReceive(altitude_queue, &altitude, 0)){
-                //uart_print("Found altitude data in queue\n\r"); // expected
-                pid_altitude.setpoint = (float)(100*joystick_read_thrust(&joystick_thrust));
-                pid_altitude.input = altitude.altitude_cm;
-                pid_altitude.rate = altitude.rate_cm_s;
-                //pid_calc(&pid_altitude, altitude.dt);
-                // Fake line!
-                //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
-            }*/
+            //uart_print("Found altitude data in queue\n\r"); // expected
+            pid_altitude.setpoint = (float)(100*joystick_read_thrust(&joystick_thrust));
+            pid_altitude.input = altitude.altitude_cm;
+            pid_altitude.rate = altitude.rate_cm_s;
+            //pid_calc(&pid_altitude, altitude.dt);
+            // Fake line!
+            //pid_altitude.output = joystick_read_thrust(&joystick_thrust);
+        }*/
             pid_altitude.output = joystick_read_thrust(&joystick_thrust);
             
             pid_calc(&pid_pitch, imu.dt);
             pid_calc(&pid_roll, imu.dt);
             pid_calc(&pid_yaw, imu.dt);
-                    
+            
             
             // Set outputs ----------------------------------------------------- 
             if(arm() && joystick_read_thrust(&joystick_thrust) > 0.001f){ // if arm and thrust joystick
                 // Calculate PID
-
+                
                 //pid_calc(&pid_altitude, altitude.dt);
                 
                 //  1  front  2
@@ -163,7 +162,7 @@ void main_task(void *pvParameters)
             GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_MAIN_TASK_PIN);
         }
         else{
-            uart_printf("No IMU sem\n\r");
+            uart_printf("No IMU queue\n\r");
         }
     } 
 }
@@ -172,7 +171,7 @@ void main_task(void *pvParameters)
 void telemetry_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
-    const TickType_t frequency = 400; // every 200ms = 5Hz
+    const TickType_t frequency = 100; // every 200ms = 5Hz
     UBaseType_t stack_size_tele;
     stack_size_tele = uxTaskGetStackHighWaterMark(NULL);
     while(1)
@@ -215,8 +214,8 @@ void telemetry_task(void *pvParameters)
         //uart_printf(" thrust: %.3f", thrust);
         //uart_printf(" toggle: %.3f", toggle);
         
-        uart_printf(" x acc: %.3f", imu.acc_x);
-        uart_printf(" y acc: %.3f", imu.acc_y);
+        //uart_printf(" x acc: %.3f", imu.acc_x);
+        //uart_printf(" y acc: %.3f", imu.acc_y);
         //uart_printf(" z acc: %.3f", imu.acc_z);
         
         uart_printf(" roll gyro: %.3f", imu.gyro_roll);
@@ -284,9 +283,9 @@ int main(void)
     // Prints debug data
     xTaskCreate(telemetry_task, (const char *)"telemetry_task", 300, NULL, 1, NULL);
     // Read several height sensors and pass altitude hold data to main_task
-    xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
+    //xTaskCreate(altitude_task, (const char *)"altitude_task", 400, NULL, 2, NULL);
     // Init ESC, reads joystick and process all data before setting new output to ESCs
-    xTaskCreate(main_task, (const char *)"main_task", 300, NULL, 3, NULL);
+    xTaskCreate(main_task, (const char *)"main_task", 300, NULL, 4, NULL);
     
     vTaskStartScheduler();
     

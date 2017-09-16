@@ -24,7 +24,7 @@ Author  :
  
 #define SENSORS_I2C                     I2C1
 #define I2C_SPEED                       400000
-#define I2C_OWN_ADDRESS                 0x00
+#define I2C_OWN_ADDRESS                 0x00  // change??
 #define SENSORS_I2C_SCL_GPIO_PORT       GPIOB
 #define SENSORS_I2C_SCL_GPIO_CLK        RCC_AHB1Periph_GPIOB
 #define SENSORS_I2C_SCL_GPIO_PIN        GPIO_Pin_6

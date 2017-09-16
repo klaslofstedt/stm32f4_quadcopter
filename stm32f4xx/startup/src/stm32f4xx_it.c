@@ -243,12 +243,14 @@ void EXTI4_IRQHandler(void)
     portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     EXTI_ClearITPendingBit(EXTI_Line4);
     
-    GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_INT_PIN);
+    
     xSemaphoreGiveFromISR(gyro_new, &xHigherPriorityTaskWoken);
+    GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_INT_PIN);
     
     if (xHigherPriorityTaskWoken != pdFALSE) {
         portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
     }
+    
     /*******/
 }
 

@@ -24,7 +24,9 @@ Author  :
 #define I2Cx_FLAG_TIMEOUT             ((uint32_t) 900) //0x1100
 #define I2Cx_LONG_TIMEOUT             ((uint32_t) (300 * I2Cx_FLAG_TIMEOUT)) //was300
  
-
+#define SENSORS_I2C                       I2C2
+#define I2C_SPEED                         400000
+#define I2C_OWN_ADDRESS                   0x00
 #define SENSORS_I2C_SCL_GPIO_PORT         GPIOB
 #define SENSORS_I2C_SCL_GPIO_CLK          RCC_AHB1Periph_GPIOB
 #define SENSORS_I2C_SCL_GPIO_PIN          GPIO_Pin_10
@@ -142,7 +144,7 @@ int Sensors_I2C_WriteRegister(unsigned char slave_addr,
                                         unsigned short len, 
                                         const unsigned char *data_ptr)
 {
-  //xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
+  xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
   
   char retries=0;
   int ret = 0;
@@ -160,7 +162,7 @@ tryWriteAgain:
     delay_ms(retry_in_mlsec);
     goto tryWriteAgain;
   }
-  //xSemaphoreGive(g_i2c_mutex);
+  xSemaphoreGive(g_i2c_mutex);
   return ret;  
 }
 
@@ -169,7 +171,7 @@ int Sensors_I2C_ReadRegister(unsigned char slave_addr,
                                        unsigned short len, 
                                        unsigned char *data_ptr)
 {
-    //xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
+  xSemaphoreTake(g_i2c_mutex, portMAX_DELAY);
   char retries=0;
   int ret = 0;
   unsigned short retry_in_mlsec = Get_I2C_Retry();
@@ -186,7 +188,7 @@ tryReadAgain:
     delay_ms(retry_in_mlsec);
     goto tryReadAgain;
   } 
-  //xSemaphoreGive(g_i2c_mutex);
+  xSemaphoreGive(g_i2c_mutex);
   return ret;
 }
 

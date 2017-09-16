@@ -215,7 +215,7 @@ static void read_from_mpl_float(void)
             uart_printf("xQueueSend failed\n\r");
         }*/
         xQueueOverwrite(imu_attitude_queue, &imu);
-        xSemaphoreGive(imu_attitude_sem);
+        //xSemaphoreGive(imu_attitude_sem);
         //xQueueOverwrite(imu_altitude_queue, &imu);
         //printf2(" roll: %7.4f", imu.gyro_roll);
         //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
@@ -594,7 +594,7 @@ void imu_task(void *pvParameters)
     hal.dmp_on = 1;
     
     while(1){
-        if(xSemaphoreTake(gyro_new, portMAX_DELAY)){ // set in the interrupt
+        //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){ // set in the interrupt
             GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
             if(hal.new_gyro == 1){ // set in "callback" called from interrupt
                 
@@ -695,7 +695,7 @@ void imu_task(void *pvParameters)
                     read_from_mpl_float();
                 }
             }
-        }
+        //}
         stack_size = uxTaskGetStackHighWaterMark(NULL);
         imu.stack_size = stack_size;
         GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
