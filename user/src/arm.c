@@ -15,6 +15,7 @@ static void arm_off_alert()
 {
     uint8_t i;
     for(i = 0; i < 2; i++){
+        uart_printf("arm off\n\r");
         buzzer_set(1000);
         delay_ms(400);
         buzzer_set(0);
@@ -26,6 +27,7 @@ static void arm_on_alert()
 {
     uint8_t i;
     for(i = 0; i < 3; i++){
+        uart_printf("arm on\n\r");
         buzzer_set(1000);
         delay_ms(100);
         buzzer_set(0);

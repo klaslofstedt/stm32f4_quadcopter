@@ -238,19 +238,18 @@ void EXTI4_IRQHandler(void)
     /* Handle new gyro*/
     GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_INT_PIN);
     gyro_data_ready_cb();
-    
-    /***** semaphore stuff */
-    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
     EXTI_ClearITPendingBit(EXTI_Line4);
-    
-    
-    xSemaphoreGiveFromISR(gyro_new, &xHigherPriorityTaskWoken);
     GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_INT_PIN);
+    /***** semaphore stuff */
+    /*
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    xSemaphoreGiveFromISR(gyro_new, &xHigherPriorityTaskWoken);
+    
     
     if (xHigherPriorityTaskWoken != pdFALSE) {
         portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
     }
-    
+    */
     /*******/
 }
 

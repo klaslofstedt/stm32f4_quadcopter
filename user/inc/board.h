@@ -22,7 +22,7 @@
 #define DEBUG_ALT_TASK_PIN              GPIO_Pin_9
 #define DEBUG_IMU_INT_PIN               GPIO_Pin_10
 #define DEBUG_TEL_TASK_PIN              GPIO_Pin_11
-//#define DEBUG_GPIOE_12                  GPIO_Pin_12
+#define DEBUG_IMU_ACT_PIN               GPIO_Pin_12
 //#define DEBUG_GPIOE_13                  GPIO_Pin_13
 //#define DEBUG_GPIOE_14                  GPIO_Pin_14
 //#define DEBUG_GPIOE_15                  GPIO_Pin_15

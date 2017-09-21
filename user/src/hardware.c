@@ -31,7 +31,8 @@ void hardware_init(void)
     // Reset RTC
     RCC_BackupResetCmd(ENABLE);
     RCC_BackupResetCmd(DISABLE);
-
+    // Ensure all priority bits are assigned as preemption priority bits (FREERTOS)
+    // This on is set to 4 according to FreeRTOS spec. Do not change.
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     
     gpio_init();
@@ -49,7 +50,6 @@ void hardware_init(void)
     pwm_input_init(TIM9, GPIOE, GPIO_Pin_5);    // joystick CH4 = 16-bit yaw
     pwm_input_init(TIM12, GPIOB, GPIO_Pin_14);  // joystick CH3 = 16-bit thrust
     
-    // Ensure all priority bits are assigned as preemption priority bits (FREERTOS)
-    // This on is set to 4 according to FreeRTOS spec. Do not change.
+
     
 }

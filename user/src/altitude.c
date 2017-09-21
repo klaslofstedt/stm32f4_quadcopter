@@ -128,6 +128,9 @@ static float altitude_remove_angle_contribution(float estimate, float x, float y
     return (float)tot_temp;
 }
 
+#define DAMP_SIZE 2
+static float rate_avg[DAMP_SIZE];
+static float altitude_avg[DAMP_SIZE];
 
 void altitude_task(void *pvParameters)
 {
@@ -161,6 +164,8 @@ void altitude_task(void *pvParameters)
             laser_read(&laser);
             //lidar_read(&lidar);
             //barometer_read(&barometer, imu.acc_z);
+            
+            //uart_printf("laser: %d\n\r", laser.range_mm);
             
             // If range is too low for lidar, use only laser
             if(laser.range_cm >= laser.range_min && laser.range_cm <= lidar.range_min){
@@ -214,14 +219,50 @@ void altitude_task(void *pvParameters)
             // These damping values are just stolen
             float temp1 = altitude.altitude_cm; // remove
             
-            altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.9f); //0.995f
+            //altitude.altitude_cm = filter_lowpass(altitude.altitude_cm, altitude.altitude_cm_last, 0.9f); //0.995f
             //uart_printf("$ %d %d %d;", (int16_t)(10*altitude.altitude_cm), (int16_t)(10*temp1), 100);
             //uart_printf("raw: %.4f ", altitude.rate_cm_s);
-            altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.9f); // 0.995f
+            
+            //altitude.rate_cm_s = filter_lowpass(altitude.rate_cm_s, altitude.rate_cm_s_last, 0.9f); // 0.995f
             //uart_printf(" filter: %.4f\n\r", altitude.rate_cm_s);
             //uart_printf("$ %d %d %d;", 100, (int16_t)(10), (int16_t)1000*altitude.rate_cm_s);
             altitude.altitude_cm_last = altitude.altitude_cm;
             altitude.rate_cm_s_last = altitude.rate_cm_s;
+            // moving avg rate
+            //rate_avg[9] = rate_avg[8];
+            //rate_avg[8] = rate_avg[7];
+            //rate_avg[7] = rate_avg[6];
+            //rate_avg[6] = rate_avg[5];
+            //rate_avg[5] = rate_avg[4];
+            //rate_avg[4] = rate_avg[3];
+            //rate_avg[3] = rate_avg[2];
+            //rate_avg[2] = rate_avg[1];
+            rate_avg[1] = rate_avg[0];
+            rate_avg[0] = altitude.rate_cm_s;
+            uint8_t i;
+            altitude.rate_cm_s = 0;
+            for(i = 0; i < DAMP_SIZE; i++){
+                altitude.rate_cm_s += rate_avg[i];
+            }
+            altitude.rate_cm_s = altitude.rate_cm_s / DAMP_SIZE;
+            // moving avg alt
+            //altitude_avg[9] = altitude_avg[8];
+            //altitude_avg[8] = altitude_avg[7];
+            //altitude_avg[7] = altitude_avg[6];
+            //altitude_avg[6] = altitude_avg[5];
+            //altitude_avg[5] = altitude_avg[4];
+            /*altitude_avg[4] = altitude_avg[3];
+            altitude_avg[3] = altitude_avg[2];
+            altitude_avg[2] = altitude_avg[1];
+            altitude_avg[1] = altitude_avg[0];
+            altitude_avg[0] = altitude.altitude_cm;
+            altitude.altitude_cm = 0;
+            for(i = 0; i < DAMP_SIZE; i++){
+                altitude.altitude_cm += altitude_avg[i];
+            }
+            altitude.altitude_cm = altitude.altitude_cm / DAMP_SIZE;*/
+            
+
             
             
             
