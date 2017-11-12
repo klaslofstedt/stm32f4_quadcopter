@@ -18,7 +18,7 @@
 #include <math.h>
 //#include "tiny_ekf.h"
 
-#define LOOP_TIME_MS 25
+#define LOOP_TIME_MS 5
 #define M_PI 3.14159265358979323846
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
@@ -140,9 +140,12 @@ void altitude_task(void *pvParameters)
     stack_size_alt = uxTaskGetStackHighWaterMark(NULL);
     
     //barometer_init(&barometer);
+    lidar_init(&lidar);
+    delay_ms(1);
     //lidar_init(&lidar);
-    laser_init(&laser);
-    laser_read_average(&laser, 50);
+    //delay_ms(1);
+    //laser_init(&laser);
+    //laser_read_average(&laser, 50);
     barometer.offset = laser.range_avg;
     
     altitude_queue = xQueueCreate(1, sizeof(altitude_data_t));
@@ -155,14 +158,14 @@ void altitude_task(void *pvParameters)
     while(1)
     { 
         vTaskDelayUntil(&wake_time, delay / portTICK_PERIOD_MS); // 40Hz
-        if(xQueueReceive(imu_altitude_queue, &imu, 0)){
+        //if(xQueueReceive(imu_altitude_queue, &imu, 0)){
             GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_ALT_TASK_PIN);
             // Calc dt
             altitude.dt = ((wake_time - last_wake_time) / portTICK_PERIOD_MS);   
             last_wake_time = wake_time;
             
-            laser_read(&laser);
-            //lidar_read(&lidar);
+            //laser_read(&laser);
+            lidar_read(&lidar);
             //barometer_read(&barometer, imu.acc_z);
             
             //uart_printf("laser: %d\n\r", laser.range_mm);
@@ -310,9 +313,9 @@ void altitude_task(void *pvParameters)
             
             stack_size_alt = uxTaskGetStackHighWaterMark(NULL);
             altitude.stack_size = stack_size_alt;
-        }
+        /*}
         else{
             //uart_printf("No altitude IMU data in queue\n\r");
-        }
+        }*/
     }
 }

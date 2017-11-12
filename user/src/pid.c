@@ -7,9 +7,6 @@
 
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
-    /*uart_printf(" input: %.4f", pid->input);
-    uart_printf(" rate: %.4f", pid->rate);
-    uart_printf(" setpoint: %.4f", pid->setpoint);*/
     // These are used for ease to read
     float p_term, i_term, d_term, error, output;
     
@@ -19,10 +16,9 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     
     // Calculate error between current and desired position
     error = pid->setpoint - pid->input;
-    //uart_printf(" error: %.4f", error);
     // Calculate the P contribution
     p_term = pid->k_p * error;
-    //uart_printf(" p_term: %.4f", p_term);
+
     // Calculate the I contribution
     pid->i_term += (float)(pid->k_i * (float)dt * ((error + pid->last_error) / 2.0f));
     if(pid->i_term > pid->boundary_max){
@@ -34,7 +30,7 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     i_term = pid->i_term;
     
     // Calculate the D contribution
-    //pid->rate = (pid->input - pid->last_input) / (float)5; // Don't use this!!!
+    //pid->rate = (pid->input - pid->last_input) / (float)dt; // Don't use this!!!
     d_term = pid->k_d * pid->rate;
 
     //Calculate output

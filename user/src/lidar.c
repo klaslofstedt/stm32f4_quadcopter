@@ -3,7 +3,7 @@
 #include "uart.h"
 #include "freertos_time.h"
 
-/*#define LIDAR_LITE_ADDRESS              0x62
+#define LIDAR_LITE_ADDRESS              0x62
 
 #define LIDAR_LITE_ACQ_COMMAND          0x00
 #define LIDAR_LITE_STATUS               0x01
@@ -15,21 +15,25 @@
 
 // Implemented based on: http://static.garmin.com/pumac/LIDAR_Lite_v3_Operation_Manual_and_Technical_Specifications.pdf
 
-void lidar_init(lidar_data_t *in)
+/*void lidar_init(lidar_data_t *in)
 {
+// kommentera bort ner till -----
 uint8_t status;
 Sensors_I2C1_ReadRegister(LIDAR_LITE_ADDRESS, LIDAR_LITE_STATUS, 1, &status);
 //uint8_t status = i2cRead(LIDAR_LITE_ADDRESS, LIDAR_LITE_STATUS);
 if (!(status & (1 << 6)) && (status & (1 << 5))) { // Read process error and health flag
-printf2("LIDAR-Lite v3 found\n\r");
-delay_ms(1000);
+uart_printf("LIDAR-Lite v3 found\n\r");
+delay_ms(100);
     } else {
-printf2("Could not find LIDAR-Lite v3: %d\n\r", status);
-while (1);
-    }
 
+while (1){
+uart_printf("Could not find LIDAR-Lite v3: %d\n\r", status);
+delay_ms(500);
+        }
+    }
+// -------
 Sensors_I2C1_WriteReg(LIDAR_LITE_ADDRESS, LIDAR_LITE_ACQ_COMMAND, 0x00); //  Reset FPGA, all registers return to default values
-delay_ms(100); // Wait 22 ms after reset according to datasheet
+delay_ms(22); // Wait 22 ms after reset according to datasheet
 
 // Default configuration
 Sensors_I2C1_WriteReg(LIDAR_LITE_ADDRESS, LIDAR_LITE_SIG_COUNT_VAL, 0x80); // Maximum acquisition count
@@ -54,7 +58,7 @@ biasCounter = 0;
     }
 unsigned char reg_read;
 Sensors_I2C1_ReadRegister(LIDAR_LITE_ADDRESS, LIDAR_LITE_STATUS, 1, &reg_read);
-printf2("reg_read: %d ", reg_read);
+uart_printf("reg_read: %d ", reg_read);
 busyFlag = reg_read & 0x01; // Read status register to check busy flag
 return !busyFlag; // Return true if new measurement is ready
 }
@@ -63,16 +67,16 @@ return !busyFlag; // Return true if new measurement is ready
 void lidar_read(lidar_data_t *in) 
 {
 if(triggerLidarLite() == 1){
-printf2("LIDAR V3 trigger successfull ");
+uart_printf("LIDAR V3 trigger successfull ");
     }
     else{
-printf2("LIDAR V3 trigger NOT successfull ");
+uart_printf("LIDAR V3 trigger NOT successfull ");
     }
 unsigned char i2cBuffer[2]; // Buffer for I2C data
 Sensors_I2C1_ReadRegister(LIDAR_LITE_ADDRESS, LIDAR_LITE_DATA, 2, i2cBuffer); // Read distance measurement
 
 int32_t distance = (int16_t)((i2cBuffer[0] << 8) | i2cBuffer[1]); // Return the distance in cm
-printf2("LIDAR V3: %d\n\r", distance);
+uart_printf("LIDAR V3: %d\n\r", distance);
 in->range_cm = (float)distance;
 }*/
 
@@ -92,6 +96,9 @@ void lidar_init(lidar_data_t *in)
 {
     uint8_t lidarliteAddress = LIDAR_ADDR_DEFAULT;
     uint8_t configuration = 0;
+    
+    write(0x00, 0x00, lidarliteAddress);
+    delay_ms(30);
     
     switch (configuration)
     {
@@ -167,7 +174,7 @@ void lidar_reset()
 {
     uint8_t lidarliteAddress = LIDAR_ADDR_DEFAULT;
     write(0x00,0x00,lidarliteAddress);
-    delay_ms(22);
+    delay_ms(100);
 }
 
 

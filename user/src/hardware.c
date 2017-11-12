@@ -41,7 +41,7 @@ void hardware_init(void)
     buzzer_init();
 
     i2c2_init(); // imu
-    i2c1_init(); // baro & ultrasonic
+    i2c1_init(); // barometer, lidar, laser
     //uart_init();
 
     pwm_input_init(TIM2, GPIOA, GPIO_Pin_15);   // joystick CH2 = 32-bit pitch
