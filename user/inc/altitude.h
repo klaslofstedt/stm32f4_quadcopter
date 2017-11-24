@@ -3,8 +3,8 @@
 
 // FreeRTOS kernel includes
 #include "FreeRTOS.h"
-//#include "task.h"
-//#include "timers.h"
+#include "task.h"
+#include "timers.h"
 #include "semphr.h"
 #include "queue.h"
 
@@ -14,7 +14,7 @@
 #define Mobs 3
 
 extern xSemaphoreHandle altitude_done;
-extern xQueueHandle altitude_data;
+extern xQueueHandle altitude_queue;
 
 // This is only kalman filter struct for ONE tiny_ekf object!! this case altitude
 typedef struct {
@@ -51,10 +51,22 @@ typedef struct {
 } ekf_t; 
 
 typedef struct {
+    float acc_z;
+    float acc_offset;
+    float laser_offset;
     float altitude_cm;
-    float dt;
+    float altitude_cm_last;
+    float rate_cm_s;
+    float rate_cm_s_last;
+    unsigned long dt;
+    uint8_t sensor_index;
+    UBaseType_t stack_size;
 } altitude_data_t;
 
+
+
 void altitude_task(void *pvParameters);
+float altitude_read_cm(void);
+float altitude_read_speed(void);
 
 #endif

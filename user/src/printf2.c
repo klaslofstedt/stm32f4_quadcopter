@@ -38,7 +38,7 @@
 /********************************* Prototypes *********************************/
 /*******************************  Function ************************************/
 
-void printf2_init(void)
+void uart_init(void)
 {
   USART_InitTypeDef USART_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -97,7 +97,7 @@ void USART_puts(const char *s)
   for(i=0;s[i]!=0;i++) USART_putc(s[i]);
 }
 
-void printf2(const char *format, ...) 
+void uart_printf(const char *format, ...) 
 {
   va_list list;
   va_start(list, format);

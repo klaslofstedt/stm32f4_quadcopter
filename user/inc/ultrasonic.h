@@ -48,10 +48,6 @@ typedef struct{
 
 enum ultrasonic_status { IDLE, TRIGGER, TRIGGER_READY, ECHO, ECHO_READY };
 
-//extern xSemaphoreHandle gyro_new;
-//extern xSemaphoreHandle imu_done;
-//extern xQueueHandle imu_data;
-
 //void ultrasonic_task(void *pvParameters);
 void ultrasonic_read(ultrasonic_data_t* ultrasonic);
 void ultrasonic_init();

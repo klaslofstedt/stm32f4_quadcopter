@@ -8,9 +8,11 @@
 #include "queue.h"
 
 /* Demo program include files. */
-#include "printf2.h"
+#include "uart.h"
 #include "freertos_time.h"
 #include "imu.h"
+#include "debug.h"
+#include "board.h"
 
 // dmp
 #include "inv_mpu.h"
@@ -20,13 +22,13 @@
 #include "eMPL_outputs.h"
 #include "mltypes.h"
 #include "mpu.h"
+
+#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
+#include "stm32f4xx_it.h"
 //#include "log.h"
 //#include "packet.h"
-xSemaphoreHandle imu_done = NULL;
-xSemaphoreHandle gyro_new = NULL;
-xQueueHandle imu_data = 0;
 
-volatile uint32_t hal_timestamp = 0;
 #define ACCEL_ON        (0x01)
 #define GYRO_ON         (0x02)
 #define COMPASS_ON      (0x04)
@@ -43,6 +45,33 @@ volatile uint32_t hal_timestamp = 0;
 #define PEDO_READ_MS    (1000)
 #define TEMP_READ_MS    (500)
 #define COMPASS_READ_MS (100)
+
+static void gpio_init(void);
+
+xSemaphoreHandle imu_attitude_sem = NULL;
+xSemaphoreHandle imu_altitude_sem = NULL;
+
+xQueueHandle imu_attitude_queue = 0;
+xQueueHandle imu_altitude_queue = 0;
+
+
+imu_data_t imu = {
+    .dmp_roll = 0,
+    .dmp_pitch = 0,
+    .dmp_yaw = 0,
+    .gyro_roll = 0,
+    .gyro_pitch = 0,
+    .gyro_yaw = 0,
+    .acc_x = 0,
+    .acc_y = 0,
+    .acc_z = 0,
+    .dt = 0,
+    .stack_size = 0
+};
+
+volatile uint32_t hal_timestamp = 0;
+
+
 struct rx_s {
     unsigned char header[3];
     unsigned char cmd;
@@ -64,19 +93,7 @@ struct hal_s {
 };
 static struct hal_s hal = {0};
 
-imu_data_t imu = {
-    .dmp_roll = 0,
-    .dmp_pitch = 0,
-    .dmp_yaw = 0,
-    .gyro_roll = 0,
-    .gyro_pitch = 0,
-    .gyro_yaw = 0,
-    .acc_x = 0,
-    .acc_y = 0,
-    .acc_z = 0,
-    .dt = 0,
-    .stack_size = 0
-};
+
 
 /* USB RX binary semaphore. Actually, it's just a flag. Not included in struct
 * because it's declared extern elsewhere.
@@ -126,7 +143,118 @@ static struct platform_data_s compass_pdata = {
 #define COMPASS_ENABLED 1
 #endif
 
-unsigned long counter = 0, ts2 = 0;// ts_tot = 0;
+void gpio_init(void)
+{
+    
+    GPIO_InitTypeDef   GPIO_InitStructure;
+    NVIC_InitTypeDef   NVIC_InitStructure;
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    
+    //  GPIO_DeInit(GPIOA);
+    //  GPIO_DeInit(GPIOC);
+    
+    /* Enable GPIOB clock */
+    RCC_AHB1PeriphClockCmd(INVEN_INT_GPIO_CLK, ENABLE);
+    /* Enable SYSCFG clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+    
+    /* Configure invensense sensor interrupt pin as input floating */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_Pin = INVEN_INT_PIN;
+    GPIO_Init(INVEN_INT_GPIO_PORT, &GPIO_InitStructure); //GPIOA
+    
+    /* Connect EXTI Line to inv sensor interrupt pin */
+    SYSCFG_EXTILineConfig(INVEN_INT_EXTI_PORT, INVEN_INT_EXTI_PIN);
+    
+    /* Configure EXTI Line1 */
+    EXTI_InitStructure.EXTI_Line = INVEN_INT_EXTI_LINE;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
+    
+    /* Enable and set EXTI Line Interrupt to the highest priority */
+    NVIC_InitStructure.NVIC_IRQChannel = INVEN_INT_EXTI_IRQ;
+    // http://www.freertos.org/RTOS-Cortex-M3-M4.html
+    // configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY in FreeRTOSConfig.h
+    // Should be lower (higher value) than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 10; 
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 10; // prob dont need to be changed
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+}
+
+void EnableInvInterrupt(void)
+{
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    /* Configure EXTI Line1 */
+    EXTI_InitStructure.EXTI_Line = INVEN_INT_EXTI_LINE;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
+}
+void DisableInvInterrupt(void)
+{
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    /* Configure EXTI Line1 */
+    EXTI_InitStructure.EXTI_Line = INVEN_INT_EXTI_LINE;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_InitStructure.EXTI_LineCmd = DISABLE;
+    EXTI_Init(&EXTI_InitStructure);
+    EXTI_ClearITPendingBit(INVEN_INT_EXTI_LINE);
+}
+
+void InvIntHandler(void)
+{
+    /* Clear the EXTI line 1 pending bit */
+    EXTI_ClearITPendingBit(INVEN_INT_EXTI_LINE);
+}
+
+void imu_read(imu_data_t* in)
+{
+    in->acc_x = imu.acc_x;
+    in->acc_y = imu.acc_y;
+    in->acc_z = imu.acc_z;
+    in->gyro_roll = imu.gyro_roll;
+    in->gyro_pitch = imu.gyro_pitch;
+    in->gyro_yaw = imu.gyro_yaw;
+    in->dmp_roll = imu.dmp_roll;
+    in->dmp_pitch = imu.dmp_pitch;
+    in->dmp_yaw = imu.dmp_yaw;
+    in->dt = imu.dt;
+}
+
+float imu_read_acc_z(void)
+{
+    return -imu.acc_z;
+}
+
+float imu_read_dmp_roll(void)
+{
+    return imu.dmp_roll;
+}
+
+float imu_read_dmp_pitch(void)
+{
+    return imu.dmp_pitch;
+}
+
+float imu_acc_z_average(uint32_t samples)
+{
+    // You should probably wait 10 seconds for the sensor to stabilize
+    uint32_t i;
+    imu.acc_z_average = 0;
+    for(i = 0; i < samples; i++){
+        imu.acc_z_average += imu.acc_z / samples;
+    }
+    return imu.acc_z_average;
+}
+
+unsigned long ts2 = 0;
 static void read_from_mpl_float(void)
 {
     int8_t accuracy;
@@ -155,25 +283,34 @@ static void read_from_mpl_float(void)
         imu.dt = ts1 - ts2;
         ts2 = ts1;
         
+        
+        /*if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
+        uart_printf("xQueueSend failed\n\r");
+    }*/
+        //uart_printf("xQueueOverwrite imu_attitude_queue\n\r");
+        xQueueOverwrite(imu_attitude_queue, &imu);
+        //xSemaphoreGive(imu_attitude_sem);
+        xQueueOverwrite(imu_altitude_queue, &imu);
         //printf2(" roll: %7.4f", imu.gyro_roll);
         //printf2(" pitch: %7.4f\n\r", imu.gyro_pitch);
+        // Send same data to altitude for futher calculations
         
-        if(!xQueueSend(imu_data, &imu, 1000)){
-            printf2("xQueueSend failed\n\r");
-        }
-        xSemaphoreGive(imu_done);
-        //taskYIELD();
-        
-        /*
-        if(!xQueueSend(imu_data, &imu, 100)){
+        // Send attitude data to main
+        /*if(!xQueueSend(imu_attitude_queue, &imu, 1000)){
         printf2("xQueueSend failed\n\r");
-    }
-        xSemaphoreGive(imu_done);
-        //taskYIELD();*/
+    }*/
+        
+        //xSemaphoreGive(imu_attitude_sem);
+        
+        
+        //xSemaphoreGive(imu_altitude_sem);
+        
+        //taskYIELD();
     }
     else{
-        printf2("dmp failed\n\r");
+        uart_printf("dmp failed\n\r");
     }
+    
 }
 
 #ifdef COMPASS_ENABLED
@@ -182,9 +319,9 @@ void send_status_compass() {
     int8_t accuracy = { 0 };
     unsigned long timestamp;
     inv_get_compass_set(data, &accuracy, (inv_time_t*) &timestamp);
-    printf2("Compass: %7.4f %7.4f %7.4f \n\r",
-            data[0]/65536.f, data[1]/65536.f, data[2]/65536.f);
-    printf2("Accuracy= %d\r\n", accuracy);
+    uart_printf("Compass: %7.4f %7.4f %7.4f \n\r",
+                data[0]/65536.f, data[1]/65536.f, data[2]/65536.f);
+    uart_printf("Accuracy= %d\r\n", accuracy);
     
 }
 #endif
@@ -233,15 +370,15 @@ static inline void run_self_test(void)
     result = mpu_run_self_test(gyro, accel);
 #endif
     if (result == 0x7) {
-        printf2("Self test passed2\n\r");
+        uart_printf("Self test passed2\n\r");
         /*printf2("accel: %7.4f %7.4f %7.4f\n\r",
-                accel[0]/65536.f,
-                accel[1]/65536.f,
-                accel[2]/65536.f);
+        accel[0]/65536.f,
+        accel[1]/65536.f,
+        accel[2]/65536.f);
         printf2("gyro: %7.4f %7.4f %7.4f\n\r",
-                gyro[0]/65536.f,
-                gyro[1]/65536.f,
-                gyro[2]/65536.f);*/
+        gyro[0]/65536.f,
+        gyro[1]/65536.f,
+        gyro[2]/65536.f);*/
         /* Test passed. We can trust the gyro data here, so now we need to update calibrated data*/
         
 #ifdef USE_CAL_HW_REGISTERS
@@ -288,13 +425,13 @@ static inline void run_self_test(void)
     }
     else {
         if (!(result & 0x1)){
-            printf2("Gyro failed\n\r");
+            uart_printf("Gyro failed\n\r");
         } 
         if (!(result & 0x2)){
-            printf2("Accel failed\n\r");
+            uart_printf("Accel failed\n\r");
         }
         if (!(result & 0x4)){
-            printf2("Compass failed\n\r");
+            uart_printf("Compass failed\n\r");
         }
     }
 }
@@ -307,22 +444,32 @@ static inline void run_self_test(void)
 
 void gyro_data_ready_cb(void)
 {
+    /*portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    
+    xSemaphoreGiveFromISR(gyro_new, &xHigherPriorityTaskWoken);
+    if (xHigherPriorityTaskWoken != pdFALSE) {
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+}*/
     //printf2("gyro\n\r");
     hal.new_gyro = 1;
-    //xSemaphoreGiveFromISR(gyro_new, NULL); // &xHigherPriorityTaskWoken?
 }
 
 
 
 void imu_task(void *pvParameters)
 {
+    //delay_ms(10000);
     UBaseType_t stack_size;
     stack_size = uxTaskGetStackHighWaterMark(NULL);
-    printf2("imu task\n\r");
+    uart_printf("imu task\n\r");
+    gpio_init();
     
-    imu_data = xQueueCreate(1, sizeof(imu_data_t));
+    imu_attitude_queue = xQueueCreate(1, sizeof(imu_data_t));
+    imu_altitude_queue = xQueueCreate(1, sizeof(imu_data_t));
+    
     vSemaphoreCreateBinary(gyro_new);
-    vSemaphoreCreateBinary(imu_done);
+    vSemaphoreCreateBinary(imu_attitude_sem);
+    vSemaphoreCreateBinary(imu_altitude_sem);
     
     //-------------------------------------dmp--------------------------
     // gör något åt hastigheten på loopen..? den verkar gå på 5-6 ms ~150-200 Hz
@@ -340,11 +487,11 @@ void imu_task(void *pvParameters)
     
     result = mpu_init(&int_param);
     if (result) {
-        printf2("Could not initialize gyro.\n\r");
+        uart_printf("Could not initialize gyro.\n\r");
     }
     result = inv_init_mpl();
     if (result) {
-        printf2("Could not initialize MPL.\n\r");
+        uart_printf("Could not initialize MPL.\n\r");
     }
     /* Compute 6-axis and 9-axis quaternions. */
     inv_enable_quaternion();
@@ -395,11 +542,11 @@ void imu_task(void *pvParameters)
     result = inv_start_mpl();
     if (result == INV_ERROR_NOT_AUTHORIZED) {
         while (1) {
-            printf2("Not authorized.\n\r");
+            uart_printf("Not authorized.\n\r");
         }
     }
     if (result) {
-        printf2("Could not start the MPL.\n\r");
+        uart_printf("Could not start the MPL.\n\r");
     }
     
     /* Get/set hardware configuration. Start gyro. */
@@ -429,7 +576,7 @@ void imu_task(void *pvParameters)
     /* Sample rate expected in microseconds. */
     inv_set_gyro_sample_rate(1000000L / gyro_rate);
     inv_set_accel_sample_rate(1000000L / gyro_rate);
-    printf2("gyracc_rate: %d\n\r", 1000000L / gyro_rate);
+    uart_printf("gyracc_rate: %d\n\r", 1000000L / gyro_rate);
 #ifdef COMPASS_ENABLED
     /* The compass rate is independent of the gyro and accel rates. As long as
     * inv_set_compass_sample_rate is called with the correct value, the 9-axis
@@ -522,12 +669,17 @@ void imu_task(void *pvParameters)
     mpu_set_dmp_state(1);
     hal.dmp_on = 1;
     
+    TickType_t wake_time = xTaskGetTickCount();
     while(1){
-        //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){
-        if(hal.new_gyro == 1){ //vTaskDelay(hal.new_gyro == 1) ???????????????
+        vTaskDelayUntil(&wake_time, 1 / portTICK_PERIOD_MS); // dirty fix
+        //if(xSemaphoreTake(gyro_new, portMAX_DELAY)){ // set in the interrupt
+        GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
+        if(hal.new_gyro == 1){ // set in "callback" called from interrupt
+            GPIO_SetBits(DEBUG_GPIO_PORT, DEBUG_IMU_ACT_PIN);
+            
             unsigned long sensor_timestamp;
             int new_data = 0;
-           
+            
             get_ms_count(&timestamp);
             
 #ifdef COMPASS_ENABLED
@@ -621,9 +773,13 @@ void imu_task(void *pvParameters)
                 */
                 read_from_mpl_float();
             }
+            GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_ACT_PIN);
         }
+        //hal.new_gyro = 0;
         stack_size = uxTaskGetStackHighWaterMark(NULL);
         imu.stack_size = stack_size;
+        GPIO_ResetBits(DEBUG_GPIO_PORT, DEBUG_IMU_TASK_PIN);
     }
+    //}
 }
 

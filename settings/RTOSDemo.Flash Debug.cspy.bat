@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\common\bin\cspybat" -f "C:\Users\klasl\Desktop\freertos_dmp2\settings\RTOSDemo.Flash Debug.general.xcl" --backend -f "C:\Users\klasl\Desktop\freertos_dmp2\settings\RTOSDemo.Flash Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\common\bin\cspybat" -f "C:\Users\klasl\Desktop\gimbal3\settings\RTOSDemo.Flash Debug.general.xcl" --backend -f "C:\Users\klasl\Desktop\gimbal3\settings\RTOSDemo.Flash Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\common\bin\cspybat" -f "C:\Users\klasl\Desktop\freertos_dmp2\settings\RTOSDemo.Flash Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\klasl\Desktop\freertos_dmp2\settings\RTOSDemo.Flash Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3_2\common\bin\cspybat" -f "C:\Users\klasl\Desktop\gimbal3\settings\RTOSDemo.Flash Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\klasl\Desktop\gimbal3\settings\RTOSDemo.Flash Debug.driver.xcl" 
 
 @echo off 
 :end

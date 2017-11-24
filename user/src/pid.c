@@ -1,7 +1,9 @@
 #include "pid.h"
+#include "uart.h"
+#include "filter.h"
 
-#define BOUNDARY_MIN -1.0f
-#define BOUNDARY_MAX 1.0f
+// Might wanna have a better error handling when using delta input as rate:
+// https://github.com/Lauszus/LaunchPadFlightController/blob/fddbe4eb9303ea4301a714585d7383a2de275d80/src/PID.c
 
 void pid_calc(pid_data_t* pid, unsigned long dt)
 {
@@ -9,38 +11,41 @@ void pid_calc(pid_data_t* pid, unsigned long dt)
     float p_term, i_term, d_term, error, output;
     
     // Calculate input rate with derivation of position instead from EKF output
-    // *** IMPORTANT *** Does it need low pass-filter?                           
-    pid->rate = (pid->input - pid->last_input) / (float)dt;
+    // *** IMPORTANT *** Does it need low pass-filter?                        
+    //pid->rate_calc = filter_lowpass((float)(1000 * (pid->input - pid->last_input) / (float)dt), pid->rate_calc, 0.75);
     
     // Calculate error between current and desired position
     error = pid->setpoint - pid->input;
-    
     // Calculate the P contribution
     p_term = pid->k_p * error;
 
     // Calculate the I contribution
-    pid->i_term += (float)(pid->k_i * (float)dt * error);
-    if(pid->i_term > BOUNDARY_MAX){
-        pid->i_term = BOUNDARY_MAX;
+    pid->i_term += (float)(pid->k_i * (float)dt * ((error + pid->last_error) / 2.0f));
+    if(pid->i_term > pid->boundary_max){
+        pid->i_term = pid->boundary_max;
     }
-    else if(pid->i_term < BOUNDARY_MIN) {
-        i_term = BOUNDARY_MIN;
+    else if(pid->i_term < pid->boundary_min) {
+        i_term = pid->boundary_min;
     }
     i_term = pid->i_term;
-
-    // Calculate the D contribution
-    d_term = pid->k_d * pid->rate;
     
+    // Calculate the D contribution
+    //pid->rate = (pid->input - pid->last_input) / (float)dt; // Don't use this!!!
+    d_term = pid->k_d * pid->rate;
+
     //Calculate output
     output = p_term + i_term - d_term;
+
     // Check boundaries
-    if(output > BOUNDARY_MAX){
-        output = BOUNDARY_MAX;
+    if(output > pid->boundary_max){
+        output = pid->boundary_max;
     }
-    else if(output < BOUNDARY_MIN) {
-        output = BOUNDARY_MIN;
+    else if(output < pid->boundary_min) {
+        output = pid->boundary_min;
     }
-    pid->output = output;
     
+    // Set data for output and next loop
+    pid->output = output; 
     pid->last_input = pid->input;
+    pid->last_error = error;
 }

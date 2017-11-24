@@ -19,13 +19,14 @@ typedef struct{
     float duty_center;
     float duty_thresh;
     float duty_input;
-    float scalefactor;
+    float scalefactor; // TODO: calculate this instead for set on init
     float output;
     float output_limit;
+    float avg[7];
 } joystick_data_t;
 
-float joystick_get_setpoint(joystick_data_t* in);
-float joystick_get_thrust(joystick_data_t* in);
-float joystick_get_toggle(joystick_data_t* in);
+float joystick_read_setpoint(joystick_data_t* in);
+float joystick_read_thrust(joystick_data_t* in);
+float joystick_read_toggle(joystick_data_t* in);
 
 #endif

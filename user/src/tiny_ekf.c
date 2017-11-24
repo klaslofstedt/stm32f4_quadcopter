@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "tiny_ekf.h"
+#include "uart.h"
 
 /* Cholesky-decomposition matrix-inversion code, adapated from
    http://jean-pierre.moreau.pagesperso-orange.fr/Cplus/choles_cpp.txt */
@@ -280,17 +281,16 @@ static void unpack(void* v, ekf_t* ekf, int n, int m)
 
 void ekf_init(void* v, int n, int m)
 {
-    /* retrieve n, m and set them in incoming data structure */
+    // retrieve n, m and set them in incoming data structure
     int* ptr = (int *)v;
     *ptr = n;
     ptr++;
     *ptr = m;
-
-    /* unpack rest of incoming structure for initlization */
+    // unpack rest of incoming structure for initlization
     ekf_t ekf;
     unpack(v, &ekf, n, m);
 
-    /* zero-out matrices */
+    // zero-out matrices
     ekf_zeros(ekf.P, n, n);
     ekf_zeros(ekf.Q, n, n);
     ekf_zeros(ekf.R, m, m);

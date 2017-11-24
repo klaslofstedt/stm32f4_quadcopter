@@ -5,9 +5,9 @@
 
 #include "stm32f4xx_gpio.h"
 #include "pwm.h"
-#include "printf2.h"
+#include "uart.h"
 
-#define PWM_FREQUENCY 400
+#define PWM_FREQUENCY 32000
 
 static void pwm_gpio_init(void);
 static void pwm_timebase_init(void);
@@ -168,6 +168,7 @@ void pwm_output_init(void)
 	pwm_output_compare_init();
 }
 
+
 void pwm_set_duty_cycle(uint8_t PinNum, uint16_t DutyCycle)
 {
     switch(PinNum){
@@ -252,12 +253,12 @@ static void pwm_timebase_init(void)
     TIM_TimeBaseInitTypeDef TIM_BaseStruct;
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
     
-    uint16_t prescaler = pwm_get_prescaler();
-    printf2("Prescaler: %d\n\r", prescaler);
+    uint16_t prescaler = 10;//pwm_get_prescaler();
+    uart_printf("Prescaler: %d\n\r", prescaler);
     TIM_BaseStruct.TIM_Prescaler = prescaler - 1;
     TIM_BaseStruct.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_BaseStruct.TIM_Period = (((SystemCoreClock / 2) / PWM_FREQUENCY) / prescaler) -1;
-    printf2("Period: %d\n\r", TIM_BaseStruct.TIM_Period);
+    uart_printf("Period: %d\n\r", TIM_BaseStruct.TIM_Period);
     TIM_BaseStruct.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_BaseStruct.TIM_RepetitionCounter = 0x0000;
     TIM_TimeBaseInit(TIM4, &TIM_BaseStruct);

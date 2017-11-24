@@ -77,6 +77,7 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "uart.h"
 
 #ifndef __ARMVFP__
 	#error This port can only be used when the project options are configured to enable hardware floating point support.
@@ -580,6 +581,10 @@ __weak void vPortSetupTimerInterrupt( void )
 		{
 			/* Look up the interrupt's priority. */
 			ucCurrentPriority = pcInterruptPriorityRegisters[ ulCurrentInterrupt ];
+
+            //uart_printf(" ucCurrentPriority %d\n\r", ucCurrentPriority);
+            //uart_printf(" ulCurrentInterrupt %d\n\r", ulCurrentInterrupt);
+            //uart_printf(" ucMaxSysCallPriority %d\n\r", ucMaxSysCallPriority);
 
 			/* The following assertion will fail if a service routine (ISR) for
 			an interrupt that has been assigned a priority above
